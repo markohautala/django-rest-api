@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from houseposts.models import HousePost
 
-class HousePostHeart(models.Model):
+class HouseHeart(models.Model):
     """
-    HousePostLike model, linked to a Poster (User) and a HousePost.
+    HouseHeart model, linked to a Poster (User) and a HousePost.
     This model ensures that a user cannot like the same post more than once.
     """
     poster = models.ForeignKey(User, on_delete=models.CASCADE)

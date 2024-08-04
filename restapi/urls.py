@@ -7,4 +7,5 @@ urlpatterns = [
     path('', include('userprofiles.urls')),  # Include the URL patterns from the userprofiles app
     path('', include('houseposts.urls')),  # Include the URL patterns from the houseposts app
     path('', include('housepostcomments.urls')),  # Include the URL patterns from the housepostcomments app
+    path('', include('househeart.urls')),  # Include the URL patterns from the househeart app
 ]
