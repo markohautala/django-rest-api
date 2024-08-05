@@ -10,10 +10,10 @@ class HousePostComment(models.Model):
     housepost = models.ForeignKey(HousePost, on_delete=models.CASCADE)
     timestamp_created = models.DateTimeField(auto_now_add=True)
     timestamp_modified = models.DateTimeField(auto_now=True)
-    message = models.TextField()
+    comment = models.TextField()
 
     class Meta:
         ordering = ['-timestamp_created']
 
     def __str__(self):
-        return self.message[:50]  # Return the first 50 characters of the message
+        return self.comment[:50]  # Return the first 50 characters of the message

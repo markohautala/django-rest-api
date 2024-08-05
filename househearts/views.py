@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions
+from rest_framework.exceptions import ValidationError
 from restapi.permissions import IsOwnerOrReadOnly
-from .models import HouseHeart
+from .models import HouseHeart, HousePost
 from .serializers import HouseHeartSerializer
 
 class HouseHeartList(generics.ListCreateAPIView):
@@ -9,17 +10,15 @@ class HouseHeartList(generics.ListCreateAPIView):
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = HouseHeartSerializer
-
-    def get_queryset(self):
-        return HouseHeart.objects.all()
+    queryset = HouseHeart.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class HouseHeartDetail(generics.RetrieveUpdateDestroyAPIView):
+class HouseHeartDetail(generics.RetrieveDestroyAPIView):
     """
     Retrieve, update or delete a househeart instance.
     """
-    permission_classes = [IsOwnerOrReadOnly]  # Update the import statement here
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = HouseHeartSerializer
     queryset = HouseHeart.objects.all()
