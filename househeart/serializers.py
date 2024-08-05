@@ -10,12 +10,12 @@ class HouseHeartSerializer(serializers.ModelSerializer):
     the unique constraint on 'poster' and 'housepost' is respected when creating
     or updating records.
     """
-    poster = serializers.ReadOnlyField(source='poster.username')
+    user = serializers.ReadOnlyField(source='user.username')
     housepost = serializers.ReadOnlyField(source='housepost.house_title')  # Assuming you want to show the title of the house post
 
     class Meta:
         model = HouseHeart
-        fields = ['id', 'timestamp_created', 'poster', 'housepost']
+        fields = ['id', 'timestamp_created', 'user', 'housepost']
 
         def create(self, validated_data):
             try:

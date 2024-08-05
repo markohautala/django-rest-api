@@ -15,7 +15,7 @@ class HouseHeartList(generics.ListCreateAPIView):
         return HouseHeart.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save(poster=self.request.user)
+        serializer.save(user=self.request.user)
 
 
 class HouseHeartDetail(generics.RetrieveUpdateDestroyAPIView):
