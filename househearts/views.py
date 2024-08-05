@@ -3,7 +3,6 @@ from restapi.permissions import IsOwnerOrReadOnly
 from .models import HouseHeart
 from .serializers import HouseHeartSerializer
 
-
 class HouseHeartList(generics.ListCreateAPIView):
     """
     List all househearts, or create a new househeart.
@@ -17,12 +16,10 @@ class HouseHeartList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-
 class HouseHeartDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve, update or delete a househeart instance.
     """
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]  # Update the import statement here
     serializer_class = HouseHeartSerializer
     queryset = HouseHeart.objects.all()
