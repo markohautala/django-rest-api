@@ -1,53 +1,43 @@
-from django.http import Http404
-from rest_framework import status, permissions
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from django.db.models import Count
+from rest_framework import generics, permissions, filters
 from .models import HousePost
 from .serializers import HousePostSerializer
 from restapi.permissions import IsOwnerOrReadOnly
 
-class HousePostList(APIView):
-    serializer_class = HousePostSerializer
+class HousePostList(generics.ListCreateAPIView):
+    """
+    List all houseposts, or create a new housepost.
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = HousePostSerializer
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['house_title', 'description']  # Excluded ForeignKey fields
+    ordering_fields = ['housepostcomments_count', 'househearts_count']
 
-    def get(self, request):
-        houseposts = HousePost.objects.all()
-        serializer = HousePostSerializer(houseposts, many=True, context={'request': request})
-        return Response(serializer.data)
+    def get_queryset(self):
+        """
+        Return a queryset of HousePost instances annotated with housepostcomments_count and househearts_count.
+        """
+        return HousePost.objects.annotate(
+            housepostcomments_count=Count('housepostcomments', distinct=True),
+            househearts_count=Count('househearts', distinct=True)
+        ).order_by('-date_posted')
 
-    def post(self, request):
-        serializer = HousePostSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)  # Assuming you have an 'owner' field
 
-class HousePostDetail(APIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+class HousePostDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update, or delete a housepost instance.
+    """
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = HousePostSerializer
 
-    def get_object(self, pk):
-        try:
-            housepost = HousePost.objects.get(pk=pk)  # Use correct variable name
-            self.check_object_permissions(self.request, housepost)
-            return housepost
-        except HousePost.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk):
-        housepost = self.get_object(pk)
-        serializer = HousePostSerializer(housepost, context={'request': request})
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        housepost = self.get_object(pk)
-        serializer = HousePostSerializer(housepost, data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        housepost = self.get_object(pk)
-        housepost.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def get_queryset(self):
+        """
+        Return a queryset of HousePost instances annotated with housepostcomments_count and househearts_count.
+        """
+        return HousePost.objects.annotate(
+            housepostcomments_count=Count('housepostcomments', distinct=True),
+            househearts_count=Count('househearts', distinct=True)
+        ).order_by('-date_posted')

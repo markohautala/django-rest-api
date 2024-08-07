@@ -1,13 +1,19 @@
+# houseposts/serializers.py
 from rest_framework import serializers
 from .models import HousePost
 from househearts.models import HouseHeart
 
 class HousePostSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the HousePost model with additional fields.
+    """
     user = serializers.ReadOnlyField(source='user.username')
     is_user = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='user.profile.id')
     profile_image = serializers.ReadOnlyField(source='user.profile.image.url')
     househeart_id = serializers.SerializerMethodField()
+    housepostcomments_count = serializers.IntegerField(read_only=True)
+    househearts_count = serializers.IntegerField(read_only=True)
 
     def validate_house_image(self, value):
         if value.size > 1024 * 1024 * 2:  # 2MB limit for image size
@@ -39,3 +45,4 @@ class HousePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousePost
         fields = '__all__'
+        read_only_fields = ('housepostcomments_count', 'househearts_count')

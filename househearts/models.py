@@ -8,7 +8,7 @@ class HouseHeart(models.Model):
     This model ensures that a user cannot like the same post more than once.
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    housepost = models.ForeignKey(HousePost, related_name='likes', on_delete=models.CASCADE)
+    housepost = models.ForeignKey(HousePost, related_name='househearts', on_delete=models.CASCADE)
     timestamp_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
