@@ -11,13 +11,14 @@ class HouseHeartSerializer(serializers.ModelSerializer):
     or updating records.
     """
     user = serializers.ReadOnlyField(source='user.username')
-    housepost = serializers.PrimaryKeyRelatedField(queryset=HousePost.objects.all())
 
     class Meta:
         model = HouseHeart
         fields = ['id', 'timestamp_created', 'user', 'housepost']
 
     def create(self, validated_data):
+        if validated_data['housepost'].user == self.context['request'].user:
+            raise serializers.ValidationError("You cannot like your own post.")
         try:
             return super().create(validated_data)
         except IntegrityError:

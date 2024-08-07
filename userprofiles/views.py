@@ -1,37 +1,22 @@
-from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.db.models import Count
+from rest_framework import generics, filters
 from .models import UserProfile
 from .serializers import UserProfileSerializer
 from restapi.permissions import IsOwnerOrReadOnly
 
-class UserProfileView(APIView):
-    def get(self, request):
-        user_profiles = UserProfile.objects.all()
-        serializer = UserProfileSerializer(user_profiles, many=True, context={'request': request})
-        return Response(serializer.data)
-
-class UserProfileDetailView(APIView):
+class UserProfileList(generics.ListAPIView):
     serializer_class = UserProfileSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    queryset = UserProfile.objects.annotate(
+        houseposts_count=Count('user__housepost', distinct=True)
+    )
+    filter_backends = [filters.OrderingFilter]  # Enable ordering in the django-rest-framework API view
+    ordering_fields = ['date_created', 'houseposts_count']
+    ordering = ['-houseposts_count']  # Default ordering
 
-    def get_object(self, pk):
-        try:
-            user_profile = UserProfile.objects.get(pk=pk)
-            self.check_object_permissions(self.request, user_profile)
-            return user_profile
-        except UserProfile.DoesNotExist:
-            raise Http404
+    def get_queryset(self):
+        return self.queryset
 
-    def get(self, request, pk):
-        user_profile = self.get_object(pk)
-        serializer = UserProfileSerializer(user_profile, context={'request': request})
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        user_profile = self.get_object(pk)
-        serializer = UserProfileSerializer(user_profile, data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+class UserProfileDetail(generics.RetrieveUpdateAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = (IsOwnerOrReadOnly,)

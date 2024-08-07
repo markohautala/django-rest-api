@@ -1,11 +1,13 @@
 from rest_framework import serializers
 from .models import HousePost
+from househearts.models import HouseHeart
 
 class HousePostSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     is_user = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='user.profile.id')
     profile_image = serializers.ReadOnlyField(source='user.profile.image.url')
+    househeart_id = serializers.SerializerMethodField()
 
     def validate_house_image(self, value):
         if value.size > 1024 * 1024 * 2:  # 2MB limit for image size
@@ -19,6 +21,15 @@ class HousePostSerializer(serializers.ModelSerializer):
     def get_is_user(self, obj):
         request = self.context.get('request')
         return request.user == obj.user
+
+    def get_househeart_id(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            househeart = HouseHeart.objects.filter(
+                user=user, housepost=obj
+            ).first()
+            return househeart.id if househeart else None
+        return None
 
     def create(self, validated_data):
         request = self.context.get('request')

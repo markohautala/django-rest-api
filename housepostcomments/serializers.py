@@ -1,3 +1,4 @@
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from rest_framework import serializers
 from housepostcomments.models import HousePostComment
 
@@ -17,6 +18,12 @@ class HousePostCommentSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return request.user == obj.user
 
+    def get_created_at(self, obj):
+        return naturaltime(obj.created_at)
+
+    def get_updated_at(self, obj):
+        return naturaltime(obj.updated_at)
+
     class Meta:
         model = HousePostComment
         fields = '__all__'
@@ -27,4 +34,4 @@ class CommentDetailSerializer(HousePostCommentSerializer):
   Serializer for the Comment model used in Detail view
   Post is a read only field so that we dont have to set it on each update
   """
-  post = serializers.ReadOnlyField(source='post.id')
+  post = serializers.ReadOnlyField(source='housepost.id')
