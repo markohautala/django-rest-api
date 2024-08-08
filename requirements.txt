@@ -11,14 +11,17 @@ crispy-bootstrap5==0.7
 cryptography==41.0.7
 defusedxml==0.7.1
 dj-database-url==0.5.0
+dj-rest-auth==6.0.0
 dj3-cloudinary-storage==0.0.6
 Django==4.2.11
 django-allauth==0.57.2
 django-cloudinary-storage==0.3.0
 django-crispy-forms==2.1
+django-filter==24.3
 django-heroku==0.3.1
 django-summernote==0.8.20.0
 djangorestframework==3.15.2
+djangorestframework-simplejwt==5.3.1
 Flask==3.0.2
 Flask-SQLAlchemy==2.5.1
 greenlet==3.0.3
