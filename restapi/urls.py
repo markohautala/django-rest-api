@@ -1,7 +1,9 @@
 from django.contrib import admin
-from django.urls import path, include  # Include the URL patterns from your app
+from django.urls import path, include
+from .views import root_route
 
 urlpatterns = [
+    path('', root_route),  # Include the root_route view at the root URL
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),  # Include the URL patterns from the rest_framework app
     path('', include('userprofiles.urls')),  # Include the URL patterns from the userprofiles app

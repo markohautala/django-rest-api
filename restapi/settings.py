@@ -124,11 +124,13 @@ DATABASES = {
 # JWT Authentication settings for dj-rest-auth
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [(
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
         'rest_framework.authentication.SessionAuthentication'
         if 'DEV' in os.environ
         else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
-    )]
+    'DEFAULT_PAGINTATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DATE_TIME_FORMAT': '%d %b %Y',
 }
 
 REST_USE_JWT = True
