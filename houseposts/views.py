@@ -11,7 +11,7 @@ class HousePostList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = HousePostSerializer
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
-    search_fields = ['house_title', 'description']  # Excluded ForeignKey fields
+    search_fields = ['house_title', 'description']
     ordering_fields = ['housepostcomments_count', 'househearts_count']
 
     def get_queryset(self):
@@ -24,7 +24,7 @@ class HousePostList(generics.ListCreateAPIView):
         ).order_by('-date_posted')
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)  # Assuming you have an 'owner' field
+        serializer.save(user=self.request.user)  # Corrected 'owner' to 'user'
 
 class HousePostDetail(generics.RetrieveUpdateDestroyAPIView):
     """
