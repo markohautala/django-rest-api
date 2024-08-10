@@ -9,6 +9,9 @@ os.environ['CLOUDINARY_URL'] = 'cloudinary://YWEpgllzlJTcA7vvJb72F8AVjDU@dtjbfg6
 # Development flag
 os.environ['DEV'] = '1'
 
+# Django environment variables
+os.environ['SECRET_KEY'] = 'a!3xei2o8(*crbiih-4d_-61r1uaqovjt&+t)d81f+)3tccj!9'
+
 # PostgreSQL environment variables
 os.environ['PGHOST'] = 'ep-quiet-star-a2kmrmon.eu-central-1.aws.neon.tech'
 os.environ['PGDATABASE'] = 'neondb'
