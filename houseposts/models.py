@@ -12,7 +12,9 @@ class HousePost(models.Model):
     house_title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     house_image = models.ImageField(
-        upload_to='house_images/', default='../house-placeholder-image_vgm8en', blank=True
+        upload_to='images/',
+        default='house-placeholder-image_vgm8en',
+        blank=True
     )
 
     class Meta:
