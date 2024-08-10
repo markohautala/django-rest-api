@@ -3,6 +3,7 @@ import os
 import cloudinary
 from os import getenv
 from dotenv import load_dotenv
+import dj_database_url  # Se till att dj_database_url är installerat
 
 if os.path.exists('env.py'):
     import env
@@ -93,20 +94,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'restapi.wsgi.application'
 
-# Database
-DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': getenv('PGDATABASE'),
-    'USER': getenv('PGUSER'),
-    'PASSWORD': getenv('PGPASSWORD'),
-    'HOST': getenv('PGHOST'),
-    'PORT': getenv('PGPORT', 5432),
-    'OPTIONS': {
-      'sslmode': 'require',
-    },
-  }
-}
+# Database configuration based on environment
+if 'DEV' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    }
 
 # JWT Authentication settings for dj-rest-auth
 REST_FRAMEWORK = {
