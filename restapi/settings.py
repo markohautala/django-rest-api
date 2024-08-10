@@ -34,7 +34,11 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # Debug mode based on environment
 DEBUG = 'DEV' in os.environ
 
-ALLOWED_HOSTS = ['localhost', 'https://housegram-rest-api-de7c6ab4d6fb.herokuapp.com/']
+ALLOWED_HOSTS = [
+    '127.0.0.1',          # För lokal utveckling
+    'localhost',          # För lokal utveckling
+    'housegram-rest-api-de7c6ab4d6fb.herokuapp.com'  # För produktion
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -182,6 +186,6 @@ if 'CLIENT_ORIGIN' in os.environ:
 else:
     # Default to allowing requests from localhost for local development
     CORS_ALLOWED_ORIGINS = [
-        "http://localhost:8000",  # or whatever port you're using
-        "http://127.0.0.1:8000",  # allows requests from 127.0.0.1
+        "http://localhost:8000",  # För lokal utveckling
+        "http://127.0.0.1:8000",  # För lokal utveckling
     ]
