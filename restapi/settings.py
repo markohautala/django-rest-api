@@ -2,15 +2,10 @@ from pathlib import Path
 import os
 import cloudinary
 from os import getenv
-from dotenv import load_dotenv
 import dj_database_url  # Se till att dj_database_url är installerat
 
 if os.path.exists('env.py'):
     import env
-
-
-# Load environment variables from .env file
-load_dotenv()
 
 # Cloudinary settings
 cloudinary.config(
