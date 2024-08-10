@@ -32,10 +32,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-15fgvd4_42_n0@0wss2eip-dwg-i18f+)a4(5ozeo1n42-qw5j'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Debug mode based on environment
+DEBUG = 'DEV' in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'https://housegram-rest-api-de7c6ab4d6fb.herokuapp.com/']
 
 # Application definition
 INSTALLED_APPS = [
@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'dj_rest_auth.registration',
+    'corsheaders',
     'django.contrib.messages',
     'rest_framework.authtoken',
     'cloudinary_storage',
@@ -64,6 +66,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -94,18 +97,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'restapi.wsgi.application'
 
-# Database configuration based on environment
-if 'DEV' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
-    }
+# # Database configuration based on environment
+# if 'DEV' in os.environ:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+# else:
+DATABASES = {
+    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+}
 
 # JWT Authentication settings for dj-rest-auth
 REST_FRAMEWORK = {
@@ -125,14 +128,21 @@ if 'DEV' not in os.environ:
         'rest_framework.renderers.JSONRenderer',
     ]
 
+# Password validation settings for dj-rest-auth
 REST_USE_JWT = True
 REST_AUTH_SECURE = True
 REST_AUTH_COOKIE = 'my-app-auth'
 REST_AUTH_REFRESH_COOKIE = 'my-refresh-token'
 
+# Configure SameSite for cross-site cookie usage
+JWT_AUTH_SAMESITE = 'None'
+
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'userprofiles.serializers.CurrentUserSerializer'
 }
+
+# Allow credentials to be included in cross-origin requests
+CORS_ALLOW_CREDENTIALS = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -165,3 +175,15 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Check if CLIENT_ORIGIN is set in environment variables
+if 'CLIENT_ORIGIN' in os.environ:
+    CORS_ALLOWED_ORIGINS = [
+        os.environ.get('CLIENT_ORIGIN')
+    ]
+else:
+    # Default to allowing requests from localhost for local development
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:8000",  # or whatever port you're using
+        "http://127.0.0.1:8000",  # allows requests from 127.0.0.1
+    ]
