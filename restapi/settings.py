@@ -8,6 +8,10 @@ import dj_database_url  # Se till att dj_database_url är installerat
 if os.path.exists('env.py'):
     import env
 
+
+# Load environment variables from .env file
+load_dotenv()
+
 # Cloudinary settings
 cloudinary.config(
     cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
@@ -32,7 +36,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Debug mode based on environment
-DEBUG = 'DEV' in os.environ
+DEBUG = os.getenv('DEV') == '1'
 
 ALLOWED_HOSTS = [
     '127.0.0.1',          # För lokal utveckling
