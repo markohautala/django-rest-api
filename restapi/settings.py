@@ -31,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Debug mode based on environment
-DEBUG = os.getenv('DEV') == '1'
+DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = [
     '127.0.0.1',          # För lokal utveckling
@@ -100,28 +100,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'restapi.wsgi.application'
 
 # Database configuration based on environment
-if 'DEV' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
-    }
+DATABASES = {
+    'default': ({
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    } if 'DEV' in os.environ else dj_database_url.parse(
+        os.environ.get('DATABASE_URL')
+    ))
+}
 
 # JWT Authentication settings for dj-rest-auth
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        (
+    'DEFAULT_AUTHENTICATION_CLASSES': [(
             'rest_framework.authentication.SessionAuthentication'
             if 'DEV' in os.environ
             else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
-        )
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    )],
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %Y',
 }
@@ -135,12 +131,11 @@ REST_USE_JWT = True
 REST_AUTH_SECURE = True
 REST_AUTH_COOKIE = 'my-app-auth'
 REST_AUTH_REFRESH_COOKIE = 'my-refresh-token'
-
 # Configure SameSite for cross-site cookie usage
 JWT_AUTH_SAMESITE = 'None'
 
 REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'userprofiles.serializers.CurrentUserSerializer'
+    'USER_DETAILS_SERIALIZER': 'restapi.serializers.CurrentUserSerializer'
 }
 
 # Allow credentials to be included in cross-origin requests
