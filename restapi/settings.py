@@ -95,18 +95,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'restapi.wsgi.application'
 
-# # Database configuration based on environment
-# if 'DEV' in os.environ:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
-# else:
-DATABASES = {
-    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
-}
+# Database configuration based on environment
+if 'DEV' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    }
 
 # JWT Authentication settings for dj-rest-auth
 REST_FRAMEWORK = {
