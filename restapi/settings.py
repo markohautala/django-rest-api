@@ -2,12 +2,12 @@ from pathlib import Path
 import os
 import dj_database_url
 
-# cloudinary_storage imports
+# Cloudinary imports
 import cloudinary
 import cloudinary.api
 import cloudinary.uploader
 
-
+# Load environment variables if env.py exists
 if os.path.exists('env.py'):
     import env
 
@@ -19,12 +19,7 @@ cloudinary.config(
     secure=True
 )
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Cloudinary settings for media
-# MEDIA_URL = 'https://res.cloudinary.com/{}/'.format(os.getenv('CLOUDINARY_CLOUD_NAME'))
-# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = os.getenv('SECRET_KEY')
@@ -133,6 +128,14 @@ REST_AUTH_SERIALIZERS = {
 
 CORS_ALLOW_CREDENTIALS = True
 
+if 'CLIENT_ORIGIN' in os.environ:
+    CORS_ALLOWED_ORIGINS = [os.environ.get('CLIENT_ORIGIN').rstrip('/')]
+else:
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ]
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -147,12 +150,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = []  # Adjusted to avoid the non-existent directory warning
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-if 'CLIENT_ORIGIN' in os.environ:
-    CORS_ALLOWED_ORIGINS = [os.environ.get('CLIENT_ORIGIN')]
-else:
-    CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000"]
