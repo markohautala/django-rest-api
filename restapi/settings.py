@@ -72,6 +72,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 ROOT_URLCONF = 'restapi.urls'
 
 TEMPLATES = [
@@ -127,14 +129,14 @@ REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'restapi.serializers.CurrentUserSerializer'
 }
 
-CORS_ALLOW_CREDENTIALS = True
-
 if 'CLIENT_ORIGIN' in os.environ:
     CORS_ALLOWED_ORIGINS = [os.environ.get('CLIENT_ORIGIN').rstrip('/')]
 else:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:8000",
         "http://127.0.0.1:8000",
+        "http://localhost:3000",
+        "https://housegram-a32010bfbf12.herokuapp.com",
     ]
 
 AUTH_PASSWORD_VALIDATORS = [
