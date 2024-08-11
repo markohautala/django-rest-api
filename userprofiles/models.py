@@ -1,16 +1,16 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
 
 class UserProfile(models.Model):
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     display_name = models.CharField(max_length=255, blank=True)
     bio = models.TextField(blank=True)
-    profile_picture = models.ImageField(
-        upload_to='profile_pics/', default='bl9c2h1utow7uh2esydx'
-    )
+    profile_picture = CloudinaryField('profile_picture')
 
     class Meta:
         ordering = ['-date_created']

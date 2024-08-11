@@ -10,8 +10,8 @@ class HousePostList(generics.ListCreateAPIView):
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = HousePostSerializer
-    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
-    search_fields = ['house_title', 'description']
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter] # Filter by ordering and search
+    search_fields = ['house_title', 'description'] # Search by house_title and description
     ordering_fields = ['housepostcomments_count', 'househearts_count']
 
     def get_queryset(self):

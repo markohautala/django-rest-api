@@ -14,6 +14,7 @@ class HousePostSerializer(serializers.ModelSerializer):
     househeart_id = serializers.SerializerMethodField()
     housepostcomments_count = serializers.IntegerField(read_only=True)
     househearts_count = serializers.IntegerField(read_only=True)
+    house_image = serializers.ImageField()  # Make the image field required
 
     def validate_house_image(self, value):
         if value.size > 1024 * 1024 * 2:  # 2MB limit for image size
@@ -41,6 +42,10 @@ class HousePostSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         validated_data['user'] = request.user
         return super().create(validated_data)
+
+    # def get_house_image(self, obj):
+    #     # Return the URL of the house image
+    #     return obj.house_image.url if obj.house_image else 'https://res.cloudinary.com/dtjbfg6km/image/upload/v1722598634/house-placeholder-image_vgm8en.png'
 
     class Meta:
         model = HousePost
