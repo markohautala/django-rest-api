@@ -72,7 +72,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS configuration
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:3000",
+    "https://housegram-a32010bfbf12.herokuapp.com",
+]
+
+CORS_ALLOW_CREDENTIALS = True  # Allow credentials (cookies) to be sent with requests
 
 ROOT_URLCONF = 'restapi.urls'
 
@@ -103,11 +111,11 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [(
-            'rest_framework.authentication.SessionAuthentication'
-            if 'DEV' in os.environ
-            else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
-    )],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication'
+        if 'DEV' in os.environ
+        else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %Y',
@@ -119,25 +127,14 @@ if 'DEV' not in os.environ:
     ]
 
 REST_USE_JWT = True
-JWT_AUTH_SECURE = True
+JWT_AUTH_SECURE = not DEBUG  # Ensure cookies are secure in production
 JWT_AUTH_COOKIE = 'my-app-auth'
 JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
-JWT_AUTH_SAMESITE = 'None'
-
+JWT_AUTH_SAMESITE = 'None'  # Required for cross-origin cookie sharing
 
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'restapi.serializers.CurrentUserSerializer'
 }
-
-if 'CLIENT_ORIGIN' in os.environ:
-    CORS_ALLOWED_ORIGINS = [os.environ.get('CLIENT_ORIGIN').rstrip('/')]
-else:
-    CORS_ALLOWED_ORIGINS = [
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-        "http://localhost:3000",
-        "https://housegram-a32010bfbf12.herokuapp.com",
-    ]
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
