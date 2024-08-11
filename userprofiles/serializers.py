@@ -5,7 +5,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     is_owner = serializers.SerializerMethodField()
     houseposts_count = serializers.IntegerField(read_only=True)
-    profile_picture = serializers.ImageField(required=False)
+    profile_picture = serializers.ImageField() # Make the image field required
 
     def get_is_owner(self, obj):
         request = self.context['request']
