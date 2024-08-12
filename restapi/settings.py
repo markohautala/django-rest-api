@@ -22,10 +22,9 @@ cloudinary.config(
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')  # Use a default only for development
 
-# Debug mode based on environment
-DEBUG = 'DEV' in os.environ
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -74,25 +73,26 @@ MIDDLEWARE = [
 
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://housegram-rest-api-de7c6ab4d6fb.herokuapp.com",
+    "http://localhost:3000",  # Your development React app URL
+    "https://housegram-a32010bfbf12.herokuapp.com",  # Your production URL
 ]
 
-CORS_ALLOW_CREDENTIALS = True  # Allow credentials (cookies) to be sent with requests
+CORS_ALLOW_CREDENTIALS = True  # Allow cookies to be sent with requests
 
 CORS_ALLOW_HEADERS = [
     'content-type',
     'authorization',
+    'x-csrftoken',
+    'accept',
+    'x-requested-with',
 ]
 
-CORS_ALLOW_METHODS = [
-    'GET',
-    'POST',
-    'PUT',
-    'PATCH',
-    'DELETE',
-    'OPTIONS',
-    'HEAD',
+CORS_EXPOSE_HEADERS = [
+    'content-type',
+    'authorization',
+    'x-csrftoken',
+    'accept',
+    'x-requested-with',
 ]
 
 ROOT_URLCONF = 'restapi.urls'
@@ -118,15 +118,15 @@ WSGI_APPLICATION = 'restapi.wsgi.application'
 DATABASES = {
     'default': (
         {'ENGINE': 'django.db.backends.sqlite3', 'NAME': BASE_DIR / 'db.sqlite3'}
-        if 'DEV' in os.environ
-        else dj_database_url.parse(os.environ.get('DATABASE_URL'))
+        if DEBUG
+        else dj_database_url.parse(os.getenv('DATABASE_URL'))
     )
 }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication'
-        if 'DEV' in os.environ
+        if DEBUG
         else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -134,7 +134,7 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%d %b %Y',
 }
 
-if 'DEV' not in os.environ:
+if not DEBUG:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
         'rest_framework.renderers.JSONRenderer',
     ]
