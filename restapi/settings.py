@@ -135,7 +135,7 @@ if not DEBUG:
     ]
 
 REST_USE_JWT = True
-JWT_AUTH_SECURE = not DEBUG  # Ensure cookies are secure in production
+JWT_AUTH_SECURE = False
 JWT_AUTH_COOKIE = 'my-app-auth'
 JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
 JWT_AUTH_SAMESITE = 'None'  # Required for cross-origin cookie sharing
