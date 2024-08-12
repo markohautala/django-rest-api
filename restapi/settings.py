@@ -7,31 +7,6 @@ import cloudinary
 import cloudinary.api
 import cloudinary.uploader
 
-# CORS configuration to allow all origins temporarily (for testing purposes)
-CORS_ALLOW_CREDENTIALS = True  # Keep this if you're using cookies for authentication
-
-ALLOWED_HOSTS=['*']
-
-CORS_ORIGIN_ALLOW_ALL = True
-
-CORS_ALLOW_METHODS = (
-    "DELETE",
-    "GET",
-    "OPTIONS",
-    "PATCH",
-    "POST",
-    "PUT",
-)
-
-CORS_ALLOW_HEADERS = (
-    "accept",
-    "authorization",
-    "content-type",
-    "user-agent",
-    "x-csrftoken",
-    "x-requested-with",
-)
-
 # Load environment variables if env.py exists
 if os.path.exists('env.py'):
     import env
@@ -51,9 +26,30 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')  # Use a default only
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-# CORS_ORIGIN_WHITELIST = [
-#     'http://localhost:3000',
-# ]
+ALLOWED_HOSTS = ['*']  # Allow any host
+
+# CORS configuration to allow any origin
+CORS_ALLOW_CREDENTIALS = True  # Keep this if you're using cookies for authentication
+
+CORS_ORIGIN_ALLOW_ALL = True  # Allow all origins
+
+CORS_ALLOW_METHODS = (
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+)
+
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -82,7 +78,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Ensure this is at the top
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
