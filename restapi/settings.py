@@ -78,9 +78,7 @@ CORS_ALLOW_CREDENTIALS = True  # Keep this if you're using cookies for authentic
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'http://localhost:3000/upload/'
-    'localhost:3000/upload/'
+    'https://housegram-a32010bfbf12.herokuapp.com',
 ]
 
 CORS_ALLOW_HEADERS = [
