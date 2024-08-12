@@ -30,7 +30,8 @@ DEBUG = 'DEV' in os.environ
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    'housegram-rest-api-de7c6ab4d6fb.herokuapp.com'
+    'housegram-rest-api-de7c6ab4d6fb.herokuapp.com',
+    # Add your production domain here
 ]
 
 INSTALLED_APPS = [
@@ -74,13 +75,26 @@ MIDDLEWARE = [
 
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "http://localhost:3000",
-    "https://housegram-a32010bfbf12.herokuapp.com",
+    "http://localhost:3000",  # React frontend
+    "https://housegram-a32010bfbf12.herokuapp.com",  # Production frontend
 ]
 
 CORS_ALLOW_CREDENTIALS = True  # Allow credentials (cookies) to be sent with requests
+
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+]
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+    'HEAD',
+]
 
 ROOT_URLCONF = 'restapi.urls'
 
