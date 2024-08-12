@@ -33,12 +33,11 @@ ALLOWED_HOSTS = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'https://housegram-rest-api-de7c6ab4d6fb.herokuapp.com'
 ]
 
 # CORS configuration to allow any origin
 CORS_ALLOW_CREDENTIALS = True  # Keep this if you're using cookies for authentication
-
-CORS_ORIGIN_ALLOW_ALL = True  # Allow all origins
 
 CORS_ALLOW_METHODS = [
     'DELETE',
