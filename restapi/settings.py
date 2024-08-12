@@ -31,7 +31,6 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'housegram-rest-api-de7c6ab4d6fb.herokuapp.com',
-    # Add your production domain here
 ]
 
 INSTALLED_APPS = [
@@ -75,8 +74,8 @@ MIDDLEWARE = [
 
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # React frontend
-    "https://housegram-a32010bfbf12.herokuapp.com",  # Production frontend
+    "http://localhost:3000",
+    "https://housegram-rest-api-de7c6ab4d6fb.herokuapp.com",
 ]
 
 CORS_ALLOW_CREDENTIALS = True  # Allow credentials (cookies) to be sent with requests
