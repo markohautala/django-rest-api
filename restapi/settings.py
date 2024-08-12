@@ -26,9 +26,11 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')  # Use a default only
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = [
-    'http://localhost:3000',
-]
+ALLOWED_HOSTS = ['*']
+
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:3000',
+# ]
 
 ALLOWED_HOSTS = ['*']
 
@@ -59,9 +61,9 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # CORS middleware
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,24 +78,24 @@ CORS_ORIGIN_ALLOW_ALL = True  # Temporarily allow all CORS requests
 
 CORS_ALLOW_CREDENTIALS = True  # Keep this if you're using cookies for authentication
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
 ]
-
 CORS_ALLOW_HEADERS = [
-    'content-type',
-    'authorization',
-    'x-csrftoken',
-    'accept',
-    'x-requested-with',
-]
-
-CORS_EXPOSE_HEADERS = [
-    'content-type',
-    'authorization',
-    'x-csrftoken',
-    'accept',
-    'x-requested-with',
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
 ]
 
 ROOT_URLCONF = 'restapi.urls'
