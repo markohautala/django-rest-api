@@ -26,11 +26,13 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')  # Use a default only
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = [
-    'housegram-rest-api-de7c6ab4d6fb.herokuapp.com',
-    'localhost',
-    '127.0.0.1'
-]
+# ALLOWED_HOSTS = [
+#     'housegram-rest-api-de7c6ab4d6fb.herokuapp.com',
+#     'localhost',
+#     '127.0.0.1'
+# ]
+
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -76,10 +78,10 @@ CORS_ORIGIN_ALLOW_ALL = True  # Temporarily allow all CORS requests
 
 CORS_ALLOW_CREDENTIALS = True  # Keep this if you're using cookies for authentication
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-    'https://housegram-a32010bfbf12.herokuapp.com',
-]
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:3000',
+#     'https://housegram-a32010bfbf12.herokuapp.com',
+# ]
 
 CORS_ALLOW_HEADERS = [
     'content-type',
