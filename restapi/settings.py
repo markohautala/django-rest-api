@@ -16,17 +16,22 @@ cloudinary.config(
     cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
     api_key=os.getenv('CLOUDINARY_API_KEY'),
     api_secret=os.getenv('CLOUDINARY_API_SECRET'),
-    secure=True
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')  # Use a default only for development
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = os.getenv('DEV', '0') == '1'
+DEBUG = 'DEV' in os.environ
 
-ALLOWED_HOSTS = ['*']  # Allow any host
+ALLOWED_HOSTS = [
+    'localhost',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
 
 # CORS configuration to allow any origin
 CORS_ALLOW_CREDENTIALS = True  # Keep this if you're using cookies for authentication
@@ -52,10 +57,6 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
-]
-
-CORS_ALLOWED_ORIGIN_REGEXES = [
-r"^https://\w+\.domain\.com$",
 ]
 
 INSTALLED_APPS = [
@@ -118,31 +119,34 @@ TEMPLATES = [
 WSGI_APPLICATION = 'restapi.wsgi.application'
 
 DATABASES = {
-    'default': (
-        {'ENGINE': 'django.db.backends.sqlite3', 'NAME': BASE_DIR / 'db.sqlite3'}
-        if DEBUG
-        else dj_database_url.parse(os.getenv('DATABASE_URL'))
-    )
+    'default': ({
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    } if 'DEV' in os.environ else dj_database_url.parse(
+        os.environ.get('DATABASE_URL')
+    ))
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': [(
         'rest_framework.authentication.SessionAuthentication'
-        if DEBUG
+        if 'DEV' in os.environ
         else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    )],
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %Y',
 }
 
-if not DEBUG:
+if 'DEV' not in os.environ:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
         'rest_framework.renderers.JSONRenderer',
     ]
 
+
 REST_USE_JWT = True
-JWT_AUTH_SECURE = False
+JWT_AUTH_SECURE = not DEBUG # Set to True in production
 JWT_AUTH_COOKIE = 'my-app-auth'
 JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
 JWT_AUTH_SAMESITE = 'None'  # Required for cross-origin cookie sharing
