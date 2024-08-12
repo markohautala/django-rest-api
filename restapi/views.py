@@ -8,7 +8,7 @@ from .settings import (
 @api_view()
 def root_route(request):
     return Response({
-        "message": "Welcome to my drf API!"
+        "message": "Welcome to my Houseposts API!"
     })
 
 @api_view(['POST'])

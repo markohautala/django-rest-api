@@ -17,12 +17,8 @@ class HousePostSerializer(serializers.ModelSerializer):
     house_image = serializers.ImageField()  # Make the image field required
 
     def validate_house_image(self, value):
-        if value.size > 1024 * 1024 * 2:  # 2MB limit for image size
-            raise serializers.ValidationError('Image size too large - max limit is 2MB')
-        if value.content_type not in ['image/jpeg', 'image/png']:  # only JPEG and PNG allowed
-            raise serializers.ValidationError('Image format not supported - only JPEG and PNG allowed')
-        if value.image.width > 4000 or value.image.height > 4000:  # 4000x4000 limit for image dimensions
-            raise serializers.ValidationError('Image dimensions too large - max limit is 4000x4000')
+        if value.size > 1024 * 1024 * 3:  # 3MB limit for image size
+            raise serializers.ValidationError('Image size too large - max limit is 3MB')
         return value
 
     def get_is_user(self, obj):
