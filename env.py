@@ -7,7 +7,7 @@ os.environ['CLOUDINARY_API_SECRET'] = 'YWEpgllzlJTcA7vvJb72F8AVjDU'
 os.environ['CLOUDINARY_URL'] = 'cloudinary://YWEpgllzlJTcA7vvJb72F8AVjDU@dtjbfg6km'
 
 # Development flag
-os.environ['DEV'] = '1'
+os.environ['DEV'] = '0'
 
 # Django environment variables
 os.environ['SECRET_KEY'] = 'a!3xei2o8(*crbiih-4d_-61r1uaqovjt&+t)d81f+)3tccj!9'
