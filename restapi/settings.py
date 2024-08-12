@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'dj_rest_auth.registration',
-    'corsheaders',
+    'corsheaders',  # Added corsheaders app
     'django.contrib.messages',
     'rest_framework.authtoken',
     'cloudinary_storage',
@@ -59,7 +59,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # CORS middleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -71,17 +71,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS configuration
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",
-#     "https://housegram-a32010bfbf12.herokuapp.com",
-# ]
-
-# CORS_ALLOWED_ORIGINS_REGEX = r'^https://.*$'
-
-# CORS_ALLOW_CREDENTIALS = True  # Allow cookies to be sent with requests
-
-# CORS configuration to allow all origins
+# CORS configuration to allow all origins temporarily (for testing purposes)
 CORS_ORIGIN_ALLOW_ALL = True  # Temporarily allow all CORS requests
 
 CORS_ALLOW_CREDENTIALS = True  # Keep this if you're using cookies for authentication
