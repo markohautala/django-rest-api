@@ -27,9 +27,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')  # Use a default only
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
     'housegram-rest-api-de7c6ab4d6fb.herokuapp.com',
+    'localhost',
+    '127.0.0.1'
 ]
 
 INSTALLED_APPS = [
@@ -60,9 +60,9 @@ SITE_ID = 1
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'allauth.account.middleware.AccountMiddleware',
@@ -73,9 +73,11 @@ MIDDLEWARE = [
 
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Your development React app URL
-    "https://housegram-a32010bfbf12.herokuapp.com",  # Your production URL
+    "http://localhost:3000",
+    "https://housegram-a32010bfbf12.herokuapp.com",
 ]
+
+CORS_ALLOWED_ORIGINS_REGEX = r'^https://.*$'
 
 CORS_ALLOW_CREDENTIALS = True  # Allow cookies to be sent with requests
 
