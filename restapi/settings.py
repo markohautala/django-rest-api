@@ -7,6 +7,31 @@ import cloudinary
 import cloudinary.api
 import cloudinary.uploader
 
+# CORS configuration to allow all origins temporarily (for testing purposes)
+CORS_ALLOW_CREDENTIALS = True  # Keep this if you're using cookies for authentication
+
+ALLOWED_HOSTS=['*']
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_METHODS = (
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+)
+
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+)
+
 # Load environment variables if env.py exists
 if os.path.exists('env.py'):
     import env
@@ -26,13 +51,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')  # Use a default only
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
-
 # CORS_ORIGIN_WHITELIST = [
 #     'http://localhost:3000',
 # ]
-
-ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -61,9 +82,9 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # CORS middleware
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -71,31 +92,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-# CORS configuration to allow all origins temporarily (for testing purposes)
-CORS_ORIGIN_ALLOW_ALL = True  # Temporarily allow all CORS requests
-
-CORS_ALLOW_CREDENTIALS = True  # Keep this if you're using cookies for authentication
-
-CORS_ALLOW_METHODS = [
-    "DELETE",
-    "GET",
-    "OPTIONS",
-    "PATCH",
-    "POST",
-    "PUT",
-]
-CORS_ALLOW_HEADERS = [
-    "accept",
-    "accept-encoding",
-    "authorization",
-    "content-type",
-    "dnt",
-    "origin",
-    "user-agent",
-    "x-csrftoken",
-    "x-requested-with",
 ]
 
 ROOT_URLCONF = 'restapi.urls'
