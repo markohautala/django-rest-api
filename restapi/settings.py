@@ -76,6 +76,12 @@ CORS_ORIGIN_ALLOW_ALL = True  # Temporarily allow all CORS requests
 
 CORS_ALLOW_CREDENTIALS = True  # Keep this if you're using cookies for authentication
 
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000/upload/'
+]
+
 CORS_ALLOW_HEADERS = [
     'content-type',
     'authorization',
