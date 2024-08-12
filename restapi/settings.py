@@ -26,7 +26,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = [
+    'https://housegram-rest-api-de7c6ab4d6fb.herokuapp.com/',
     'localhost',
+    '127.0.0.1'
 ]
 
 CORS_ALLOWED_ORIGINS = [
