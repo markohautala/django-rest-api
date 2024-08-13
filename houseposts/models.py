@@ -11,7 +11,7 @@ class HousePost(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     house_title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    house_image = CloudinaryField('house_image')
+    house_image = CloudinaryField('house_image', transformation={"quality": "auto", "fetch_format": "auto"})
 
     class Meta:
         ordering = ['-date_posted']
