@@ -146,10 +146,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'https://housegram-rest-api-de7c6ab4d6fb.herokuapp.com'
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
