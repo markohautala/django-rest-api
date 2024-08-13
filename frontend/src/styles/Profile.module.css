@@ -1,0 +1,35 @@
+.profileCard {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a card effect */
+  max-width: 600px; /* Optional: Adjust the width of the card */
+  margin: 40px auto; /* Center the card on the page */
+}
+
+.profileImage {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%; /* Circular image */
+  object-fit: cover; /* Ensure the image covers the entire circle */
+  margin-right: 20px; /* Space between image and text */
+}
+
+.profileDetails {
+  flex-grow: 1; /* Allow text to grow and take available space */
+}
+
+.profileName {
+  font-size: 2em;
+  margin: 0; /* Remove margin */
+  color: #333; /* Darker text color */
+}
+
+.profileBio {
+  margin-top: 10px; /* Space between name and bio */
+  color: #666; /* Lighter text color for bio */
+  font-size: 1.1em; /* Slightly larger text */
+  line-height: 1.6; /* Improve readability */
+}

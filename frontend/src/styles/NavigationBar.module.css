@@ -1,0 +1,95 @@
+.NavigationBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px;
+  background-color: white; /* Background color */
+  color: rgb(0, 0, 0); /* Text color */
+}
+
+.NavLink {
+  display: flex;
+  align-items: center;
+  color: rgb(0, 0, 0); /* Text color */
+  text-decoration: none; /* Remove underline */
+  padding: 0 10px; /* Adjust spacing as needed */
+}
+
+.NavLink .material-symbols-outlined {
+  margin-right: 5px; /* Space between icon and text */
+  vertical-align: middle; /* Align icons vertically */
+  font-size: 20px; /* Adjust icon size as needed */
+  line-height: 0; /* Reset line-height for the icon */
+  color: royalblue; /* Set the icon color */
+}
+
+/* Optional: Add styling for active links */
+.NavLink.active {
+  font-weight: bold; /* Example of active link styling */
+  color: royalblue; /* Example of active link color */
+  border-bottom: 2px solid royalblue; /* Add a border to show active state */
+}
+
+/* Styles for logo and brand text */
+.NavbarBrand {
+  display: flex;
+  align-items: center;
+}
+
+.BrandLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Remove underline from the link */
+}
+
+.BrandLogo {
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px; /* Spacing between logo and text */
+}
+
+.BrandText {
+  font-size: 1rem; /* Adjust font size as needed */
+  font-weight: bold; /* Make the text bold */
+  color: rgb(0, 0, 0); /* Text color */
+}
+
+/* Optional: Style for logo text on smaller screens */
+@media (max-width: 991px) {
+  .NavbarBrand {
+    flex-direction: column; /* Stack logo and text vertically */
+    text-align: center; /* Center text on smaller screens */
+  }
+
+  .BrandText {
+    font-size: 1rem; /* Adjust font size for smaller screens */
+    margin-top: 5px; /* Add margin above text */
+  }
+}
+
+/* New styles for burger mode */
+@media (max-width: 991px) {
+  .navbar-collapse {
+    background-color: white; /* Background color for burger menu */
+    border-radius: 10px; /* Rounded corners for burger menu */
+    padding: 10px; /* Padding inside the burger menu */
+  }
+
+  .NavLink {
+    padding: 10px 20px; /* Increase padding for better spacing */
+    font-size: 18px; /* Slightly larger text for better readability */
+  }
+
+  .NavLink:not(:last-child) {
+    margin-bottom: 10px; /* Add margin between items */
+  }
+
+  .navbar-toggler {
+    border: none; /* Remove border from the burger icon */
+    outline: none; /* Remove outline on focus */
+  }
+
+  .navbar-toggler-icon {
+    color: black; /* Change burger icon color */
+  }
+}
