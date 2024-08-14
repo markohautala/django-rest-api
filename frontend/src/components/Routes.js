@@ -1,15 +1,14 @@
-// src/components/Routes.jsx
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import SignUpForm from '../pages/auth/SignUpForm.jsx';
-import LogInForm from '../pages/auth/LogInForm.jsx';
+import SignInForm from '../pages/auth/SignInForm.jsx';
 import Profile from '../pages/Profile.jsx';
 import Upload from '../pages/Upload.jsx';
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<LogInForm />} />
+      <Route path="/signin" element={<SignInForm />} />
       <Route path="/create-account" element={<SignUpForm />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/upload" element={<Upload />} />

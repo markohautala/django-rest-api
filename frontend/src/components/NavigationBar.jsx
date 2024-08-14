@@ -5,12 +5,20 @@ import Navbar from "react-bootstrap/Navbar";
 import logo2 from "../assets/logo2.png";
 import styles from "../styles/NavigationBar.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from '../context/AuthContext';
+import { useCurrentUser, useSetCurrentUser } from '../context/CurrentUserContext';
 
 function NavigationBar() {
-  const { isAuthenticated, logout } = useAuth();
+  const currentUser = useCurrentUser();
+  const setCurrentUser = useSetCurrentUser();
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem("authToken");
+    setExpanded(false);
+    navigate("/signin");
+  };
 
   const handleNavClick = (path) => {
     setExpanded(false);
@@ -22,19 +30,14 @@ function NavigationBar() {
       <Container>
         <Navbar.Brand className={styles.NavbarBrand}>
           <NavLink to="/" onClick={() => setExpanded(false)} className={styles.BrandLink}>
-            <img
-              src={logo2}
-              alt="logo"
-              height={50}
-              className={styles.BrandLogo}
-            />
+            <img src={logo2} alt="logo" height={50} className={styles.BrandLogo} />
             <span className={styles.BrandText}>HOUSEGRAM</span>
           </NavLink>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            {isAuthenticated ? (
+            {currentUser ? (
               <>
                 <NavLink to="/" className={styles.NavLink} onClick={() => handleNavClick("/")}>
                   <span className="material-symbols-outlined">home</span> Home
@@ -45,24 +48,16 @@ function NavigationBar() {
                 <NavLink to="/profile" className={styles.NavLink} onClick={() => handleNavClick("/profile")}>
                   <span className="material-symbols-outlined">account_box</span> Profile
                 </NavLink>
-                <NavLink
-                  to="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    logout();
-                    setExpanded(false);
-                  }}
-                  className={styles.NavLink}
-                >
+                <NavLink to="#" onClick={handleLogout} className={styles.NavLink}>
                   <span className="material-symbols-outlined">logout</span> Logout
                 </NavLink>
               </>
             ) : (
               <>
-                <NavLink to="/login" className={styles.NavLink} onClick={() => handleNavClick("/login")}>
+                <NavLink to="/signin" className={styles.NavLink} onClick={() => handleNavClick("/signin")}>
                   <span className="material-symbols-outlined">key</span> Login
                 </NavLink>
-                <NavLink to="/create-account" className={styles.NavLink} onClick={() => handleNavClick("/create-account")}>
+                <NavLink to="/signup" className={styles.NavLink} onClick={() => handleNavClick("/signup")}>
                   <span className="material-symbols-outlined">person_add</span> Create Account
                 </NavLink>
               </>

@@ -4,6 +4,7 @@ from .settings import (
     JWT_AUTH_COOKIE, JWT_AUTH_REFRESH_COOKIE, JWT_AUTH_SAMESITE,
     JWT_AUTH_SECURE,
 )
+from dj_rest_auth.views import LoginView
 
 @api_view()
 def root_route(request):
@@ -33,3 +34,7 @@ def logout_route(request):
         secure=JWT_AUTH_SECURE,
     )
     return response
+
+class CustomLoginView(LoginView):
+    def get(self, request, *args, **kwargs):
+        return Response({"detail": "Method 'GET' not allowed."}, status=405)
