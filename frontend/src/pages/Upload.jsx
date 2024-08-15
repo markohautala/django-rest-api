@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Container from 'react-bootstrap/Container';
+import { Form, Button, Image, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import loadingGif from '../assets/loading.gif'; // Updated path
+import styles from '../styles/SignInUpForm.module.css'; // Updated path
 
 function Upload() {
   const [postData, setPostData] = useState({
@@ -17,6 +15,7 @@ function Upload() {
 
   const { house_title, description, house_image } = postData;
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -27,16 +26,43 @@ function Upload() {
   };
 
   const handleImageChange = (event) => {
-    if (event.target.files.length) {
+    const file = event.target.files[0];
+    if (file) {
+      if (house_image) {
+        URL.revokeObjectURL(house_image);
+      }
+
       setPostData({
         ...postData,
-        house_image: event.target.files[0],
+        house_image: file,
       });
+
+      setErrors({
+        ...errors,
+        house_image: '',
+      });
+    }
+  };
+
+  const handleRemoveImage = () => {
+    if (house_image) {
+      URL.revokeObjectURL(house_image);
+    }
+    setPostData({
+      ...postData,
+      house_image: null,
+    });
+
+    const fileInput = document.getElementById('image-upload');
+    if (fileInput) {
+      fileInput.value = '';
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
+    setErrors({});
 
     const formData = new FormData();
     formData.append('house_title', house_title);
@@ -57,66 +83,131 @@ function Upload() {
       navigate('/'); // Redirect to homepage after successful upload
     } catch (err) {
       setErrors(err.response?.data || { non_field_errors: ["Something went wrong, please try again."] });
+    } finally {
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    return () => {
+      if (house_image) {
+        URL.revokeObjectURL(house_image);
+      }
+    };
+  }, [house_image]);
+
   return (
-    <Row>
-      <Col md={6} className="mx-auto">
-        <Container className="p-4">
-          <h1>Upload a New House Post</h1>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="house_title">
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="text"
-                name="house_title"
-                value={house_title}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            {errors.house_title?.map((message, idx) => (
-              <div key={idx} className="text-danger">
-                {message}
-              </div>
-            ))}
-            <Form.Group controlId="description">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="description"
-                value={description}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            {errors.description?.map((message, idx) => (
-              <div key={idx} className="text-danger">
-                {message}
-              </div>
-            ))}
-            <Form.Group controlId="house_image">
-              <Form.Label>House Image</Form.Label>
-              <Form.Control
-                type="file"
-                name="house_image"
-                onChange={handleImageChange}
-                required
-              />
-            </Form.Group>
-            {errors.house_image?.map((message, idx) => (
-              <div key={idx} className="text-danger">
-                {message}
-              </div>
-            ))}
-            <Button className="mt-3" type="submit">
-              Upload
-            </Button>
-          </Form>
-        </Container>
-      </Col>
-    </Row>
+    <Container className="mt-5">
+      {loading && (
+        <div className={styles.loadingOverlay}>
+          <img src={loadingGif} alt="Loading..." className={styles.loadingSpinner} />
+        </div>
+      )}
+      <div className="card p-4" style={{ borderRadius: '10px' }}>
+        <Form onSubmit={handleSubmit}>
+          <Row>
+            <Col xs={12} md={4} className="d-flex flex-column align-items-center mb-4 mb-md-0">
+              <Form.Group className="text-center">
+                {house_image ? (
+                  <>
+                    <figure onClick={() => document.getElementById('image-upload').click()} style={{ cursor: 'pointer' }}>
+                      <Image
+                        src={URL.createObjectURL(house_image)}
+                        rounded
+                        style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                      />
+                    </figure>
+                    <div className="d-flex flex-column align-items-center">
+                      <Button
+                        variant="outline-primary"
+                        className="mt-2"
+                        onClick={() => document.getElementById('image-upload').click()}
+                      >
+                        Change the image
+                      </Button>
+                      <Button
+                        variant="outline-danger"
+                        className="mt-2"
+                        onClick={handleRemoveImage}
+                      >
+                        Remove Image
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <Form.Label
+                    className="d-flex flex-column align-items-center"
+                    htmlFor="image-upload"
+                    style={{
+                      width: '100%',
+                      height: '200px',
+                      border: '2px dashed #ccc',
+                      borderRadius: '10px',
+                      backgroundColor: '#f8f9fa',
+                      justifyContent: 'center',
+                      display: 'flex',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: '48px', color: '#6c757d' }}>
+                      add_photo_alternate
+                    </span>
+                    <p className="mt-2 text-center" style={{ color: '#6c757d' }}>
+                      Click or tap to upload image of dream house
+                    </p>
+                  </Form.Label>
+                )}
+                <Form.Control
+                  type="file"
+                  id="image-upload"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                />
+                {errors.house_image && <Form.Text className="text-danger">{errors.house_image}</Form.Text>}
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={8}>
+              <Form.Group>
+                <Form.Label htmlFor="house_title">Title</Form.Label>
+                <Form.Control
+                  type="text"
+                  id="house_title"
+                  name="house_title"
+                  value={house_title}
+                  onChange={handleChange}
+                  placeholder="Enter a title"
+                  required
+                  autoComplete="off"
+                />
+                {errors.house_title && <Form.Text className="text-danger">{errors.house_title}</Form.Text>}
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="description">Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  id="description"
+                  name="description"
+                  value={description}
+                  onChange={handleChange}
+                  placeholder="Write a description"
+                  required
+                  autoComplete="off"
+                />
+                {errors.description && <Form.Text className="text-danger">{errors.description}</Form.Text>}
+              </Form.Group>
+
+              <Button variant="dark" type="submit">
+                Add Housepost
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+    </Container>
   );
 }
 
