@@ -1,19 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Form from "react-bootstrap/Form";
-import Alert from "react-bootstrap/Alert";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Container from "react-bootstrap/Container";
-import Image from "react-bootstrap/Image"; // Add this import
 import { useNavigate } from "react-router-dom";
-import styles from "../../styles/SignInUpForm.module.css";
-import btnStyles from "../../styles/Button.module.css";
-import appStyles from "../../App.module.css";
-import { Link } from 'react-router-dom';
 import { useRedirect } from "../../hooks/useRedirect";
+import loadingGif from "../../assets/loading.gif";
+import styles from "../../styles/SignInUpForm.module.css";
 
 function SignUpForm() {
   useRedirect("loggedIn");
@@ -24,6 +15,9 @@ function SignUpForm() {
   });
   const { username, password1, password2 } = signUpData;
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -35,104 +29,125 @@ function SignUpForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setErrors({});
+    setLoading(true);
 
-    const csrfToken = Cookies.get('csrftoken');
+    if (password1 !== password2) {
+      setErrors({ non_field_errors: ["The passwords don't match"] });
+      setLoading(false);
+      return;
+    }
+
+    const csrfToken = Cookies.get("csrftoken");
 
     try {
       await axios.post("/dj-rest-auth/registration/", signUpData, {
         headers: {
-          'X-CSRFToken': csrfToken,
+          "X-CSRFToken": csrfToken,
         },
       });
-      navigate.push("/login");
+      navigate("/login");
     } catch (err) {
-      setErrors(err.response?.data);
+      setErrors(err.response?.data || { non_field_errors: ["An error occurred. Please try again."] });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Row className={styles.Row}>
-      <Col className="my-auto py-2 p-md-2" md={6}>
-        <Container className={`${appStyles.Content} p-4 `}>
-          <h1 className={styles.Header}>sign up</h1>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="username">
-              <Form.Label className="d-none">username</Form.Label>
-              <Form.Control
-                className={styles.Input}
+    <div className="container mt-5">
+      {loading && (
+        <div className={styles.loadingOverlay}>
+          <img src={loadingGif} alt="Loading..." className={styles.loadingSpinner} />
+        </div>
+      )}
+      <div className="row justify-content-center">
+        <div className="col-md-4">
+          <h2 className="text-center mb-4">Create an account</h2>
+          {errors.non_field_errors?.map((message, idx) => (
+            <div key={idx} className="alert alert-warning" role="alert">
+              {message}
+            </div>
+          ))}
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="username" className="form-label">Username</label>
+              <input
                 type="text"
-                placeholder="Username"
+                className="form-control"
+                id="username"
                 name="username"
                 value={username}
                 onChange={handleChange}
+                required
               />
-            </Form.Group>
-            {errors.username?.map((message, idx) => (
-              <Alert variant="warning" key={idx}>
-                {message}
-              </Alert>
-            ))}
-            <Form.Group controlId="password1">
-              <Form.Label className="d-none">Password</Form.Label>
-              <Form.Control
-                className={styles.Input}
-                type="password"
-                placeholder="Password"
+              {errors.username?.map((message, idx) => (
+                <div key={idx} className="alert alert-warning mt-2" role="alert">
+                  {message}
+                </div>
+              ))}
+            </div>
+            <div className="mb-3 position-relative">
+              <label htmlFor="password1" className="form-label">Password</label>
+              <input
+                type={showPassword ? "text" : "password"}
+                className="form-control"
+                id="password1"
                 name="password1"
                 value={password1}
                 onChange={handleChange}
+                required
               />
-            </Form.Group>
-            {errors.password1?.map((message, idx) => (
-              <Alert key={idx} variant="warning">
-                {message}
-              </Alert>
-            ))}
-            <Form.Group controlId="password2">
-              <Form.Label className="d-none">Confirm password</Form.Label>
-              <Form.Control
-                className={styles.Input}
-                type="password"
-                placeholder="Confirm password"
+              <span
+                className="material-symbols-outlined position-absolute"
+                style={{ top: "40px", right: "10px", cursor: "pointer" }}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "visibility_off" : "visibility"}
+              </span>
+              {errors.password1?.map((message, idx) => (
+                <div key={idx} className="alert alert-warning mt-2" role="alert">
+                  {message}
+                </div>
+              ))}
+            </div>
+            <div className="mb-3 position-relative">
+              <label htmlFor="password2" className="form-label">Confirm Password</label>
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                className="form-control"
+                id="password2"
                 name="password2"
                 value={password2}
                 onChange={handleChange}
+                required
               />
-            </Form.Group>
-            {errors.password2?.map((message, idx) => (
-              <Alert key={idx} variant="warning">
-                {message}
-              </Alert>
-            ))}
-            <Button
-              className={`${btnStyles.Button} ${btnStyles.Wide} ${btnStyles.Bright}`}
-              type="submit"
-            >
-              Sign up
-            </Button>
-            {errors.non_field_errors?.map((message, idx) => (
-              <Alert key={idx} variant="warning" className="mt-3">
-                {message}
-              </Alert>
-            ))}
-          </Form>
-        </Container>
-        <Container className={`mt-3 ${appStyles.Content}`}>
-          <Link className={styles.Link} to="/login">
-            Already have an account? <span>Sign in</span>
-          </Link>
-        </Container>
-      </Col>
-      <Col
-        md={6}
-        className={`my-auto d-none d-md-block p-2 ${styles.SignUpCol}`}
-      >
-        <Image
-          className={`${appStyles.FillerImage}`}
-          src={"https://codeinstitute.s3.amazonaws.com/AdvancedReact/hero2.jpg"}
-        />
-      </Col>
-    </Row>
+              <span
+                className="material-symbols-outlined position-absolute"
+                style={{ top: "40px", right: "10px", cursor: "pointer" }}
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? "visibility_off" : "visibility"}
+              </span>
+              {errors.password2?.map((message, idx) => (
+                <div key={idx} className="alert alert-warning mt-2" role="alert">
+                  {message}
+                </div>
+              ))}
+            </div>
+            <button type="submit" className="btn btn-dark w-100">Sign Up</button>
+          </form>
+
+          <button
+            onClick={() => navigate("/login")}
+            className="btn btn-white mt-3 w-100"
+            style={{ backgroundColor: "white", color: "black", border: "1px solid black" }}
+          >
+            Already have an account? Log in
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
