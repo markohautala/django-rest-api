@@ -17,7 +17,7 @@ function NavigationBar() {
     setCurrentUser(null);
     localStorage.removeItem("authToken");
     setExpanded(false);
-    navigate("/signin");
+    navigate("/login");
   };
 
   const handleNavClick = (path) => {
@@ -54,10 +54,10 @@ function NavigationBar() {
               </>
             ) : (
               <>
-                <NavLink to="/signin" className={styles.NavLink} onClick={() => handleNavClick("/signin")}>
+                <NavLink to="/login" className={styles.NavLink} onClick={() => handleNavClick("/login")}>
                   <span className="material-symbols-outlined">key</span> Login
                 </NavLink>
-                <NavLink to="/signup" className={styles.NavLink} onClick={() => handleNavClick("/signup")}>
+                <NavLink to="/create-account" className={styles.NavLink} onClick={() => handleNavClick("/create-account")}>
                   <span className="material-symbols-outlined">person_add</span> Create Account
                 </NavLink>
               </>

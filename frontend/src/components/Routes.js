@@ -1,18 +1,19 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import SignUpForm from '../pages/auth/SignUpForm.jsx';
-import SignInForm from '../pages/auth/SignInForm.jsx';
+import CreateAccountForm from '../pages/auth/CreateAccountForm.jsx';
+import LogInForm from '../pages/auth/LogInForm.jsx';
 import Profile from '../pages/Profile.jsx';
 import Upload from '../pages/Upload.jsx';
+import Home from '../components/Home.jsx';
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/signin" element={<SignInForm />} />
-      <Route path="/create-account" element={<SignUpForm />} />
+      <Route path="/login" element={<LogInForm />} />
+      <Route path="/create-account" element={<CreateAccountForm />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/upload" element={<Upload />} />
-      <Route path="/" element={<h1>Home</h1>} />
+      <Route path="/" element={<Home />} />
       <Route path="*" element={<h1>404 Not Found</h1>} />
     </Routes>
   );
