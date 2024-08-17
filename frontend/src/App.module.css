@@ -7,6 +7,6 @@
 }
 
 .Main {
-  padding-top: 90px;
+  padding-top: 90px; /* Ensures space at the top of all pages under navbar */
   padding-bottom: 60px; /* Ensures space at the bottom of all pages */
 }

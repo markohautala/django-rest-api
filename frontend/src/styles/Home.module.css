@@ -1,0 +1,60 @@
+/* Home.module.css */
+
+/* Override Bootstrap's default accordion button styles */
+.accordion-button {
+  background-color: transparent !important; /* Remove the blue background */
+  color: rgb(0, 0, 0); /* Ensure text color remains black */
+  border: none; /* Remove any border */
+  outline: none; /* Remove focus outline */
+  box-shadow: none; /* Remove box-shadow on focus */
+}
+
+.accordion-button:not(.collapsed) {
+  color: rgb(0, 0, 0); /* Ensure text color remains black when expanded */
+  background-color: transparent !important; /* Remove blue background when expanded */
+}
+
+.accordion-button::after {
+  filter: invert(0%); /* Adjust the arrow icon color if needed */
+}
+
+.AccordionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  color: rgb(0, 0, 0); /* Text color */
+  text-decoration: none; /* Remove underline */
+  padding: 0 10px; /* Adjust spacing as needed */
+  font-weight: 600; /* Match the weight of the submit button text */
+  font-size: 16px; /* Adjust font size to match the button text */
+  border: none; /* Remove border */
+}
+
+.AccordionHeader .material-symbols-outlined {
+  margin-right: 5px; /* Space between icon and text */
+  vertical-align: middle; /* Align icons vertically */
+  font-size: 20px; /* Adjust icon size as needed */
+  line-height: 0; /* Reset line-height for the icon */
+  color: royalblue; /* Set the icon color */
+}
+
+.SubmitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  color: white;
+  padding: 10px 20px; /* Adjust padding for button */
+  border: none;
+  border-radius: 5px;
+  font-weight: 600; /* Set font weight to a medium value */
+  cursor: pointer;
+}
+
+.SubmitButton .material-symbols-outlined {
+  margin-left: 5px; /* Space between text and icon */
+  vertical-align: middle; /* Align icon vertically */
+  font-size: 20px; /* Adjust icon size as needed */
+  line-height: 0; /* Reset line-height for the icon */
+  color: white; /* Set the icon color */
+}

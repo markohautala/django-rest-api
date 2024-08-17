@@ -16,13 +16,13 @@ Deployed URL:
 
 #### Possible future features
 
+logged in / authenticated user could have a navbar link that says "househearts" and when the user clicks on that, the user is navigated to a page where the user can see all the posts that the user has "house-hearted".
+
 ## Testing
 
 ### Lighthouse Testing
 
 ### Resolved Bugs
-
-# Bug Report
 
 This document outlines the bugs encountered during the development process and the solutions implemented to resolve them.
 
@@ -52,7 +52,14 @@ When the frontend and backend were separated into different repositories, persis
 The issue was resolved by following the Code Institute guide on merging the frontend with the backend into a single repository. Proper CORS configuration was implemented, which allowed seamless communication between the frontend and backend, resolving the 403 errors.
 
 
-### Bug #4:
+### Bug #4: Persistent Login After Logout and CSRF Token Issues
+
+**Description:**
+After logging out, users were still logged in upon refreshing the page due to persistent JWT tokens and session cookies. Additionally, CSRF tokens were not being set properly, causing issues with logout functionality.
+
+**Solution:**
+The issue was resolved by adding a Django view to explicitly set the CSRF token when the frontend loads and updating the logout process to clear JWT tokens, session cookies, and other relevant authentication data on both the server and client sides. This ensured that users were fully logged out and prevented automatic re-login upon page refresh.
+
 
 ### Bug #5:
 
@@ -73,15 +80,40 @@ The issue was resolved by following the Code Institute guide on merging the fron
 ## Deployment procedure
 
 ### Forking and Cloning the Project - steps
+##### Forking and Cloning the Project
+##### To deploy this Django + React project, follow these steps to fork and clone the repository:
 
-#### Deploying on Heroku steps
+#### Fork the Repository:
+
+- Go to the project's GitHub repository at [this page](https://github.com/markohautala/django-auth-crud-app)
+
+- Click on the Fork button in the upper right corner of the page.
+
+- This will create a copy of the repository under your GitHub account.
+
+#### Clone the Forked Repository:
+
+- Go to the GitHub repository https://github.com/markohautala/django-auth-crud-app
+
+- Locate the Code button above the list of files (next to 'Add file') and click it
+
+- choose a preferred cloning option by selecting either HTTPS or GitHub CLI.
+
+- Open Git Bash
+
+- Change the current working directory to the one where you want the cloned directory
+
+- Type git clone and paste the URL from the clipboard ($ git clone https://github.com/markohautala/django-rest-api.git)
+
+- Press Enter to create your local clone
+
+### Deploying on Heroku steps
 
 ### Setup in the IDE (VS Code)
 
-Since this is a repository with both the frontend and backend in the same folderstructure. You need to create two localhosts development enviroments. You can first click on "New terminal" and then click again to "Split terminal". This creates to terminals. In on of them, type "python manage.py runserver" to start development server on the backend. On the other terminal, type "cd frontend" (go narrow down to the frontend-folder) and then type "npm start" to run the development server on the frontend. Now you should have the backend on http://127.0.0.1:8000/ and the frontend on http://localhost:3000/.
+- Since this is a repository with both the frontend and backend in the same folderstructure. You need to create two localhosts development enviroments. You can first click on "New terminal" and then click again to "Split terminal". This creates to terminals. In on of them, type "python manage.py runserver" to start development server on the backend. On the other terminal, type "cd frontend" (go narrow down to the frontend-folder) and then type "npm start" to run the development server on the frontend. Now you should have the backend on http://127.0.0.1:8000/ and the frontend on http://localhost:3000/.
 
 ## Credits
 
 
 https://react-bootstrap.netlify.app/docs/components/cards
-
