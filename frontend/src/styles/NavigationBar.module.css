@@ -3,7 +3,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 7px;
-  background-color: white; /* Background color */
+  background: rgba(255, 255, 255, 0.6); /* Light background with transparency for glassmorphism */
+  backdrop-filter: blur(10px); /* Blur effect for glassmorphism */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Optional border for definition */
   color: rgb(0, 0, 0); /* Text color */
 }
 
@@ -70,7 +73,8 @@
 /* New styles for burger mode */
 @media (max-width: 991px) {
   .navbar-collapse {
-    background-color: white; /* Background color for burger menu */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for burger menu */
+    backdrop-filter: blur(10px); /* Blur effect for burger menu */
     border-radius: 10px; /* Rounded corners for burger menu */
     padding: 10px; /* Padding inside the burger menu */
   }

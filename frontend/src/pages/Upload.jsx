@@ -114,7 +114,7 @@ function Upload() {
                       <Image
                         src={URL.createObjectURL(house_image)}
                         rounded
-                        style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                        style={{ width: '100%', height: '400px', objectFit: 'cover' }} // Increased height
                       />
                     </figure>
                     <div className="d-flex flex-column align-items-center">
@@ -140,7 +140,7 @@ function Upload() {
                     htmlFor="image-upload"
                     style={{
                       width: '100%',
-                      height: '200px',
+                      height: '400px', // Increased height
                       border: '2px dashed #ccc',
                       borderRadius: '10px',
                       backgroundColor: '#f8f9fa',
@@ -180,6 +180,7 @@ function Upload() {
                   placeholder="Enter a title"
                   required
                   autoComplete="off"
+                  style={{ fontSize: '1.25rem', padding: '10px' }} // Increased font size and padding
                 />
                 {errors.house_title && <Form.Text className="text-danger">{errors.house_title}</Form.Text>}
               </Form.Group>
@@ -188,7 +189,7 @@ function Upload() {
                 <Form.Label htmlFor="description">Description</Form.Label>
                 <Form.Control
                   as="textarea"
-                  rows={3}
+                  rows={5}
                   id="description"
                   name="description"
                   value={description}
@@ -196,11 +197,12 @@ function Upload() {
                   placeholder="Write a description"
                   required
                   autoComplete="off"
+                  style={{ fontSize: '1.25rem', padding: '10px' }} // Increased font size and padding
                 />
                 {errors.description && <Form.Text className="text-danger">{errors.description}</Form.Text>}
               </Form.Group>
 
-              <Button variant="dark" type="submit">
+              <Button variant="dark" type="submit" style={{ fontSize: '1.25rem', padding: '10px 20px' }}>
                 Add Housepost
               </Button>
             </Col>

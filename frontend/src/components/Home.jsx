@@ -1,7 +1,13 @@
 import React from 'react';
+import LandingPage from '../pages/LandingPage'; // Corrected path
+import HousePosts from '../pages/HousePosts'; // Corrected path
 
-function Home() {
-  return <div>Welcome to the Home Page</div>;
+function Home({ isAuthenticated }) {
+  return (
+    <div>
+      {isAuthenticated ? <HousePosts /> : <LandingPage />}
+    </div>
+  );
 }
 
 export default Home;

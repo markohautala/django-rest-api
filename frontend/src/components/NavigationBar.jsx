@@ -6,18 +6,59 @@ import logo2 from "../assets/logo2.png";
 import styles from "../styles/NavigationBar.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useCurrentUser, useSetCurrentUser } from '../context/CurrentUserContext';
+import axios from 'axios';
 
-function NavigationBar() {
+// Function to get CSRF token from cookies
+const getCSRFToken = () => {
+  const csrfToken = document.cookie
+    .split('; ')
+    .find(row => row.startsWith('csrftoken='))
+    ?.split('=')[1];
+  return csrfToken;
+};
+
+function NavigationBar({ isAuthenticated }) {
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    setCurrentUser(null);
-    localStorage.removeItem("authToken");
-    setExpanded(false);
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      const csrfToken = getCSRFToken();
+
+      if (!csrfToken) {
+        console.error("CSRF token not found.");
+        return;
+      }
+
+      await axios.post('/dj-rest-auth/logout/', {}, {
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,  // Ensure credentials are sent with the request
+      });
+
+      // Clear local storage and session storage
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Manually clear cookies
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/");
+      });
+
+      // Set the current user to null in the context
+      setCurrentUser(null);
+
+      // Navigate to the home page
+      navigate("/home");
+    } catch (err) {
+      console.error('Error during logout:', err);
+    }
   };
 
   const handleNavClick = (path) => {
@@ -37,9 +78,9 @@ function NavigationBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            {currentUser ? (
+            {isAuthenticated ? (
               <>
-                <NavLink to="/" className={styles.NavLink} onClick={() => handleNavClick("/")}>
+                <NavLink to="/home" className={styles.NavLink} onClick={() => handleNavClick("/home")}>
                   <span className="material-symbols-outlined">home</span> Home
                 </NavLink>
                 <NavLink to="/upload" className={styles.NavLink} onClick={() => handleNavClick("/upload")}>

@@ -1,5 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import JsonResponse
 from .settings import (
     JWT_AUTH_COOKIE, JWT_AUTH_REFRESH_COOKIE, JWT_AUTH_SAMESITE,
     JWT_AUTH_SECURE,
@@ -14,7 +16,8 @@ def root_route(request):
 
 @api_view(['POST'])
 def logout_route(request):
-    response = Response()
+    response = Response({"message": "Logged out successfully."})
+    # Clear JWT cookies
     response.set_cookie(
         key=JWT_AUTH_COOKIE,
         value='',
@@ -33,7 +36,15 @@ def logout_route(request):
         samesite=JWT_AUTH_SAMESITE,
         secure=JWT_AUTH_SECURE,
     )
+    # Clear session cookie (if using session-based auth)
+    response.delete_cookie('sessionid')
+
     return response
+
+
+@ensure_csrf_cookie
+def set_csrf_token(request):
+    return JsonResponse({'detail': 'CSRF cookie set'})
 
 class CustomLoginView(LoginView):
     def get(self, request, *args, **kwargs):
