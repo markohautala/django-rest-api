@@ -106,7 +106,7 @@ function Upload() {
       <div className="card p-4" style={{ borderRadius: '10px' }}>
         <Form onSubmit={handleSubmit}>
           <Row>
-            <Col xs={12} md={4} className="d-flex flex-column align-items-center mb-4 mb-md-0">
+            <Col xs={12} md={12} lg={4} className="d-flex flex-column align-items-center mb-4">
               <Form.Group className="text-center">
                 {house_image ? (
                   <>
@@ -114,7 +114,7 @@ function Upload() {
                       <Image
                         src={URL.createObjectURL(house_image)}
                         rounded
-                        style={{ width: '100%', height: '400px', objectFit: 'cover' }} // Increased height
+                        style={{ width: '100%', height: '400px', objectFit: 'cover' }}
                       />
                     </figure>
                     <div className="d-flex flex-column align-items-center">
@@ -140,7 +140,7 @@ function Upload() {
                     htmlFor="image-upload"
                     style={{
                       width: '100%',
-                      height: '400px', // Increased height
+                      height: '400px',
                       border: '2px dashed #ccc',
                       borderRadius: '10px',
                       backgroundColor: '#f8f9fa',
@@ -153,7 +153,7 @@ function Upload() {
                       add_photo_alternate
                     </span>
                     <p className="mt-2 text-center" style={{ color: '#6c757d' }}>
-                      Click or tap to upload image of dream house
+                      Click or tap to upload image of your dream house
                     </p>
                   </Form.Label>
                 )}
@@ -168,7 +168,7 @@ function Upload() {
               </Form.Group>
             </Col>
 
-            <Col xs={12} md={8}>
+            <Col xs={12} md={12} lg={8}>
               <Form.Group>
                 <Form.Label htmlFor="house_title">Title</Form.Label>
                 <Form.Control
@@ -180,7 +180,7 @@ function Upload() {
                   placeholder="Enter a title"
                   required
                   autoComplete="off"
-                  style={{ fontSize: '1.25rem', padding: '10px' }} // Increased font size and padding
+                  style={{ fontSize: '1.25rem', padding: '10px' }}
                 />
                 {errors.house_title && <Form.Text className="text-danger">{errors.house_title}</Form.Text>}
               </Form.Group>
@@ -197,7 +197,7 @@ function Upload() {
                   placeholder="Write a description"
                   required
                   autoComplete="off"
-                  style={{ fontSize: '1.25rem', padding: '10px' }} // Increased font size and padding
+                  style={{ fontSize: '1.25rem', padding: '10px' }}
                 />
                 {errors.description && <Form.Text className="text-danger">{errors.description}</Form.Text>}
               </Form.Group>

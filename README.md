@@ -9,18 +9,109 @@ Deployed URL:
 
 
 ## How to use the application
+- As a user, you can visit hte given deployed url, and from there you can either create a new account, or log in with an existing one. To create and account, navigate to the create account page by clicking in the navigation bar on "create account". Then you will be redirected to the form to create you account. Type in our desired username and create a password - you will be prompted to re-type it, just to make sure they are the same. Remember this password. If the account-creation is successful, you will be redirected to the login-page, whee you now need to login in. On sucessful login, you will be redirected to the "homepage". Here you can see the other users posts from the application.
+
+To be able to create your own housepost and to shre your own dreamhome, navigate to "upload" on the navigationbar - click on the link. Now you will be redirected to the upload page where you can enter a image of your own. The maximum sixe is 4mb on the image size. You also need to add a short title and description of your own. After you feel satisfied with your draft of a housepost, click the submit button. Upon success, you will be redirected to the homepage where you now can see your newly created housepost.
+
+You can also on the homepage look at other peoples houseposts and give them likes or "househearts". You can also add comments that are kind and nice and also read and look at other peoples comments. If you want to delete your comment, you can hover over your own comment and click on the delete button - this will permanently delete the existing comment.
+
+You have your own profile and you can navigate to it using the navigation bar and click on "Profile". On that page, you can now see a image (for now placeholder image - since you have yet to upload such), and you can also see a field for username and description. You can edit them aswell bu clicking on those buttons and click save. You can aswell upload your own avatar image.
+
+
 
 ## Features
+
+### Database Models
+
+The HousePost application includes several key database models that define the structure and relationships of the data. Below is an overview of each model and how they are connected.
+
+#### 1. UserProfile
+
+**Purpose**:
+The `UserProfile` model stores additional information about users that extends the default Django `User` model.
+
+**Fields**:
+- `user`: A one-to-one relationship with Django's built-in `User` model.
+- `date_created`: The date and time when the profile was created.
+- `date_updated`: The date and time when the profile was last updated.
+- `display_name`: A custom name that the user can display.
+- `bio`: A short biography or description written by the user.
+- `profile_picture`: A profile picture uploaded by the user, managed by Cloudinary.
+
+**Relationships**:
+- The `UserProfile` model is directly linked to the `User` model via a one-to-one relationship. Each user has one profile.
+
+#### 2. HousePost
+
+**Purpose**:
+The `HousePost` model represents posts created by users about houses. These posts include details such as the title, description, and an image of the house.
+
+**Fields**:
+- `user`: A foreign key linking each post to a specific user.
+- `date_posted`: The date and time when the post was created.
+- `date_modified`: The date and time when the post was last updated.
+- `house_title`: The title of the house post.
+- `description`: A detailed description of the house.
+- `house_image`: An image of the house, managed by Cloudinary.
+
+**Relationships**:
+- Each `HousePost` is linked to one user via a foreign key (`user`). This establishes a many-to-one relationship where a single user can have multiple posts.
+
+#### 3. HouseHeart
+
+**Purpose**:
+The `HouseHeart` model represents a "like" or "heart" that a user gives to a specific house post.
+
+**Fields**:
+- `user`: A foreign key linking the heart to the user who liked the post.
+- `housepost`: A foreign key linking the heart to the specific house post that was liked.
+- `timestamp_created`: The date and time when the heart was created.
+
+**Relationships**:
+- Each `HouseHeart` is linked to both a user and a house post via foreign keys. This establishes a many-to-one relationship where a single post can have many hearts, and a single user can like multiple posts.
+- The combination of `user` and `housepost` is unique, ensuring that a user can only like a specific post once.
+
+#### 4. HousePostComment
+
+**Purpose**:
+The `HousePostComment` model stores comments made by users on house posts.
+
+**Fields**:
+- `user`: A foreign key linking the comment to the user who made it.
+- `housepost`: A foreign key linking the comment to the specific house post it was made on.
+- `timestamp_created`: The date and time when the comment was created.
+- `timestamp_modified`: The date and time when the comment was last updated.
+- `comment`: The content of the comment.
+
+**Relationships**:
+- Each `HousePostComment` is linked to both a user and a house post via foreign keys. This creates a many-to-one relationship where a single post can have many comments, and a single user can comment on multiple posts.
+
+#### Summary of Relationships
+
+- **UserProfile** is a one-to-one extension of the `User` model.
+- **HousePost** is related to `User` via a many-to-one relationship.
+- **HouseHeart** and **HousePostComment** are each related to both `User` and `HousePost` via many-to-one relationships.
+
+These models work together to create a robust structure for managing user profiles, posts about houses, user interactions (likes/house-hearts), and user-generated comments.
+
 
 #### UX design decisions
 
 #### Possible future features
 
-logged in / authenticated user could have a navbar link that says "househearts" and when the user clicks on that, the user is navigated to a page where the user can see all the posts that the user has "house-hearted".
+- logged in / authenticated user could have a navbar link that says "househearts" and when the user clicks on that, the user is navigated to a page where the user can see all the posts that the user has "house-hearted".
+
+- A featue that would be good to possibly apply in the future would be the ability to search other users. Right now the "feed" or the homepage lists all the houseposts in the database. So, the ability to follow other users and that the feed/home-page would only display those profile's posts, that would definetily be a cosiderable feature in the future.
+
+- A notification system giving the users notifications when other users give "house-hearts"/likes or comments on ones own posts - boosting the possibility for users to return to the website and post more houseposts and this would eventually make the community grow and self-reminding the webpage to users aout it's existance.
+
+- Right now, the application is just for the purpose of a portfolio project - but if this would eventually become a commercial application, there would be the need of a admin, staff or system in place that would check and approve if the houseposts contains a image of a house. If not, there would be a problem if users expect house-related images and posts but recieve something else. 
+
+
 
 ## Testing
-
 ### Lighthouse Testing
+
 
 ### Resolved Bugs
 
@@ -70,17 +161,21 @@ The issue was resolved by adding a Django view to explicitly set the CSRF token 
 ### Bug #8:
 
 ### Unsolved bugs
+- Currently there are no unsolved bugs - but there are features that would be considered "good to add" to the application but there are no unresolved bugs or errors in the application that are known.
 
 ### Validator testing
 
 ### Languages and Frameworks used
+- Backend is built with Django REST framework
+- Frontend is built with React
+- Styling and grid-layout on the frontend is applied with react-bootstrap
+- Custom CSS and HTML has been added aswell.
 
 ### Manual testing write up
 
 ## Deployment procedure
 
 ### Forking and Cloning the Project - steps
-##### Forking and Cloning the Project
 ##### To deploy this Django + React project, follow these steps to fork and clone the repository:
 
 #### Fork the Repository:
@@ -107,13 +202,23 @@ The issue was resolved by adding a Django view to explicitly set the CSRF token 
 
 - Press Enter to create your local clone
 
-### Deploying on Heroku steps
-
 ### Setup in the IDE (VS Code)
 
 - Since this is a repository with both the frontend and backend in the same folderstructure. You need to create two localhosts development enviroments. You can first click on "New terminal" and then click again to "Split terminal". This creates to terminals. In on of them, type "python manage.py runserver" to start development server on the backend. On the other terminal, type "cd frontend" (go narrow down to the frontend-folder) and then type "npm start" to run the development server on the frontend. Now you should have the backend on http://127.0.0.1:8000/ and the frontend on http://localhost:3000/.
 
 ## Credits
+#### Resources used
+- For the react-bootstrap elements, this porject has gotten it's information and content from the react-bootstrap documentation: https://react-bootstrap.netlify.app/docs/
 
+- Icons for the page has been gotten from Google Icons: https://favicon.io/favicon-converter/
 
-https://react-bootstrap.netlify.app/docs/components/cards
+- The custom loading icon that has been applied to the different react-pages that use POST or GET requests (in submitting forms for example), then there is a loading gif that has been applied. This loading icon was generated with: https://loading.io/
+
+- Secret key generator for Django (in orde to create a new secet key for the backend): https://djecrety.ir/
+
+- The database diagram in this README has been made using this resource: https://dbdiagram.io/home
+
+- The househeart icons for the liked and not-liked icons are gotten from this free resource: https://www.flaticon.com/search?word=house%20heart
+
+#### Other credits
+- Inspiration for this application and for some of the features has been gotten from Code Institues walktrough project called "Moments". But in order to make it custom to my projects scope and needs, there has been significant customization made to all the models, views, react-code, UX-design, feature and naming convention troughout the whole application. But, initial inspiration for this project idea was achieved by doing the walktrough project from Code Institute. But just to clarify, this project has it's own uniqueness and my personal toucht it.

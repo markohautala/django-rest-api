@@ -58,3 +58,21 @@
   line-height: 0; /* Reset line-height for the icon */
   color: white; /* Set the icon color */
 }
+
+/* Glassmorphism Div */
+.glassmorphismDiv {
+  position: absolute;
+  top: 10px; /* Adjust the position of the glassmorphism div */
+  left: 10px;
+  width: 120px; /* Set the square size */
+  height: 35px;
+  background: rgba(255, 255, 255, 0.2); /* Light frosted glass effect */
+  border-radius: 2px;
+  backdrop-filter: blur(10px); /* Apply blur to the background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #fff;
+  font-weight: bold;
+}
