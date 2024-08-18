@@ -77,16 +77,6 @@ function HousePosts() {
     }
   };
 
-  const fetchUserProfile = async (userId) => {
-    try {
-      const response = await axios.get(`http://127.0.0.1:8000/userprofiles/?user=${userId}`);
-      return response.data.results[0].profile_picture || placeholderImage;
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-      return placeholderImage;
-    }
-  };
-
   const containerStyle = {
     width: '75%', // Default for larger screens
     margin: '0 auto',
@@ -157,17 +147,7 @@ function HousePosts() {
                 />
               </button>
               <div className="d-flex align-items-center">
-                <img
-                  src={placeholderImage} // Use the placeholder initially
-                  className="rounded-circle me-2"
-                  alt="User Avatar"
-                  style={{ width: '40px', height: '40px' }}
-                  onLoad={async (e) => {
-                    const userProfileImage = await fetchUserProfile(post.user);
-                    e.target.src = userProfileImage;
-                  }}
-                />
-                <div>{post.user}</div>
+                <div><strong>User:</strong> {post.user}</div>
               </div>
             </div>
           </div>
@@ -221,16 +201,26 @@ function HousePosts() {
 
       <div className="d-flex justify-content-between mt-4">
         <button
-          className="btn btn-secondary"
+          className="btn"
           onClick={handlePreviousPage}
           disabled={!previousPage}
+          style={{
+            backgroundColor: previousPage ? 'black' : 'grey',
+            color: 'white',
+            borderColor: 'transparent',
+          }}
         >
           Previous
         </button>
         <button
-          className="btn btn-primary"
+          className="btn"
           onClick={handleNextPage}
           disabled={!nextPage}
+          style={{
+            backgroundColor: nextPage ? 'black' : 'grey',
+            color: 'white',
+            borderColor: 'transparent',
+          }}
         >
           Next
         </button>
