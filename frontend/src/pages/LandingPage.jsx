@@ -20,11 +20,11 @@ function LandingPage() {
   const [index, setIndex] = useState(0);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    localStorage.clear();
-    sessionStorage.clear();
-    console.log("Cleared local storage and session storage");
-  }, []);
+  // useEffect(() => {
+  //   localStorage.clear();
+  //   sessionStorage.clear();
+  //   console.log("Cleared local storage and session storage");
+  // }, []);
 
   const handleSelect = (selectedIndex) => {
     setIndex(selectedIndex);

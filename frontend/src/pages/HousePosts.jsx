@@ -6,6 +6,7 @@ import styles from '../styles/Home.module.css';
 import heartNotLiked from '../assets/househeart-not-liked.png';
 import heartLiked from '../assets/househeart-liked.png';
 import loadingSpinner from '../assets/loading.gif';
+import Comments from './Comments';
 
 const placeholderImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
@@ -14,31 +15,29 @@ function HousePosts() {
   const [nextPage, setNextPage] = useState(null);
   const [previousPage, setPreviousPage] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);  // Add loading state
-  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchHousePosts('http://127.0.0.1:8000/houseposts/');
   }, []);
 
   useEffect(() => {
-    window.scrollTo(0, 0);  // Scroll to the top when page changes
+    window.scrollTo(0, 0);
   }, [nextPage, previousPage]);
 
   const fetchHousePosts = (url) => {
-    setIsLoading(true);  // Start loading
+    setIsLoading(true);
     axios.get(url)
       .then(response => {
-        const posts = response.data.results.map(post => ({ ...post, comments: [] })); // Initialize comments array
+        const posts = response.data.results.map(post => ({ ...post, comments: [] }));
         setHousePosts(posts);
         setNextPage(response.data.next);
         setPreviousPage(response.data.previous);
 
-        // Update the current page number based on the URL
         const pageMatch = url.match(/page=(\d+)/);
         setCurrentPage(pageMatch ? parseInt(pageMatch[1], 10) : 1);
 
-        // Fetch comments for each post
         posts.forEach(post => {
           if (post.housepostcomments_count > 0) {
             fetchCommentsForPost(post.id);
@@ -46,7 +45,7 @@ function HousePosts() {
         });
       })
       .finally(() => {
-        setIsLoading(false);  // End loading
+        setIsLoading(false);
       })
       .catch(error => console.error('Error fetching house posts:', error));
   };
@@ -54,12 +53,16 @@ function HousePosts() {
   const fetchCommentsForPost = (postId) => {
     axios.get(`http://127.0.0.1:8000/housepostcomments/?housepost=${postId}`)
       .then(response => {
+        // Ensure that the response data only includes comments with the matching housepost ID
+        const filteredComments = response.data.results.filter(comment => comment.housepost === postId);
+
         setHousePosts(prevPosts => prevPosts.map(post =>
-          post.id === postId ? { ...post, comments: response.data.results } : post
+          post.id === postId ? { ...post, comments: filteredComments } : post
         ));
       })
       .catch(error => console.error(`Error fetching comments for post ${postId}:`, error));
   };
+
 
   const toggleLike = () => {
     setIsLiked(!isLiked);
@@ -78,17 +81,17 @@ function HousePosts() {
   };
 
   const containerStyle = {
-    width: '75%', // Default for larger screens
+    width: '75%',
     margin: '0 auto',
   };
 
   const responsiveStyles = `
-    @media (max-width: 1199px) { /* Medium screens */
+    @media (max-width: 1199px) {
       .responsive-container {
         width: 85% !important;
       }
     }
-    @media (max-width: 767px) { /* Small screens */
+    @media (max-width: 767px) {
       .responsive-container {
         width: 95% !important;
       }
@@ -117,8 +120,8 @@ function HousePosts() {
   return (
     <div className="responsive-container" style={containerStyle}>
       <style>{responsiveStyles}</style>
-      <h2>Houseposts Feed</h2> {/* Updated heading */}
-      <p>Page {currentPage}</p> {/* Updated page number display */}
+      <h2>Houseposts Feed</h2>
+      <p>Page {currentPage}</p>
 
       {housePosts.map((post) => (
         <div key={post.id} className="card rounded-lg overflow-hidden position-relative mb-4">
@@ -143,7 +146,7 @@ function HousePosts() {
                 <img
                   src={isLiked ? heartLiked : heartNotLiked}
                   alt="Like Button"
-                  style={{ width: '28.8px', height: '28.8px' }}  // 20% increase in size
+                  style={{ width: '28.8px', height: '28.8px' }}
                 />
               </button>
               <div className="d-flex align-items-center">
@@ -160,7 +163,6 @@ function HousePosts() {
                   Comments ({post.housepostcomments_count})
                 </AccordionHeader>
                 <AccordionBody>
-                  {/* Comments Section */}
                   {post.comments.length > 0 ? (
                     post.comments.map((comment, index) => (
                       <div key={index} className="p-2 mb-2 bg-white rounded border">
@@ -183,18 +185,7 @@ function HousePosts() {
                 </AccordionBody>
               </AccordionItem>
             </Accordion>
-            <div className="input-group mt-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Add a comment..."
-                aria-label="Add a comment"
-              />
-              <button className={`btn ${styles.SubmitButton}`} type="button">
-                Comment
-                <span className="material-symbols-outlined">send</span>
-              </button>
-            </div>
+            <Comments postId={post.id} fetchCommentsForPost={fetchCommentsForPost} />
           </div>
         </div>
       ))}

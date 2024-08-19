@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useRedirect } from "../../hooks/useRedirect";
 import loadingGif from "../../assets/loading.gif";
 import styles from "../../styles/SignInUpForm.module.css";
+import { Modal, Button } from "react-bootstrap"; // Import Bootstrap components
 
 function SignUpForm() {
   useRedirect("loggedIn");
@@ -18,6 +19,7 @@ function SignUpForm() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -145,8 +147,40 @@ function SignUpForm() {
           >
             Already have an account? Log in
           </button>
+
+          {/* Gear Icon */}
+          <div className="text-center mt-3 d-flex justify-content-center align-items-center">
+            <span className="me-2">Instructions</span> {/* Text to the left of the icon */}
+            <span
+              className="material-symbols-outlined"
+              style={{ cursor: "pointer" }}
+              onClick={() => setShowModal(true)}
+            >
+              settings
+            </span>
+          </div>
         </div>
       </div>
+
+      {/* Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Password Requirements</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ul>
+            <li>Your password can’t be too similar to your other personal information.</li>
+            <li>Your password must contain at least 8 characters.</li>
+            <li>Your password can’t be a commonly used password.</li>
+            <li>Your password can’t be entirely numeric.</li>
+          </ul>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
