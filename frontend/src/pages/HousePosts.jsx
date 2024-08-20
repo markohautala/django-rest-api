@@ -7,6 +7,7 @@ import heartNotLiked from '../assets/househeart-not-liked.png';
 import heartLiked from '../assets/househeart-liked.png';
 import loadingSpinner from '../assets/loading.gif';
 import Comments from './Comments';
+import CommentDelete from './CommentDelete';
 
 const placeholderImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
@@ -56,13 +57,18 @@ function HousePosts() {
         // Ensure that the response data only includes comments with the matching housepost ID
         const filteredComments = response.data.results.filter(comment => comment.housepost === postId);
 
+        // Sort the comments by their timestamp, oldest first (ascending order)
+        const sortedComments = filteredComments.sort((a, b) => new Date(a.timestamp_created) - new Date(b.timestamp_created));
+
+        // Reverse the sorted comments to ensure oldest at the top
+        sortedComments.reverse();
+
         setHousePosts(prevPosts => prevPosts.map(post =>
-          post.id === postId ? { ...post, comments: filteredComments } : post
+          post.id === postId ? { ...post, comments: sortedComments } : post
         ));
       })
       .catch(error => console.error(`Error fetching comments for post ${postId}:`, error));
   };
-
 
   const toggleLike = () => {
     setIsLiked(!isLiked);
@@ -165,8 +171,8 @@ function HousePosts() {
                 <AccordionBody>
                   {post.comments.length > 0 ? (
                     post.comments.map((comment, index) => (
-                      <div key={index} className="p-2 mb-2 bg-white rounded border">
-                        <div className="d-flex align-items-center">
+                      <div key={index} className="p-2 mb-2 bg-white rounded border d-flex align-items-center">
+                        <div className="d-flex align-items-center" style={{ flexGrow: 1 }}>
                           <img
                             src={comment.profile_image || placeholderImage}
                             className="rounded-circle me-2"
@@ -175,8 +181,17 @@ function HousePosts() {
                           />
                           <div>
                             <strong>{comment.user}</strong> {comment.comment}
+                            <div className="text-muted">
+                              ({comment.timestamp_created})
+                            </div>
                           </div>
                         </div>
+                        <CommentDelete
+                          commentId={comment.id}
+                          commentUser={comment.user} // Pass the comment user
+                          loggedInUser={'Marko222'} // Pass the logged-in user (replace with actual logged-in user variable)
+                          fetchCommentsForPost={() => fetchCommentsForPost(post.id)}
+                        />
                       </div>
                     ))
                   ) : (

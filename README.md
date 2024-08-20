@@ -105,7 +105,7 @@ These models work together to create a robust structure for managing user profil
 
 - A notification system giving the users notifications when other users give "house-hearts"/likes or comments on ones own posts - boosting the possibility for users to return to the website and post more houseposts and this would eventually make the community grow and self-reminding the webpage to users aout it's existance.
 
-- Right now, the application is just for the purpose of a portfolio project - but if this would eventually become a commercial application, there would be the need of a admin, staff or system in place that would check and approve if the houseposts contains a image of a house. If not, there would be a problem if users expect house-related images and posts but recieve something else. 
+- Right now, the application is just for the purpose of a portfolio project - but if this would eventually become a commercial application, there would be the need of a admin, staff or system in place that would check and approve if the houseposts contains a image of a house. If not, there would be a problem if users expect house-related images and posts but recieve something else.
 
 
 
@@ -152,7 +152,24 @@ After logging out, users were still logged in upon refreshing the page due to pe
 The issue was resolved by adding a Django view to explicitly set the CSRF token when the frontend loads and updating the logout process to clear JWT tokens, session cookies, and other relevant authentication data on both the server and client sides. This ensured that users were fully logged out and prevented automatic re-login upon page refresh.
 
 
-### Bug #5:
+### Bug #5: Inability to Post Comments from Frontend
+
+**Description:**
+A bug was encountered where users were unable to post comments on house posts from the frontend, even though the functionality worked correctly in the Django REST Framework backend. Despite multiple attempts to debug and fix the issue in the code, the root cause was not immediately apparent.
+
+**Solution:**
+The issue was resolved by modifying the `REST_FRAMEWORK` settings in the Django application. Instead of having separate authentication classes for production and development environments, both `TokenAuthentication` and `SessionAuthentication` were enabled simultaneously in all environments:
+
+
+```python
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+```
+
 
 ### Bug #6:
 
