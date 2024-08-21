@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import Carousel from "react-bootstrap/Carousel";
 import Accordion from "react-bootstrap/Accordion";
@@ -20,18 +21,19 @@ function LandingPage() {
   const [index, setIndex] = useState(0);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   localStorage.clear();
-  //   sessionStorage.clear();
-  //   console.log("Cleared local storage and session storage");
-  // }, []);
-
   const handleSelect = (selectedIndex) => {
     setIndex(selectedIndex);
   };
 
   return (
     <div style={{ width: "90%", margin: "0 auto" }}>
+      <style>
+        {`
+          .accordion {
+            --bs-accordion-active-bg: #ffffff !important;
+          }
+        `}
+      </style>
       <Carousel
         activeIndex={index}
         onSelect={handleSelect}

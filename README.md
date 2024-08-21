@@ -20,6 +20,20 @@ You have your own profile and you can navigate to it using the navigation bar an
 
 
 ## Features
+take screenshots and paste them here.
+
+
+### React components
+explain all the components here.
+
+
+### Security
+- DEBUG mode set to off
+- Secret key added to Heroku config vars and env.py file and to gitignore (not shared to github)
+- All API:s are secret in env.py and in Heroku config vars.
+- Industry standard CORS settings added.
+- Specified allowed hosts added.
+
 
 ### Database Models
 
@@ -96,6 +110,7 @@ These models work together to create a robust structure for managing user profil
 
 
 #### UX design decisions
+Paste in figma or UX design decisions here.
 
 #### Possible future features
 
@@ -170,17 +185,13 @@ REST_FRAMEWORK = {
 }
 ```
 
-
-### Bug #6:
-
-### Bug #7:
-
-### Bug #8:
-
 ### Unsolved bugs
 - Currently there are no unsolved bugs - but there are features that would be considered "good to add" to the application but there are no unresolved bugs or errors in the application that are known.
 
 ### Validator testing
+JavaScript testing: https://jshint.com/
+Python pep8 linter testing: https://pep8ci.herokuapp.com/
+
 
 ### Languages and Frameworks used
 - Backend is built with Django REST framework
@@ -189,15 +200,18 @@ REST_FRAMEWORK = {
 - Custom CSS and HTML has been added aswell.
 
 ### Manual testing write up
+test everything - write what was exprected and what was the outcome
 
 ## Deployment procedure
+explain what dependencies need to be installed and so on
+
 
 ### Forking and Cloning the Project - steps
 ##### To deploy this Django + React project, follow these steps to fork and clone the repository:
 
 #### Fork the Repository:
 
-- Go to the project's GitHub repository at [this page](https://github.com/markohautala/django-auth-crud-app)
+- Go to the project's GitHub repository at [this page](https://github.com/markohautala/django-rest-api)
 
 - Click on the Fork button in the upper right corner of the page.
 
@@ -205,7 +219,7 @@ REST_FRAMEWORK = {
 
 #### Clone the Forked Repository:
 
-- Go to the GitHub repository https://github.com/markohautala/django-auth-crud-app
+- Go to the GitHub repository https://github.com/markohautala/django-rest-api
 
 - Locate the Code button above the list of files (next to 'Add file') and click it
 

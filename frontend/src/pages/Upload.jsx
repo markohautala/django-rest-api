@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { Form, Button, Image, Container, Row, Col } from 'react-bootstrap';
+import { Form, Button, Image, Container, Row, Col, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import loadingGif from '../assets/loading.gif'; // Updated path
 import styles from '../styles/SignInUpForm.module.css'; // Updated path
@@ -16,6 +16,7 @@ function Upload() {
   const { house_title, description, house_image } = postData;
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false); // State to manage success message
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -80,7 +81,11 @@ function Upload() {
           'X-CSRFToken': csrfToken,
         },
       });
-      navigate('/'); // Redirect to homepage after successful upload
+      setSuccess(true); // Show success message
+      setTimeout(() => {
+        setSuccess(false); // Hide success message after 3 seconds
+        navigate('/'); // Redirect to homepage after successful upload
+      }, 3000);
     } catch (err) {
       setErrors(err.response?.data || { non_field_errors: ["Something went wrong, please try again."] });
     } finally {
@@ -102,6 +107,40 @@ function Upload() {
         <div className={styles.loadingOverlay}>
           <img src={loadingGif} alt="Loading..." className={styles.loadingSpinner} />
         </div>
+      )}
+      {success && (
+        <Alert
+          variant="success"
+          style={{
+            position: 'fixed',
+            right: '20px',
+            top: '80px',
+            zIndex: 1000,
+            width: 'auto',
+            maxWidth: '300px',
+            marginRight: '20px',
+          }}
+          className="d-none d-lg-block"
+        >
+          HousePost successfully created
+        </Alert>
+      )}
+      {success && (
+        <Alert
+          variant="success"
+          style={{
+            position: 'fixed',
+            top: '20%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 1000,
+            width: 'auto',
+            maxWidth: '300px',
+          }}
+          className="d-lg-none"
+        >
+          HousePost successfully created
+        </Alert>
       )}
       <div className="card p-4" style={{ borderRadius: '10px' }}>
         <Form onSubmit={handleSubmit}>

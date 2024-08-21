@@ -8,6 +8,7 @@ import heartLiked from '../assets/househeart-liked.png';
 import loadingSpinner from '../assets/loading.gif';
 import Comments from './Comments';
 import CommentDelete from './CommentDelete';
+import DeleteHousePostButton from './DeleteHousePostButton'; // New import
 
 const placeholderImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
@@ -54,13 +55,10 @@ function HousePosts() {
   const fetchCommentsForPost = (postId) => {
     axios.get(`http://127.0.0.1:8000/housepostcomments/?housepost=${postId}`)
       .then(response => {
-        // Ensure that the response data only includes comments with the matching housepost ID
         const filteredComments = response.data.results.filter(comment => comment.housepost === postId);
 
-        // Sort the comments by their timestamp, oldest first (ascending order)
         const sortedComments = filteredComments.sort((a, b) => new Date(a.timestamp_created) - new Date(b.timestamp_created));
 
-        // Reverse the sorted comments to ensure oldest at the top
         sortedComments.reverse();
 
         setHousePosts(prevPosts => prevPosts.map(post =>
@@ -131,12 +129,21 @@ function HousePosts() {
 
       {housePosts.map((post) => (
         <div key={post.id} className="card rounded-lg overflow-hidden position-relative mb-4">
-          <div style={{ width: '100%', overflow: 'hidden' }}>
+          <div style={{ width: '100%', overflow: 'hidden', position: 'relative' }}>
             <img
               src={post.house_image}
               className="card-img-top object-cover"
               alt="House Image"
               style={{ width: '100%', height: 'auto', display: 'block' }}
+            />
+            <DeleteHousePostButton
+              postId={post.id}
+              postUser={post.user}
+              loggedInUser={'Marko222'} // Replace with actual logged-in user
+              onDeleteSuccess={() => {
+                alert('HousePost deleted successfully');
+                window.location.href = '/';
+              }}
             />
           </div>
 
@@ -188,8 +195,8 @@ function HousePosts() {
                         </div>
                         <CommentDelete
                           commentId={comment.id}
-                          commentUser={comment.user} // Pass the comment user
-                          loggedInUser={'Marko222'} // Pass the logged-in user (replace with actual logged-in user variable)
+                          commentUser={comment.user}
+                          loggedInUser={'Marko222'} // Replace with actual logged-in user variable
                           fetchCommentsForPost={() => fetchCommentsForPost(post.id)}
                         />
                       </div>
