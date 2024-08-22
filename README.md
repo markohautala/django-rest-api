@@ -17,11 +17,41 @@ You can also on the homepage look at other peoples houseposts and give them like
 
 You have your own profile and you can navigate to it using the navigation bar and click on "Profile". On that page, you can now see a image (for now placeholder image - since you have yet to upload such), and you can also see a field for username and description. You can edit them aswell bu clicking on those buttons and click save. You can aswell upload your own avatar image.
 
+<hr>
+
+## Project goals
+- I created this application with the goal of providing a platform for house enthusiasts to share their dream homes and connect with others who have similar interests. The app allows users to post pictures, descriptions, and interact with each other's content, helping to build a vibrant community of home lovers.
+
+### **User Stories Mapped to Project Goals**
+
+This application was developed with the goal of creating a platform where house enthusiasts can share their dream homes and build a community. Below is a table mapping user stories to this main project goal:
+
+| **Project Goal**                                          | **User Story**                                                                                                 |
+|-----------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| **Create a platform for sharing dream homes**             | **House Post Management**: Users can create, edit, delete, and view house posts, allowing them to share their homes. |
+| **Build a community of house enthusiasts**                | **Househeart Functionality**: Users can "househeart" posts, showing appreciation and building community interaction. |
+|                                                           | **View House Posts Feed**: Users can browse through all shared house posts, encouraging exploration and engagement.   |
+| **Personalize user experiences**                          | **User Profile Management**: Users can manage their profiles, including their bio and profile picture, making the app more personal. |
+|                                                           | **Edit User Profile**: Users can update their profile information, keeping their personal information current.       |
+| **Ensure user-friendly interaction**                      | **Sign-Up Form**: Allows new users to join the community easily.                                                   |
+|                                                           | **Login Form**: Enables returning users to access their profiles and interact with the app.                         |
+|                                                           | **Action Feedback**: Provides clear feedback on actions like post creation or profile updates, ensuring users know what's happening. |
+|                                                           | **Navigation**: Users can easily navigate through the app, accessing different features without confusion.           |
+| **Secure and manage user data**                           | **User Authentication**: Users can securely sign up, log in, and manage their sessions.                            |
+|                                                           | **CORS Management**: Ensures secure communication between the frontend and backend.                                |
+|                                                           | **Error Handling**: Users receive clear messages when something goes wrong, improving their experience and security.  |
+| **Support image sharing and storage**                     | **Cloudinary Integration**: Users can upload images securely, ensuring their house posts are visually engaging.      |
+| **Encourage ongoing user interaction**                    | **Delete House Post**: Users can remove content they no longer wish to share, keeping their profiles up-to-date.     |
+|                                                           | **View User Profile**: Users can see their bio and shared posts, encouraging them to keep engaging with the app.     |
+
+
+<hr>
 
 
 ## Features
 take screenshots and paste them here.
 
+<hr>
 
 ### React components
 ### **Upload.jsx**
@@ -66,10 +96,39 @@ The `Home` component decides what to show on the homepage based on whether the u
 ### **useRedirect.jsx**
 The `useRedirect` hook is a custom React hook that automatically redirects users based on their authentication status. For example, it redirects logged-in users away from the sign-in or sign-up pages.
 
+
 ### **App.js**
-The `App` component is the main entry point of the application. It sets up the layout, including the navigation bar and main content area, and manages the global authentication state. It fetches a CSRF token when the app loads to ensure secure communication with the backend.
+The `App` component is the main entry point of the application. It sets up the layout, including the navigation bar and main content area, and manages the global authentication state. It fetches a CSRF token when the app loads to ensure secure communication with the backend. Using reusable components in React makes the app easier to maintain and update, ensuring everything stays consistent and efficient.
+
+<hr>
+
+### **Component Reuse in React**
+
+This application uses React's component-based architecture to keep the code clean and easy to manage by reusing components across different parts of the app.
+
+#### **1. `NavigationBar.jsx`**
+- **What it does**: The `NavigationBar` is used at the top of every page to help users navigate the app.
+- **Reuse**: It's the same component on every page, so any updates happen everywhere without extra work.
+
+#### **2. `Form Components (LoginForm.jsx & CreateAccountForm.jsx)`**
+- **What they do**: These forms handle user login and account creation.
+- **Reuse**: Both forms use similar layouts and logic, which keeps things consistent and reduces repeated code.
+
+#### **3. `HousePost Components (HousePosts.jsx & DeleteHousePostButton.jsx)`**
+- **What they do**: `HousePosts` shows a list of posts, and `DeleteHousePostButton` lets users delete posts.
+- **Reuse**: `DeleteHousePostButton` is its own component, so it can be used anywhere a post needs deleting, not just in the main feed.
+
+#### **4. `Comment Components (Comments.jsx & CommentDelete.jsx)`**
+- **What they do**: `Comments` lets users add and view comments, while `CommentDelete` allows users to delete their comments.
+- **Reuse**: These components can be easily reused wherever comments are needed in the app.
+
+#### **5. **Handling Errors & Loading** **
+- **What they do**: Components like `Upload` and `Profile` manage loading spinners and error messages in a similar way.
+- **Reuse**: The same patterns are used throughout the app, making it consistent and easy to update.
 
 
+
+<hr>
 
 ### **Security**
 
@@ -129,7 +188,7 @@ This app includes several safety measures on both the frontend (what the user se
 
 These security measures help keep the app safe and make sure that user data is protected.
 
-
+<hr>
 
 ### Database Models
 
@@ -204,9 +263,12 @@ The `HousePostComment` model stores comments made by users on house posts.
 
 These models work together to create a robust structure for managing user profiles, posts about houses, user interactions (likes/house-hearts), and user-generated comments.
 
+<hr>
 
 #### UX design decisions
 Paste in figma or UX design decisions here.
+
+<hr>
 
 #### Possible future features
 
@@ -218,11 +280,12 @@ Paste in figma or UX design decisions here.
 
 - Right now, the application is just for the purpose of a portfolio project - but if this would eventually become a commercial application, there would be the need of a admin, staff or system in place that would check and approve if the houseposts contains a image of a house. If not, there would be a problem if users expect house-related images and posts but recieve something else.
 
-
+<hr>
 
 ## Testing
 ### Lighthouse Testing
 
+<hr>
 
 ### Resolved Bugs
 
@@ -281,13 +344,18 @@ REST_FRAMEWORK = {
 }
 ```
 
+<hr>
+
 ### Unsolved bugs
 - Currently there are no unsolved bugs - but there are features that would be considered "good to add" to the application but there are no unresolved bugs or errors in the application that are known.
+
+<hr>
 
 ### Validator testing
 JavaScript testing: https://jshint.com/
 Python pep8 linter testing: https://pep8ci.herokuapp.com/
 
+<hr>
 
 ### Languages and Frameworks used
 - Backend is built with Django REST framework
@@ -295,12 +363,17 @@ Python pep8 linter testing: https://pep8ci.herokuapp.com/
 - Styling and grid-layout on the frontend is applied with react-bootstrap
 - Custom CSS and HTML has been added aswell.
 
+<hr>
+
 ### Manual testing write up
-test everything - write what was exprected and what was the outcome
+test everything - write what was exprected and what was the outcome.
+
+<hr>
 
 ## Deployment procedure
-explain what dependencies need to be installed and so on
+explain what dependencies need to be installed and so on.
 
+<hr>
 
 ### Forking and Cloning the Project - steps
 ##### To deploy this Django + React project, follow these steps to fork and clone the repository:
@@ -312,6 +385,8 @@ explain what dependencies need to be installed and so on
 - Click on the Fork button in the upper right corner of the page.
 
 - This will create a copy of the repository under your GitHub account.
+
+<hr>
 
 #### Clone the Forked Repository:
 
@@ -329,9 +404,15 @@ explain what dependencies need to be installed and so on
 
 - Press Enter to create your local clone
 
+<hr>
+
 ### Setup in the IDE (VS Code)
 
 - Since this is a repository with both the frontend and backend in the same folderstructure. You need to create two localhosts development enviroments. You can first click on "New terminal" and then click again to "Split terminal". This creates to terminals. In on of them, type "python manage.py runserver" to start development server on the backend. On the other terminal, type "cd frontend" (go narrow down to the frontend-folder) and then type "npm start" to run the development server on the frontend. Now you should have the backend on http://127.0.0.1:8000/ and the frontend on http://localhost:3000/.
+
+
+<hr>
+
 
 ## Credits
 #### Resources used

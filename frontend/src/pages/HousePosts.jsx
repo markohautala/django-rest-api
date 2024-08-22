@@ -68,6 +68,14 @@ function HousePosts() {
       .catch(error => console.error(`Error fetching comments for post ${postId}:`, error));
   };
 
+  const incrementCommentCount = (postId) => {
+    setHousePosts(prevPosts =>
+      prevPosts.map(post =>
+        post.id === postId ? { ...post, housepostcomments_count: post.housepostcomments_count + 1 } : post
+      )
+    );
+  };
+
   const handleNextPage = () => {
     if (nextPage) {
       fetchHousePosts(nextPage);
@@ -179,7 +187,7 @@ function HousePosts() {
                             src={comment.profile_image || placeholderImage}
                             className="rounded-circle me-2"
                             alt="User Avatar"
-                            style={{ width: '40px', height: '40px' }}
+                            style={{ width: '40px', height: '40px', objectFit: 'cover' }} // Ensure image is not squeezed
                           />
                           <div>
                             <strong>{comment.user}</strong> {comment.comment}
@@ -202,7 +210,11 @@ function HousePosts() {
                 </AccordionBody>
               </AccordionItem>
             </Accordion>
-            <Comments postId={post.id} fetchCommentsForPost={fetchCommentsForPost} />
+            <Comments
+              postId={post.id}
+              fetchCommentsForPost={fetchCommentsForPost}
+              incrementCommentCount={() => incrementCommentCount(post.id)} // Pass the function to increment the count
+            />
           </div>
         </div>
       ))}

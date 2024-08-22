@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import styles from '../styles/Home.module.css';
 
-function Comments({ postId, fetchCommentsForPost }) {
+function Comments({ postId, fetchCommentsForPost, incrementCommentCount }) {
   const [comment, setComment] = useState('');
   const [errors, setErrors] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleCommentChange = (e) => {
     setComment(e.target.value);
@@ -26,9 +28,6 @@ function Comments({ postId, fetchCommentsForPost }) {
 
     const csrfToken = Cookies.get('csrftoken');
     const token = localStorage.getItem('token');
-
-    console.log('CSRF Token:', csrfToken); // Debugging log
-    console.log('Auth Token:', token); // Debugging log
 
     if (!token) {
       setErrors('Authentication token not found. Please log in.');
@@ -49,10 +48,15 @@ function Comments({ postId, fetchCommentsForPost }) {
         withCredentials: true,
       });
 
-      console.log('Comment submitted successfully:', response.data);
-
       setComment('');
-      fetchCommentsForPost(postId);
+      fetchCommentsForPost(postId); // Refetch the comments
+      incrementCommentCount(); // Increment the comment count in the UI
+      setSuccessMessage('Comment added to housepost successfully.');
+
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000); // Hide the success message after 3 seconds
+
     } catch (error) {
       console.error('Error submitting comment:', error);
       const errorMsg = error.response?.data?.detail || 'Failed to submit the comment. Please try again.';
@@ -63,33 +67,47 @@ function Comments({ postId, fetchCommentsForPost }) {
   };
 
   return (
-    <Form onSubmit={handleCommentSubmit}>
-      <div className="input-group mt-3">
-        <Form.Control
-          as="textarea"
-          className="form-control"
-          placeholder="Add a comment..."
-          aria-label="Add a comment"
-          value={comment}
-          onChange={handleCommentChange}
-          disabled={loading}
-          rows={2}
-        />
-        <button
-          className={`btn ${styles.SubmitButton}`}
-          type="submit"
-          disabled={loading || comment.trim() === ''}
-        >
-          {loading ? 'Submitting...' : 'Comment'}
-          {!loading && <span className="material-symbols-outlined">send</span>}
-        </button>
-      </div>
-      {errors && (
-        <div className="text-danger mt-2">
-          {errors}
+    <>
+      {successMessage && (
+        <div style={{
+          position: 'fixed',
+          top: '100px', // 100px from the top
+          right: '20px', // 20px from the right
+          zIndex: 1000, // Ensure it's above other elements
+        }}>
+          <Alert variant="success">
+            {successMessage}
+          </Alert>
         </div>
       )}
-    </Form>
+      <Form onSubmit={handleCommentSubmit}>
+        <div className="input-group mt-3">
+          <Form.Control
+            as="textarea"
+            className="form-control"
+            placeholder="Add a comment..."
+            aria-label="Add a comment"
+            value={comment}
+            onChange={handleCommentChange}
+            disabled={loading}
+            rows={2}
+          />
+          <button
+            className={`btn ${styles.SubmitButton}`}
+            type="submit"
+            disabled={loading || comment.trim() === ''}
+          >
+            {loading ? 'Submitting...' : 'Comment'}
+            {!loading && <span className="material-symbols-outlined">send</span>}
+          </button>
+        </div>
+        {errors && (
+          <div className="text-danger mt-2">
+            {errors}
+          </div>
+        )}
+      </Form>
+    </>
   );
 }
 
