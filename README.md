@@ -6,6 +6,7 @@
 Backend and integrated frontend repository: https://github.com/markohautala/django-rest-api
 
 Deployed URL:
+https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/
 
 
 ## How to use the application

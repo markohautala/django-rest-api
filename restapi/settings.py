@@ -7,7 +7,7 @@ import cloudinary
 import cloudinary.api
 import cloudinary.uploader
 
-# Load environment variables if env.py exists
+# Load environment variables
 if os.path.exists('env.py'):
     import env
 
@@ -20,16 +20,16 @@ cloudinary.config(
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = 'DEBUG' in os.environ
+DEBUG = False  # Turned off debug mode for production
 
-ALLOWED_HOSTS = ['http://localhost:3000', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['http://localhost:3000', '127.0.0.1', 'localhost', 'housegram-fullstack-app-a01c6177ffd8.herokuapp.com']
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1',
+    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',  # Added Heroku domain
 ]
 
 INSTALLED_APPS = [
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'dj_rest_auth.registration',
-    'corsheaders',  # Added corsheaders app
+    'corsheaders',
     'django.contrib.messages',
     'rest_framework.authtoken',
     'cloudinary_storage',
@@ -92,7 +92,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'restapi.wsgi.application'
 
 
-# Always use the production database
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
 }
@@ -107,19 +106,16 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%d %b %Y',
 }
 
-
-if 'DEBUG' not in os.environ:
+if not DEBUG:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
         'rest_framework.renderers.JSONRenderer',
     ]
-
 
 REST_USE_JWT = True
 JWT_AUTH_SECURE = False
 JWT_AUTH_COOKIE = 'my-app-auth'
 JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
-JWT_AUTH_SAMESITE = 'None'  # Required for cross-origin cookie sharing
-
+JWT_AUTH_SAMESITE = 'None'
 
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'restapi.serializers.CurrentUserSerializer'
@@ -137,23 +133,24 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Removing the default email backend
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = []  # Adjusted to avoid the non-existent directory warning
+STATICFILES_DIRS = []
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings
-
 CORS_ALLOW_ALL_ORIGINS = False
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',  # Added Heroku domain
+]
 
 CORS_ALLOW_CREDENTIALS = True
 
