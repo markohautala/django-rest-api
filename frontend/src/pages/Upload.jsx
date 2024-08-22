@@ -3,22 +3,24 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Form, Button, Image, Container, Row, Col, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import loadingGif from '../assets/loading.gif'; // Updated path
-import styles from '../styles/SignInUpForm.module.css'; // Updated path
+import loadingGif from '../assets/loading.gif'; // Path to loading gif
+import styles from '../styles/SignInUpForm.module.css'; // Path to custom styles
 
 function Upload() {
+  // State management
   const [postData, setPostData] = useState({
     house_title: '',
     description: '',
     house_image: null,
   });
 
-  const { house_title, description, house_image } = postData;
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false); // State to manage success message
-  const navigate = useNavigate();
+  const { house_title, description, house_image } = postData; // Destructure post data state
+  const [errors, setErrors] = useState({}); // State to manage form errors
+  const [loading, setLoading] = useState(false); // State to manage loading state
+  const [success, setSuccess] = useState(false); // State to manage success message visibility
+  const navigate = useNavigate(); // Hook for navigation
 
+  // Handle input changes for text fields
   const handleChange = (event) => {
     setPostData({
       ...postData,
@@ -26,9 +28,11 @@ function Upload() {
     });
   };
 
+  // Handle image file changes
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      // Revoke previous object URL to avoid memory leaks
       if (house_image) {
         URL.revokeObjectURL(house_image);
       }
@@ -45,6 +49,7 @@ function Upload() {
     }
   };
 
+  // Handle removing the selected image
   const handleRemoveImage = () => {
     if (house_image) {
       URL.revokeObjectURL(house_image);
@@ -56,13 +61,14 @@ function Upload() {
 
     const fileInput = document.getElementById('image-upload');
     if (fileInput) {
-      fileInput.value = '';
+      fileInput.value = ''; // Clear the file input
     }
   };
 
+  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
+    setLoading(true); // Set loading state to true
     setErrors({});
 
     const formData = new FormData();
@@ -72,7 +78,7 @@ function Upload() {
       formData.append('house_image', house_image);
     }
 
-    const csrfToken = Cookies.get('csrftoken');
+    const csrfToken = Cookies.get('csrftoken'); // Get CSRF token from cookies
 
     try {
       await axios.post('http://localhost:8000/houseposts/', formData, {
@@ -89,10 +95,11 @@ function Upload() {
     } catch (err) {
       setErrors(err.response?.data || { non_field_errors: ["Something went wrong, please try again."] });
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading state to false
     }
   };
 
+  // Cleanup image URL on component unmount
   useEffect(() => {
     return () => {
       if (house_image) {
@@ -103,11 +110,13 @@ function Upload() {
 
   return (
     <Container className="mt-5">
+      {/* Loading spinner */}
       {loading && (
         <div className={styles.loadingOverlay}>
           <img src={loadingGif} alt="Loading..." className={styles.loadingSpinner} />
         </div>
       )}
+      {/* Success messages for different screen sizes */}
       {success && (
         <Alert
           variant="success"
@@ -142,11 +151,13 @@ function Upload() {
           HousePost successfully created
         </Alert>
       )}
+      {/* Form for creating a HousePost */}
       <div className="card p-4" style={{ borderRadius: '10px' }}>
         <Form onSubmit={handleSubmit}>
           <Row>
             <Col xs={12} md={12} lg={4} className="d-flex flex-column align-items-center mb-4">
               <Form.Group className="text-center">
+                {/* Image preview or upload button */}
                 {house_image ? (
                   <>
                     <figure onClick={() => document.getElementById('image-upload').click()} style={{ cursor: 'pointer' }}>
@@ -196,6 +207,7 @@ function Upload() {
                     </p>
                   </Form.Label>
                 )}
+                {/* Hidden file input for image upload */}
                 <Form.Control
                   type="file"
                   id="image-upload"
@@ -203,6 +215,7 @@ function Upload() {
                   onChange={handleImageChange}
                   style={{ display: 'none' }}
                 />
+                {/* Error message for image upload */}
                 {errors.house_image && <Form.Text className="text-danger">{errors.house_image}</Form.Text>}
               </Form.Group>
             </Col>
@@ -221,6 +234,7 @@ function Upload() {
                   autoComplete="off"
                   style={{ fontSize: '1.25rem', padding: '10px' }}
                 />
+                {/* Error message for title */}
                 {errors.house_title && <Form.Text className="text-danger">{errors.house_title}</Form.Text>}
               </Form.Group>
 
@@ -238,6 +252,7 @@ function Upload() {
                   autoComplete="off"
                   style={{ fontSize: '1.25rem', padding: '10px' }}
                 />
+                {/* Error message for description */}
                 {errors.description && <Form.Text className="text-danger">{errors.description}</Form.Text>}
               </Form.Group>
 

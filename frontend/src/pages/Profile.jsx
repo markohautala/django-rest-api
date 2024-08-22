@@ -6,42 +6,46 @@ import styles from "../styles/Profile.module.css";
 import loadingSpinner from "../assets/loading.gif"; // Updated to use the smaller loading spinner
 
 function Profile() {
-  const [userProfile, setUserProfile] = useState(null);
-  const [displayName, setDisplayName] = useState("");
-  const [bio, setBio] = useState("");
-  const [profilePicture, setProfilePicture] = useState("");
-  const [tempProfilePicture, setTempProfilePicture] = useState(""); // Temporary profile picture for the modal
-  const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();  // Initialize useNavigate
+  // State management
+  const [userProfile, setUserProfile] = useState(null); // Stores the user profile data
+  const [displayName, setDisplayName] = useState(""); // Stores the display name
+  const [bio, setBio] = useState(""); // Stores the bio
+  const [profilePicture, setProfilePicture] = useState(""); // Stores the profile picture URL
+  const [tempProfilePicture, setTempProfilePicture] = useState(""); // Temporary profile picture for editing
+  const [isEditing, setIsEditing] = useState(false); // Controls whether the profile is in edit mode
+  const [isLoading, setIsLoading] = useState(true); // Manages loading state during data fetching or saving
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false); // Controls the visibility of the success message
+  const [errors, setErrors] = useState({}); // Stores any errors encountered
+  const navigate = useNavigate();  // Initialize useNavigate for navigation
 
+  // Effect to fetch user profile data when the component mounts
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
+        // Fetch the current user's basic info
         const userResponse = await axios.get("/dj-rest-auth/user/", {
           headers: {
-            Authorization: `Token ${localStorage.getItem('token')}`,
+            Authorization: `Token ${localStorage.getItem('token')}`, // Include the auth token in the headers
           },
         });
 
-        const userId = userResponse.data.pk;
+        const userId = userResponse.data.pk; // Get the user's ID from the response
 
+        // Fetch the full profile details using the user's ID
         const response = await axios.get(`/userprofiles/${userId}/`, {
           headers: {
-            Authorization: `Token ${localStorage.getItem('token')}`,
+            Authorization: `Token ${localStorage.getItem('token')}`, // Include the auth token in the headers
           },
         });
 
         const data = response.data;
-        setUserProfile(data);
-        setDisplayName(data.display_name || "No display name yet");
-        setBio(data.bio || "No bio has been given yet");
-        const profileImg = data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+        setUserProfile(data); // Store the profile data in state
+        setDisplayName(data.display_name || "No display name yet"); // Set display name with a fallback
+        setBio(data.bio || "No bio has been given yet"); // Set bio with a fallback
+        const profileImg = data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"; // Default profile picture if none exists
         setProfilePicture(profileImg);
-        setTempProfilePicture(profileImg); // Initialize the temp profile picture with the current one
-        setIsLoading(false);
+        setTempProfilePicture(profileImg); // Initialize the temporary profile picture
+        setIsLoading(false); // Data fetching complete, disable loading
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
         setErrors({ non_field_errors: ["Failed to load profile data."] });
@@ -49,56 +53,61 @@ function Profile() {
       }
     };
 
-    fetchUserProfile();
+    fetchUserProfile(); // Trigger the fetch on component mount
   }, []);
 
+  // Handle profile picture changes in the modal
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setTempProfilePicture(URL.createObjectURL(file)); // Update only the temporary profile picture
+      setTempProfilePicture(URL.createObjectURL(file)); // Update the preview with the selected image
     }
   };
 
+  // Handle saving the edited profile
   const handleSaveProfile = async () => {
     const updatedProfile = {
-      display_name: displayName === "No display name yet" ? "" : displayName,
-      bio: bio === "No bio has been given yet" ? "" : bio,
+      display_name: displayName === "No display name yet" ? "" : displayName, // Remove placeholder text
+      bio: bio === "No bio has been given yet" ? "" : bio, // Remove placeholder text
     };
 
-    setIsLoading(true);
+    setIsLoading(true); // Start loading state
 
     try {
       const formData = new FormData();
       formData.append("display_name", updatedProfile.display_name);
       formData.append("bio", updatedProfile.bio);
-      if (tempProfilePicture !== profilePicture) { // Check if the profile picture has changed
+      if (tempProfilePicture !== profilePicture) { // Only append the picture if it has changed
         formData.append("profile_picture", tempProfilePicture);
       }
 
+      // Send the PATCH request to update the profile
       await axios.patch(`/userprofiles/${userProfile.id}/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Token ${localStorage.getItem('token')}`,
+          Authorization: `Token ${localStorage.getItem('token')}`, // Include the auth token in the headers
         },
       });
 
-      setProfilePicture(tempProfilePicture); // Only update the main profile picture after saving
-      setShowSuccessMessage(true);
+      setProfilePicture(tempProfilePicture); // Update the main profile picture after saving
+      setShowSuccessMessage(true); // Show success message
       setTimeout(() => setShowSuccessMessage(false), 3000); // Hide success message after 3 seconds
-      setIsEditing(false);
+      setIsEditing(false); // Exit edit mode
     } catch (error) {
       console.error("Error updating profile:", error);
       setErrors(error.response?.data || { non_field_errors: ["Failed to update profile."] });
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Stop loading state
     }
   };
 
+  // Handle cancelling profile edits
   const handleCancelEdit = () => {
-    setTempProfilePicture(profilePicture); // Reset the temporary profile picture on cancel
-    setIsEditing(false);
+    setTempProfilePicture(profilePicture); // Reset the temporary profile picture to the original
+    setIsEditing(false); // Exit edit mode
   };
 
+  // Loading spinner while fetching data
   if (isLoading) {
     return (
       <div style={{
@@ -120,6 +129,7 @@ function Profile() {
 
   return (
     <div className={styles.profileCard}>
+      {/* Success message display */}
       {showSuccessMessage && (
         <Alert variant="success" style={{
           position: 'fixed',
@@ -134,6 +144,7 @@ function Profile() {
         </Alert>
       )}
 
+      {/* Profile picture and details */}
       <img
         src={profilePicture}
         alt="Profile"

@@ -18,15 +18,17 @@ import image14 from "../assets/image14.jpg";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function LandingPage() {
-  const [index, setIndex] = useState(0);
-  const navigate = useNavigate();
+  const [index, setIndex] = useState(0); // State to manage the active slide in the carousel
+  const navigate = useNavigate(); // Hook to navigate programmatically between routes
 
+  // Function to handle slide selection in the carousel
   const handleSelect = (selectedIndex) => {
-    setIndex(selectedIndex);
+    setIndex(selectedIndex); // Update the active slide index
   };
 
   return (
     <div style={{ width: "90%", margin: "0 auto" }}>
+      {/* Custom styles for Accordion components */}
       <style>
         {`
           .accordion {
@@ -34,6 +36,8 @@ function LandingPage() {
           }
         `}
       </style>
+
+      {/* Image Carousel */}
       <Carousel
         activeIndex={index}
         onSelect={handleSelect}
@@ -44,6 +48,7 @@ function LandingPage() {
           overflow: "hidden",
         }}
       >
+        {/* Individual slides in the carousel */}
         <Carousel.Item>
           <img
             src={image1}
@@ -166,6 +171,7 @@ function LandingPage() {
         </Carousel.Item>
       </Carousel>
 
+      {/* Accordion with information sections */}
       <Accordion
         defaultActiveKey=""
         className="mt-4"
@@ -209,6 +215,7 @@ function LandingPage() {
         </Accordion.Item>
       </Accordion>
 
+      {/* Call to Action Cards */}
       <div className="row mt-4" style={{ width: "100%", margin: "0 auto" }}>
         <div className="col-12 col-md-6 mb-4">
           <Card style={{ height: "100%" }}>

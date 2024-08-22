@@ -280,6 +280,8 @@ Paste in figma or UX design decisions here.
 
 - Right now, the application is just for the purpose of a portfolio project - but if this would eventually become a commercial application, there would be the need of a admin, staff or system in place that would check and approve if the houseposts contains a image of a house. If not, there would be a problem if users expect house-related images and posts but recieve something else.
 
+- One feature that was intended to input to the application was the ability to search and filter results on the homepage. Due to lack of time, it was excluded from the plan but it would be a good feature to add in the future to give the users the ability to search for "popular" houseposts tht have the most comments and the most househearts. Also, users would be able to search for posts. This functionality is added to the backend but, as said previously, due to lack of time, it had to be excluded from the plan.
+
 <hr>
 
 ## Testing
@@ -366,12 +368,206 @@ Python pep8 linter testing: https://pep8ci.herokuapp.com/
 <hr>
 
 ### Manual testing write up
-test everything - write what was exprected and what was the outcome.
+#### Test Scenarios and Test Cases
+
+#### Homepage
+
+**Test Scenario 1: Verify homepage content and layout**
+
+| Test Case ID | Test Steps                                                                                                                              |
+|--------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| TC01         | Open the homepage and verify the presence of the carousel displaying images with appropriate dimensions and layout.                      |
+| TC02         | Ensure that the accordion sections ("Creating Your First HousePost", "Connecting with the Community", "Securing Your Profile") expand and collapse correctly. |
+| TC03         | Verify that the "Login" and "Create Account" buttons on the homepage navigate to the correct pages.                                      |
+
+#### Login Page
+
+**Test Scenario 2: Verify login functionality**
+
+| Test Case ID | Test Steps                                                                                              |
+|--------------|---------------------------------------------------------------------------------------------------------|
+| TC04         | Open the login page and verify the presence of the login form with "Username" and "Password" fields.     |
+| TC05         | Enter valid credentials and submit the form. Ensure successful login and redirection to the homepage.    |
+| TC06         | Enter invalid credentials and submit the form. Ensure that an appropriate error message is displayed.    |
+| TC07         | Verify that the "Create a user account" button navigates to the registration page.                       |
+| TC08         | Verify that the "Home" link in the navigation bar navigates back to the homepage.                        |
+
+#### Registration Page
+
+**Test Scenario 3: Verify registration functionality**
+
+| Test Case ID | Test Steps                                                                                                 |
+|--------------|------------------------------------------------------------------------------------------------------------|
+| TC09         | Open the registration page and verify the presence of the registration form with "Username", "Password", and "Confirm Password" fields. |
+| TC10         | Enter valid details and submit the form. Ensure successful registration and redirection to the login page.  |
+| TC11         | Enter invalid details (e.g., mismatched passwords) and submit the form. Ensure appropriate error messages are displayed. |
+| TC12         | Verify that the "Login" button navigates to the login page.                                                 |
+| TC13         | Verify that the "Home" link in the navigation bar navigates back to the homepage.                          |
+
+#### Profile Management
+
+**Test Scenario 4: Verify profile viewing and editing**
+
+| Test Case ID | Test Steps                                                                                                      |
+|--------------|-----------------------------------------------------------------------------------------------------------------|
+| TC14         | Open the profile page and verify the presence of the profile details (display name, bio, and profile picture).  |
+| TC15         | Click the "Edit Profile" button and verify that a modal opens with the ability to edit the display name, bio, and profile picture. |
+| TC16         | Change the display name, bio, and profile picture, then save the changes. Ensure that the updated profile details are displayed correctly. |
+| TC17         | Cancel the profile editing process and ensure that no changes are made to the profile.                          |
+
+#### HousePost Creation
+
+**Test Scenario 5: Verify house post creation functionality**
+
+| Test Case ID | Test Steps                                                                                          |
+|--------------|-----------------------------------------------------------------------------------------------------|
+| TC18         | Open the "Upload" page and verify the presence of the post creation form with fields for title, description, and image upload. |
+| TC19         | Enter valid details (title, description) and select an image file. Submit the form and ensure the post is created successfully. |
+| TC20         | Enter a valid title and description but no image. Submit the form and ensure that the post is created successfully with default image handling. |
+| TC21         | Verify that the success message is displayed after the post creation and that the user is redirected to the homepage. |
+| TC22         | Verify the presence of the uploaded image preview, and test the "Change the image" and "Remove Image" functionalities.           |
+
+#### HousePost Viewing and Deletion
+
+**Test Scenario 6: Verify house post viewing and deletion**
+
+| Test Case ID | Test Steps                                                                                                      |
+|--------------|-----------------------------------------------------------------------------------------------------------------|
+| TC23         | Open the homepage and verify the presence of the recently created house post in the list of posts.              |
+| TC24         | Click on a house post to view its details and verify that the correct title, description, and image are displayed. |
+| TC25         | Click the "Delete" button for a house post you created and confirm the deletion. Ensure the post is removed from the list. |
+
+#### Comments on HousePosts
+
+**Test Scenario 7: Verify adding and deleting comments on house posts**
+
+| Test Case ID | Test Steps                                                                                                     |
+|--------------|----------------------------------------------------------------------------------------------------------------|
+| TC26         | Open a house post and verify the presence of the comments section.                                             |
+| TC27         | Add a comment to the post and ensure it is displayed correctly under the post.                                 |
+| TC28         | Delete your comment and ensure it is removed from the comments section.                                        |
+| TC29         | Verify that only the user who posted the comment has the ability to delete it, and that the delete confirmation modal functions correctly. |
+
+#### HouseHearts (Liking Posts)
+
+**Test Scenario 8: Verify HouseHearts functionality**
+
+| Test Case ID | Test Steps                                                                                                     |
+|--------------|----------------------------------------------------------------------------------------------------------------|
+| TC30         | Open a house post and verify the presence of the HouseHearts (like) button.                                    |
+| TC31         | Click the HouseHearts button and ensure the heart count increases and the heart icon updates to indicate it has been liked. |
+| TC32         | Attempt to click the HouseHearts button again and verify that an appropriate error message is displayed (preventing double-liking). |
+
+#### Navigation Bar
+
+**Test Scenario 9: Verify navigation bar functionality**
+
+| Test Case ID | Test Steps                                                                                                     |
+|--------------|----------------------------------------------------------------------------------------------------------------|
+| TC33         | Verify that the navigation bar is present on all pages.                                                        |
+| TC34         | Click on the "Home" link in the navigation bar and ensure it navigates to the homepage.                        |
+| TC35         | Click on the "Profile" link in the navigation bar (when logged in) and ensure it navigates to the profile page. |
+| TC36         | Click on the "Logout" link in the navigation bar and verify that it logs the user out and redirects to the login page. |
+| TC37         | Verify that the "Login" and "Create Account" links are present and functional when not logged in.              |
+
 
 <hr>
 
-## Deployment procedure
-explain what dependencies need to be installed and so on.
+
+## Deployment Procedure
+
+To successfully deploy this Django + React project, follow the steps outlined below. These steps assume that you are deploying to a production environment.
+
+### 1. Install Required Dependencies
+
+Ensure that all the necessary dependencies are installed. You can install the backend dependencies listed in the `requirements.txt` file by running:
+
+```bash
+pip install -r requirements.txt
+```
+
+- For the frontend, ensure that Node.js and npm are installed, and run:
+```
+npm install
+```
+2. Set Up Environment Variables
+For secure and smooth operation in production, you need to configure environment variables. These variables are crucial for configuring Django, Cloudinary, the database, and more. Below is a list of required environment variables:
+
+SECRET_KEY: The secret key for Django. Ensure this is set to a strong, unique value in production.
+DEBUG: Set this to False in production to disable debug mode.
+DATABASE_URL: The URL for your production database. Typically, this will be a PostgreSQL URL.
+CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET: Credentials for Cloudinary, which is used for media storage.
+CSRF_TRUSTED_ORIGINS: The domains that are trusted for CSRF protection, including your production domain.
+Create an .env file in the root of your project and populate it with these variables:
+
+```
+SECRET_KEY=your-secret-key
+DEBUG=False
+DATABASE_URL=postgres://user:password@hostname:port/dbname
+CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
+CLOUDINARY_API_KEY=your-cloudinary-api-key
+CLOUDINARY_API_SECRET=your-cloudinary-api-secret
+```
+
+3. Configure Django Settings
+The settings.py file is pre-configured to load environment variables, manage media files via Cloudinary, and handle static files using WhiteNoise. Ensure that your settings.py is correctly set up to differentiate between development and production environments.
+
+Key Configurations:
+Database:
+
+The database configuration automatically reads from the DATABASE_URL environment variable using dj_database_url.
+
+```
+DATABASES = {
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+}
+```
+
+Static Files:
+
+Ensure that static files are correctly handled by WhiteNoise for efficient serving in production:
+
+```
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+```
+
+Cloudinary:
+
+Cloudinary is set up to manage media files. The necessary environment variables for Cloudinary should be set as shown below:
+
+```
+cloudinary.config(
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET'),
+)
+```
+
+CORS and CSRF:
+
+The application is configured to handle Cross-Origin Resource Sharing (CORS) and CSRF with the following settings:
+```
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1',
+]
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
+```
+
+4. Apply Migrations and Collect Static Files
+Before deploying, ensure that you apply migrations to set up the database schema and collect static files:
+```
+python manage.py migrate
+python manage.py collectstatic
+```
+
+5. Deploy the Application
+Deploy the application using your preferred method. In this production we used Heroku:
+- Heroku: Use the Procfile and ensure all necessary environment variables are set in the Heroku dashboard.
 
 <hr>
 

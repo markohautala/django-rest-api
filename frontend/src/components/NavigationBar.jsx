@@ -18,11 +18,13 @@ const getCSRFToken = () => {
 };
 
 function NavigationBar({ isAuthenticated }) {
+  // Access current user context and define state for navbar expansion
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
 
+  // Handle user logout by clearing session and navigating to home page
   const handleLogout = async () => {
     try {
       const csrfToken = getCSRFToken();
@@ -40,44 +42,48 @@ function NavigationBar({ isAuthenticated }) {
         withCredentials: true,  // Ensure credentials are sent with the request
       });
 
-      // Clear local storage and session storage
+      // Clear local storage, session storage, and cookies
       localStorage.clear();
       sessionStorage.clear();
-
-      // Manually clear cookies
       document.cookie.split(";").forEach((c) => {
         document.cookie = c
           .replace(/^ +/, "")
           .replace(/=.*/, "=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/");
       });
 
-      // Set the current user to null in the context
+      // Reset the current user context and navigate to the home page
       setCurrentUser(null);
-
-      // Navigate to the home page
       navigate("/home");
     } catch (err) {
       console.error('Error during logout:', err);
     }
   };
 
+  // Handle navigation link click and collapse navbar
   const handleNavClick = (path) => {
     setExpanded(false);
     navigate(path);
   };
 
+  // Main content of the component
   return (
     <Navbar expand="lg" className={styles.NavigationBar} fixed="top" expanded={expanded}>
       <Container>
+        {/* Brand logo and name, navigate to home when clicked */}
         <Navbar.Brand className={styles.NavbarBrand}>
           <NavLink to="/" onClick={() => setExpanded(false)} className={styles.BrandLink}>
             <img src={logo2} alt="logo" height={50} className={styles.BrandLogo} />
             <span className={styles.BrandText}>HOUSEGRAM</span>
           </NavLink>
         </Navbar.Brand>
+
+        {/* Toggle button for collapsing the navbar on smaller screens */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
+
+        {/* Collapsible navigation links */}
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
+            {/* Display different navigation links based on authentication status */}
             {isAuthenticated ? (
               <>
                 <NavLink to="/home" className={styles.NavLink} onClick={() => handleNavClick("/home")}>

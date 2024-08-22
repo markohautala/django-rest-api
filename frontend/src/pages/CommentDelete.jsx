@@ -4,51 +4,53 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 function CommentDelete({ commentId, commentUser, loggedInUser, fetchCommentsForPost }) {
-  const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false); // State to control the visibility of the modal
+  const [loading, setLoading] = useState(false); // State to manage loading status during deletion
 
+  // Function to handle the deletion of a comment
   const handleDelete = async () => {
-    setLoading(true);
+    setLoading(true); // Start loading animation
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token'); // Retrieve the authentication token from local storage
     if (!token) {
       alert('Authentication token not found. Please log in.');
-      setLoading(false);
+      setLoading(false); // Stop loading if there's no token
       return;
     }
 
     try {
-      const deleteUrl = `http://127.0.0.1:8000/housepostcomments/${commentId}/`;
+      const deleteUrl = `http://127.0.0.1:8000/housepostcomments/${commentId}/`; // URL for deleting the specific comment
       await axios.delete(deleteUrl, {
         headers: {
-          Authorization: `Token ${token}`,
+          Authorization: `Token ${token}`, // Include the token in the request header for authentication
         },
       });
 
-      fetchCommentsForPost(); // Refresh comments after deletion
-      setShowModal(false); // Close the modal after successful deletion
+      fetchCommentsForPost(); // Refresh the comments after successful deletion
+      setShowModal(false); // Close the modal after deletion
     } catch (error) {
       console.error('Error deleting comment:', error);
       alert('Failed to delete the comment. Please try again.');
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading animation
     }
   };
 
-  // Only render the delete button if the logged-in user matches the comment user
+  // Only render the delete button if the logged-in user is the owner of the comment
   if (commentUser !== loggedInUser) {
-    return null; // Don't render the delete button
+    return null; // Do not render anything if the user is not authorized to delete the comment
   }
 
   // Inline styles for positioning the delete button
   const deleteButtonStyle = {
-    marginLeft: 'auto', // Pushes the button to the right
+    marginLeft: 'auto', // Aligns the button to the right
     display: 'flex',
     alignItems: 'center',
   };
 
   return (
     <>
+      {/* Delete button triggers the modal */}
       <button
         className="btn btn-danger btn-sm"
         style={deleteButtonStyle}
@@ -57,6 +59,7 @@ function CommentDelete({ commentId, commentUser, loggedInUser, fetchCommentsForP
         Delete
       </button>
 
+      {/* Modal to confirm the deletion of the comment */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
@@ -69,7 +72,7 @@ function CommentDelete({ commentId, commentUser, loggedInUser, fetchCommentsForP
             Cancel
           </Button>
           <Button variant="danger" onClick={handleDelete} disabled={loading}>
-            {loading ? 'Deleting...' : 'Delete'}
+            {loading ? 'Deleting...' : 'Delete'} {/* Show 'Deleting...' while the deletion is in progress */}
           </Button>
         </Modal.Footer>
       </Modal>

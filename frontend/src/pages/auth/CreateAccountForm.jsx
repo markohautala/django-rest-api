@@ -8,20 +8,21 @@ import styles from "../../styles/SignInUpForm.module.css";
 import { Modal, Button } from "react-bootstrap"; // Import Bootstrap components
 
 function SignUpForm() {
-  useRedirect("loggedIn");
+  useRedirect("loggedIn"); // Redirect user if they are already logged in
   const [signUpData, setSignUpData] = useState({
     username: "",
     password1: "",
     password2: "",
   });
-  const { username, password1, password2 } = signUpData;
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { username, password1, password2 } = signUpData; // Destructure state for easy access
+  const [errors, setErrors] = useState({}); // State to track form errors
+  const [loading, setLoading] = useState(false); // State to track loading status
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State to toggle confirm password visibility
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Navigation function from react-router-dom
 
+  // Handle input changes and update state
   const handleChange = (event) => {
     setSignUpData({
       ...signUpData,
@@ -29,35 +30,39 @@ function SignUpForm() {
     });
   };
 
+  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErrors({});
-    setLoading(true);
+    setLoading(true); // Start loading animation
 
+    // Check if passwords match
     if (password1 !== password2) {
       setErrors({ non_field_errors: ["The passwords don't match"] });
-      setLoading(false);
+      setLoading(false); // Stop loading animation
       return;
     }
 
-    const csrfToken = Cookies.get("csrftoken");
+    const csrfToken = Cookies.get("csrftoken"); // Get CSRF token from cookies
 
     try {
+      // Attempt to sign up the user
       await axios.post("/dj-rest-auth/registration/", signUpData, {
         headers: {
           "X-CSRFToken": csrfToken,
         },
       });
-      navigate("/login");
+      navigate("/login"); // Redirect to login page on success
     } catch (err) {
       setErrors(err.response?.data || { non_field_errors: ["An error occurred. Please try again."] });
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading animation
     }
   };
 
   return (
     <div className="container mt-5">
+      {/* Display loading spinner while submitting */}
       {loading && (
         <div className={styles.loadingOverlay}>
           <img src={loadingGif} alt="Loading..." className={styles.loadingSpinner} />
@@ -66,6 +71,7 @@ function SignUpForm() {
       <div className="row justify-content-center">
         <div className="col-md-4">
           <h2 className="text-center mb-4">Create an account</h2>
+          {/* Display non-field errors */}
           {errors.non_field_errors?.map((message, idx) => (
             <div key={idx} className="alert alert-warning" role="alert">
               {message}
@@ -83,6 +89,7 @@ function SignUpForm() {
                 onChange={handleChange}
                 required
               />
+              {/* Display username errors */}
               {errors.username?.map((message, idx) => (
                 <div key={idx} className="alert alert-warning mt-2" role="alert">
                   {message}
@@ -100,6 +107,7 @@ function SignUpForm() {
                 onChange={handleChange}
                 required
               />
+              {/* Toggle password visibility */}
               <span
                 className="material-symbols-outlined position-absolute"
                 style={{ top: "40px", right: "10px", cursor: "pointer" }}
@@ -107,6 +115,7 @@ function SignUpForm() {
               >
                 {showPassword ? "visibility_off" : "visibility"}
               </span>
+              {/* Display password1 errors */}
               {errors.password1?.map((message, idx) => (
                 <div key={idx} className="alert alert-warning mt-2" role="alert">
                   {message}
@@ -124,6 +133,7 @@ function SignUpForm() {
                 onChange={handleChange}
                 required
               />
+              {/* Toggle confirm password visibility */}
               <span
                 className="material-symbols-outlined position-absolute"
                 style={{ top: "40px", right: "10px", cursor: "pointer" }}
@@ -131,15 +141,18 @@ function SignUpForm() {
               >
                 {showConfirmPassword ? "visibility_off" : "visibility"}
               </span>
+              {/* Display password2 errors */}
               {errors.password2?.map((message, idx) => (
                 <div key={idx} className="alert alert-warning mt-2" role="alert">
                   {message}
                 </div>
               ))}
             </div>
+            {/* Submit button */}
             <button type="submit" className="btn btn-dark w-100">Sign Up</button>
           </form>
 
+          {/* Button to navigate to the login page */}
           <button
             onClick={() => navigate("/login")}
             className="btn btn-white mt-3 w-100"
@@ -148,7 +161,7 @@ function SignUpForm() {
             Already have an account? Log in
           </button>
 
-          {/* Gear Icon */}
+          {/* Instructions section with a gear icon to open modal */}
           <div className="text-center mt-3 d-flex justify-content-center align-items-center">
             <span className="me-2">Instructions</span> {/* Text to the left of the icon */}
             <span
@@ -162,7 +175,7 @@ function SignUpForm() {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal displaying password requirements */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Password Requirements</Modal.Title>
