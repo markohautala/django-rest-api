@@ -1,2 +1,2 @@
 release: python manage.py makemigrations && python manage.py migrate
-web: gunicorn restapi.wsgi
+web: npm run build --prefix frontend && gunicorn restapi.wsgi
