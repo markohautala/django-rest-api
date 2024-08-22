@@ -1,0 +1,25 @@
+/* Househeart.module.css */
+
+.alert {
+  position: fixed;
+  top: 100px; /* Adds 100px margin from the top */
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+  z-index: 1000;
+  opacity: 0.9;
+  transition: opacity 0.5s ease;
+}
+
+.alert-success {
+  background-color: green;
+}
+
+.alert-error {
+  background-color: red;
+}
+
+.alert-disappear {
+  opacity: 0;
+}

@@ -3,12 +3,11 @@ import { Accordion, AccordionItem, AccordionHeader, AccordionBody } from 'react-
 import axios from 'axios';
 import styles from '../styles/Home.module.css';
 
-import heartNotLiked from '../assets/househeart-not-liked.png';
-import heartLiked from '../assets/househeart-liked.png';
 import loadingSpinner from '../assets/loading.gif';
 import Comments from './Comments';
 import CommentDelete from './CommentDelete';
 import DeleteHousePostButton from './DeleteHousePostButton';
+import HouseHearts from '../components/HouseHearts';
 
 const placeholderImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
@@ -16,11 +15,9 @@ function HousePosts() {
   const [housePosts, setHousePosts] = useState([]);
   const [nextPage, setNextPage] = useState(null);
   const [previousPage, setPreviousPage] = useState(null);
-  const [isLiked, setIsLiked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Assuming loggedInUser is stored as an object with a 'username' field in localStorage
   const loggedInUser = JSON.parse(localStorage.getItem('user'))?.username;
 
   useEffect(() => {
@@ -69,10 +66,6 @@ function HousePosts() {
         ));
       })
       .catch(error => console.error(`Error fetching comments for post ${postId}:`, error));
-  };
-
-  const toggleLike = () => {
-    setIsLiked(!isLiked);
   };
 
   const handleNextPage = () => {
@@ -159,13 +152,11 @@ function HousePosts() {
             <h5 className="card-title">{post.house_title}</h5>
             <p className="card-text">{post.description}</p>
             <div className="d-flex justify-content-between align-items-center">
-              <button className="btn btn-link p-0" type="button" onClick={toggleLike}>
-                <img
-                  src={isLiked ? heartLiked : heartNotLiked}
-                  alt="Like Button"
-                  style={{ width: '28.8px', height: '28.8px' }}
-                />
-              </button>
+              <HouseHearts
+                postId={post.id}
+                currentHeartCount={post.househearts_count}
+                fetchHousePosts={() => fetchHousePosts('http://127.0.0.1:8000/houseposts/')}
+              />
               <div className="d-flex align-items-center">
                 <div><strong>User:</strong> {post.user}</div>
               </div>
