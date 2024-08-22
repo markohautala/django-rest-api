@@ -69,6 +69,9 @@ function SignInForm() {
       // Set the current user context
       setCurrentUser(userResponse.data);
 
+      // Store the user information in localStorage
+      localStorage.setItem('user', JSON.stringify(userResponse.data)); // Store user info
+
       // Redirect to homepage after successful login
       navigate("/");
     } catch (err) {

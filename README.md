@@ -24,15 +24,111 @@ take screenshots and paste them here.
 
 
 ### React components
-explain all the components here.
+### **Upload.jsx**
+The `Upload` component allows users to create and upload a new "HousePost". It includes a form where users can enter a title, description, and upload an image of their house. The component handles image preview, form submission, and shows a loading spinner while uploading the data. If the upload is successful, it displays a success message and redirects the user to the homepage.
+
+### **Profile.jsx**
+The `Profile` component displays the user’s profile, including their display name, bio, and profile picture. It also allows users to edit their profile or delete their account. Users can update their display name, bio, and profile picture using a modal form. The component handles loading states and shows success or error messages based on the actions taken by the user.
+
+### **LandingPage.jsx**
+The `LandingPage` component is the welcome page for the application. It features a carousel displaying images of houses and an accordion with information about creating posts, connecting with the community, and securing user profiles. It also provides quick links for logging in or creating an account.
+
+### **HousePosts.jsx**
+The `HousePosts` component fetches and displays a list of "HousePosts" created by users. Each post shows the house image, title, description, and a like button. Users can also view comments on each post and add their own comments. The component handles pagination, loading states, and liking/unliking posts.
+
+### **DeleteHousePostButton.jsx**
+The `DeleteHousePostButton` component provides a button for deleting a specific "HousePost". It confirms the user's action with a modal and, if confirmed, deletes the post. The button only appears for posts created by the logged-in user.
+
+### **Comments.jsx**
+The `Comments` component allows users to add comments to a "HousePost". It includes a form for writing and submitting comments. The component manages errors, loading states, and updates the comment list after a new comment is added.
+
+### **CommentDelete.jsx**
+The `CommentDelete` component provides a button for deleting a specific comment on a "HousePost". It only allows the user who made the comment to delete it, confirming the action with a modal. After deletion, the component updates the comment list.
+
+### **LoginForm.jsx**
+The `SignInForm` component provides a form for users to log in to their accounts. It includes fields for entering a username and password, with an option to show or hide the password. The component handles form submission, manages loading states, and shows error messages if the login fails.
+
+### **CreateAccountForm.jsx**
+The `SignUpForm` component allows users to create a new account. It includes fields for entering a username and password, with validation to ensure the passwords match. The component shows a modal with password requirements and manages errors and loading states during account creation.
+
+### **Routes.js**
+The `AppRoutes` component defines all the possible routes (URLs) in the application. It checks if the user is authenticated and directs them to the appropriate page, such as home, login, sign-up, upload, or profile. If the user tries to access a page that doesn’t exist, they are redirected to the home page.
+
+### **NotFound.jsx**
+The `NotFound` component simply displays a "404 - Page Not Found" message when the user tries to access a page that doesn’t exist.
+
+### **NavigationBar.jsx**
+The `NavigationBar` component is the top navigation bar of the application. It includes links to different pages like home, upload, profile, login, and sign-up, depending on whether the user is logged in or not. It also handles user logout by clearing session data and redirecting to the home page.
+
+### **Home.jsx**
+The `Home` component decides what to show on the homepage based on whether the user is logged in. If the user is authenticated, it displays the `HousePosts` component; otherwise, it shows the `LandingPage` component.
+
+### **useRedirect.jsx**
+The `useRedirect` hook is a custom React hook that automatically redirects users based on their authentication status. For example, it redirects logged-in users away from the sign-in or sign-up pages.
+
+### **App.js**
+The `App` component is the main entry point of the application. It sets up the layout, including the navigation bar and main content area, and manages the global authentication state. It fetches a CSRF token when the app loads to ensure secure communication with the backend.
 
 
-### Security
-- DEBUG mode set to off
-- Secret key added to Heroku config vars and env.py file and to gitignore (not shared to github)
-- All API:s are secret in env.py and in Heroku config vars.
-- Industry standard CORS settings added.
-- Specified allowed hosts added.
+
+### **Security**
+
+This app includes several safety measures on both the frontend (what the user sees) and the backend (how the app works behind the scenes) to protect user data and keep the app secure.
+
+---
+
+#### **Frontend Security Measures**
+
+1. **Protection Against CSRF Attacks**:
+   - **CSRF Tokens**: The frontend uses special tokens (CSRF tokens) in requests to make sure that actions are being made by the right person and not by someone else trying to trick the system.
+
+2. **Login and Access Control**:
+   - **Token-Based Login**: When users log in, they receive a token (like a pass) that is saved in the browser. This token is used to make sure they are allowed to do certain things in the app.
+   - **Protected Pages**: Some pages, like the profile or upload page, can only be accessed if the user is logged in. This keeps private information safe.
+
+3. **Form Safety**:
+   - **Form Checks**: Before sending any information (like login details), the frontend checks if everything is filled out correctly. This helps catch mistakes early and prevents bad data from being sent.
+
+4. **Handling Errors**:
+   - **Safe Error Messages**: If something goes wrong, the app shows simple error messages that don’t give away any sensitive details about the app.
+
+5. **Managing User Sessions**:
+   - **Session Timeout**: The app keeps track of how long a user has been logged in. If the user has been inactive for a while, they will be logged out automatically for safety.
+   - **Clearing Data on Logout**: When a user logs out, the app makes sure to clear any stored information from the browser to keep their data safe.
+
+---
+
+#### **Backend Security Measures**
+
+1. **Protection Against CSRF Attacks**:
+   - **CSRF Middleware**: The backend also uses CSRF tokens to check that actions are coming from the right user and not someone trying to trick the system.
+
+2. **Login and Access Control**:
+   - **JWT Authentication**: The app uses a system called JWT (JSON Web Tokens) to manage user logins securely. These tokens are stored in a way that makes them hard to steal.
+   - **Custom Permissions**: The app has rules to make sure that only the owner of certain content (like a post) can change it, while others can only view it.
+
+3. **Data Safety**:
+   - **Model Validation**: The app checks that certain actions, like liking a post, follow the rules (for example, a user can’t like the same post twice).
+   - **Serializer Validation**: The backend checks that the data it receives is correct, such as making sure uploaded images aren’t too large.
+
+4. **Password Security**:
+   - **Strong Passwords**: When users create accounts, the app checks that their passwords are strong enough to be safe.
+   - **Password Hashing**: User passwords are stored in a safe way so that even if someone gets into the database, they can’t easily read the passwords.
+
+5. **Managing User Sessions**:
+   - **Secure Cookies**: The app uses secure settings for cookies (which store user tokens) to protect against attacks.
+   - **Clearing Cookies on Logout**: When users log out, the app clears these tokens to prevent unauthorized access later.
+
+6. **Error Handling and Logging**:
+   - **Safe Error Handling**: The backend carefully handles errors to make sure no sensitive information is leaked.
+
+7. **User Profiles**:
+   - **Automatic Profile Creation**: When a new user signs up, the app automatically creates a profile for them, making sure every user has a profile to manage.
+
+---
+
+These security measures help keep the app safe and make sure that user data is protected.
+
 
 
 ### Database Models

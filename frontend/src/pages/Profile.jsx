@@ -14,8 +14,6 @@ function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false); // State for delete account modal
-  const [showDeleteSuccessMessage, setShowDeleteSuccessMessage] = useState(false); // State for showing delete success message
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();  // Initialize useNavigate
 
@@ -101,28 +99,6 @@ function Profile() {
     setIsEditing(false);
   };
 
-  const handleDeleteAccount = async () => {
-    try {
-      setIsLoading(true);
-      await axios.delete(`/userprofiles/${userProfile.id}/`, {
-        headers: {
-          Authorization: `Token ${localStorage.getItem('token')}`,
-        },
-      });
-
-      // Show success message and redirect to homepage
-      setShowDeleteSuccessMessage(true);
-      setTimeout(() => {
-        setShowDeleteSuccessMessage(false);
-        navigate("/"); // Redirect to homepage after 3 seconds
-      }, 3000);
-    } catch (error) {
-      console.error("Error deleting account:", error);
-      setErrors({ non_field_errors: ["Failed to delete account."] });
-      setIsLoading(false);
-    }
-  };
-
   if (isLoading) {
     return (
       <div style={{
@@ -158,20 +134,6 @@ function Profile() {
         </Alert>
       )}
 
-      {showDeleteSuccessMessage && (
-        <Alert variant="danger" style={{
-          position: 'fixed',
-          top: '100px',  // Distance from the top of the page
-          right: '20px',  // Distance from the right side of the page
-          zIndex: 1000,
-          width: '250px',  // Smaller width
-          textAlign: 'center',
-          padding: '10px',  // Smaller padding
-        }}>
-          Account deleted
-        </Alert>
-      )}
-
       <img
         src={profilePicture}
         alt="Profile"
@@ -185,13 +147,6 @@ function Profile() {
           {bio}
         </p>
         <Button variant="dark" onClick={() => setIsEditing(true)}>Edit Profile</Button>
-        <span
-          className="material-symbols-outlined"
-          style={{ cursor: "pointer", marginLeft: "10px", fontSize: "24px" }}
-          onClick={() => setShowDeleteModal(true)}
-        >
-          settings
-        </span>
       </div>
 
       {/* Modal for Editing Profile */}
@@ -251,28 +206,6 @@ function Profile() {
         <Modal.Footer>
           <Button variant="dark" onClick={handleCancelEdit}>Cancel</Button>
           <Button variant="dark" onClick={handleSaveProfile}>Save Profile</Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Modal for Deleting Account */}
-      <Modal
-        show={showDeleteModal}
-        onHide={() => setShowDeleteModal(false)}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Delete Account</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Do you wish to permanently delete your account? This will delete all your created posts and comments. This action is irreversible.</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={handleDeleteAccount}>
-            Delete Account
-          </Button>
         </Modal.Footer>
       </Modal>
     </div>
