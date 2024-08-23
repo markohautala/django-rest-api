@@ -24,11 +24,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = False  # Turned off debug mode for production
 
-ALLOWED_HOSTS = ['http://localhost:3000', '127.0.0.1', 'localhost', 'housegram-fullstack-app-a01c6177ffd8.herokuapp.com']
+ALLOWED_HOSTS = ['housegram-fullstack-app-a01c6177ffd8.herokuapp.com']
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1',
     'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',  # Added Heroku domain
 ]
 
@@ -151,7 +149,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = False
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000',
     'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',  # Added Heroku domain
 ]
 
