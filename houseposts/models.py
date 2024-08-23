@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 
+
 class HousePost(models.Model):
     """
     HousePost model, associated with 'user', i.e., a User instance.

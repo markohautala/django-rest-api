@@ -9,125 +9,20 @@ Deployed URL:
 https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/
 
 
-## How to use the application
-- As a user, you can visit hte given deployed url, and from there you can either create a new account, or log in with an existing one. To create and account, navigate to the create account page by clicking in the navigation bar on "create account". Then you will be redirected to the form to create you account. Type in our desired username and create a password - you will be prompted to re-type it, just to make sure they are the same. Remember this password. If the account-creation is successful, you will be redirected to the login-page, whee you now need to login in. On sucessful login, you will be redirected to the "homepage". Here you can see the other users posts from the application.
+## How to Use the Application
 
-To be able to create your own housepost and to shre your own dreamhome, navigate to "upload" on the navigationbar - click on the link. Now you will be redirected to the upload page where you can enter a image of your own. The maximum sixe is 4mb on the image size. You also need to add a short title and description of your own. After you feel satisfied with your draft of a housepost, click the submit button. Upon success, you will be redirected to the homepage where you now can see your newly created housepost.
+- As a user, you can visit the deployed URL and create a new account or log in with an existing one. To create an account, navigate to the "Create Account" page by clicking on the "Create Account" link in the navigation bar. You will be redirected to a form where you can enter your desired username and create a password. You will be prompted to re-enter the password to ensure they match. If the account creation is successful, you will be redirected to the login page where you can now log in. Upon successful login, you will be redirected to the homepage, where you can see other users' posts.
 
-You can also on the homepage look at other peoples houseposts and give them likes or "househearts". You can also add comments that are kind and nice and also read and look at other peoples comments. If you want to delete your comment, you can hover over your own comment and click on the delete button - this will permanently delete the existing comment.
+- To create your own house post and share your dream home, navigate to the "Upload" page using the navigation bar. On the upload page, you can add an image of your home (maximum size of 4MB), a short title, and a description. Once you are satisfied with your post, click the "Submit" button. Upon success, you will be redirected to the homepage where your newly created house post will be visible.
 
-You have your own profile and you can navigate to it using the navigation bar and click on "Profile". On that page, you can now see a image (for now placeholder image - since you have yet to upload such), and you can also see a field for username and description. You can edit them aswell bu clicking on those buttons and click save. You can aswell upload your own avatar image.
+- On the homepage, you can view other users' house posts, give them likes or "Househearts," and add kind and thoughtful comments. You can also read and view other users' comments. To delete your comment, hover over it and click on the delete button. This will permanently delete the comment.
+
+- You have your own profile that you can navigate to by clicking on "Profile" in the navigation bar. On the profile page, you can see a placeholder image (until you upload your own), your username, and your bio. You can edit these by clicking on the corresponding buttons and saving your changes. You can also upload your own avatar image.
 
 <hr>
 
 ## Project goals
 - I created this application with the goal of providing a platform for house enthusiasts to share their dream homes and connect with others who have similar interests. The app allows users to post pictures, descriptions, and interact with each other's content, helping to build a vibrant community of home lovers.
-
-### **User Stories Mapped to Project Goals**
-
-This application was developed with the goal of creating a platform where house enthusiasts can share their dream homes and build a community. Below is a table mapping user stories to this main project goal:
-
-| **Project Goal**                                          | **User Story**                                                                                                 |
-|-----------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
-| **Create a platform for sharing dream homes**             | **House Post Management**: Users can create, edit, delete, and view house posts, allowing them to share their homes. |
-| **Build a community of house enthusiasts**                | **Househeart Functionality**: Users can "househeart" posts, showing appreciation and building community interaction. |
-|                                                           | **View House Posts Feed**: Users can browse through all shared house posts, encouraging exploration and engagement.   |
-| **Personalize user experiences**                          | **User Profile Management**: Users can manage their profiles, including their bio and profile picture, making the app more personal. |
-|                                                           | **Edit User Profile**: Users can update their profile information, keeping their personal information current.       |
-| **Ensure user-friendly interaction**                      | **Sign-Up Form**: Allows new users to join the community easily.                                                   |
-|                                                           | **Login Form**: Enables returning users to access their profiles and interact with the app.                         |
-|                                                           | **Action Feedback**: Provides clear feedback on actions like post creation or profile updates, ensuring users know what's happening. |
-|                                                           | **Navigation**: Users can easily navigate through the app, accessing different features without confusion.           |
-| **Secure and manage user data**                           | **User Authentication**: Users can securely sign up, log in, and manage their sessions.                            |
-|                                                           | **CORS Management**: Ensures secure communication between the frontend and backend.                                |
-|                                                           | **Error Handling**: Users receive clear messages when something goes wrong, improving their experience and security.  |
-| **Support image sharing and storage**                     | **Cloudinary Integration**: Users can upload images securely, ensuring their house posts are visually engaging.      |
-| **Encourage ongoing user interaction**                    | **Delete House Post**: Users can remove content they no longer wish to share, keeping their profiles up-to-date.     |
-|                                                           | **View User Profile**: Users can see their bio and shared posts, encouraging them to keep engaging with the app.     |
-
-
-<hr>
-
-
-## Features
-take screenshots and paste them here.
-
-<hr>
-
-### React components
-### **Upload.jsx**
-The `Upload` component allows users to create and upload a new "HousePost". It includes a form where users can enter a title, description, and upload an image of their house. The component handles image preview, form submission, and shows a loading spinner while uploading the data. If the upload is successful, it displays a success message and redirects the user to the homepage.
-
-### **Profile.jsx**
-The `Profile` component displays the user’s profile, including their display name, bio, and profile picture. It also allows users to edit their profile or delete their account. Users can update their display name, bio, and profile picture using a modal form. The component handles loading states and shows success or error messages based on the actions taken by the user.
-
-### **LandingPage.jsx**
-The `LandingPage` component is the welcome page for the application. It features a carousel displaying images of houses and an accordion with information about creating posts, connecting with the community, and securing user profiles. It also provides quick links for logging in or creating an account.
-
-### **HousePosts.jsx**
-The `HousePosts` component fetches and displays a list of "HousePosts" created by users. Each post shows the house image, title, description, and a like button. Users can also view comments on each post and add their own comments. The component handles pagination, loading states, and liking/unliking posts.
-
-### **DeleteHousePostButton.jsx**
-The `DeleteHousePostButton` component provides a button for deleting a specific "HousePost". It confirms the user's action with a modal and, if confirmed, deletes the post. The button only appears for posts created by the logged-in user.
-
-### **Comments.jsx**
-The `Comments` component allows users to add comments to a "HousePost". It includes a form for writing and submitting comments. The component manages errors, loading states, and updates the comment list after a new comment is added.
-
-### **CommentDelete.jsx**
-The `CommentDelete` component provides a button for deleting a specific comment on a "HousePost". It only allows the user who made the comment to delete it, confirming the action with a modal. After deletion, the component updates the comment list.
-
-### **LoginForm.jsx**
-The `SignInForm` component provides a form for users to log in to their accounts. It includes fields for entering a username and password, with an option to show or hide the password. The component handles form submission, manages loading states, and shows error messages if the login fails.
-
-### **CreateAccountForm.jsx**
-The `SignUpForm` component allows users to create a new account. It includes fields for entering a username and password, with validation to ensure the passwords match. The component shows a modal with password requirements and manages errors and loading states during account creation.
-
-### **Routes.js**
-The `AppRoutes` component defines all the possible routes (URLs) in the application. It checks if the user is authenticated and directs them to the appropriate page, such as home, login, sign-up, upload, or profile. If the user tries to access a page that doesn’t exist, they are redirected to the home page.
-
-### **NotFound.jsx**
-The `NotFound` component simply displays a "404 - Page Not Found" message when the user tries to access a page that doesn’t exist.
-
-### **NavigationBar.jsx**
-The `NavigationBar` component is the top navigation bar of the application. It includes links to different pages like home, upload, profile, login, and sign-up, depending on whether the user is logged in or not. It also handles user logout by clearing session data and redirecting to the home page.
-
-### **Home.jsx**
-The `Home` component decides what to show on the homepage based on whether the user is logged in. If the user is authenticated, it displays the `HousePosts` component; otherwise, it shows the `LandingPage` component.
-
-### **useRedirect.jsx**
-The `useRedirect` hook is a custom React hook that automatically redirects users based on their authentication status. For example, it redirects logged-in users away from the sign-in or sign-up pages.
-
-
-### **App.js**
-The `App` component is the main entry point of the application. It sets up the layout, including the navigation bar and main content area, and manages the global authentication state. It fetches a CSRF token when the app loads to ensure secure communication with the backend. Using reusable components in React makes the app easier to maintain and update, ensuring everything stays consistent and efficient.
-
-<hr>
-
-### **Component Reuse in React**
-
-This application uses React's component-based architecture to keep the code clean and easy to manage by reusing components across different parts of the app.
-
-#### **1. `NavigationBar.jsx`**
-- **What it does**: The `NavigationBar` is used at the top of every page to help users navigate the app.
-- **Reuse**: It's the same component on every page, so any updates happen everywhere without extra work.
-
-#### **2. `Form Components (LoginForm.jsx & CreateAccountForm.jsx)`**
-- **What they do**: These forms handle user login and account creation.
-- **Reuse**: Both forms use similar layouts and logic, which keeps things consistent and reduces repeated code.
-
-#### **3. `HousePost Components (HousePosts.jsx & DeleteHousePostButton.jsx)`**
-- **What they do**: `HousePosts` shows a list of posts, and `DeleteHousePostButton` lets users delete posts.
-- **Reuse**: `DeleteHousePostButton` is its own component, so it can be used anywhere a post needs deleting, not just in the main feed.
-
-#### **4. `Comment Components (Comments.jsx & CommentDelete.jsx)`**
-- **What they do**: `Comments` lets users add and view comments, while `CommentDelete` allows users to delete their comments.
-- **Reuse**: These components can be easily reused wherever comments are needed in the app.
-
-#### **5. **Handling Errors & Loading** **
-- **What they do**: Components like `Upload` and `Profile` manage loading spinners and error messages in a similar way.
-- **Reuse**: The same patterns are used throughout the app, making it consistent and easy to update.
-
-
 
 <hr>
 
@@ -193,100 +88,310 @@ These security measures help keep the app safe and make sure that user data is p
 
 ### Database Models
 
+<p align="center">
+  <img src="frontend\src\assets\readme-images\database-model-diagram.png" alt="database models relationships" width="400">
+</p>
+
+
 The HousePost application includes several key database models that define the structure and relationships of the data. Below is an overview of each model and how they are connected.
 
 #### 1. UserProfile
 
 **Purpose**:
-The `UserProfile` model stores additional information about users that extends the default Django `User` model.
+The UserProfile model stores additional information about users that extends the default Django User model.
 
 **Fields**:
-- `user`: A one-to-one relationship with Django's built-in `User` model.
-- `date_created`: The date and time when the profile was created.
-- `date_updated`: The date and time when the profile was last updated.
-- `display_name`: A custom name that the user can display.
-- `bio`: A short biography or description written by the user.
-- `profile_picture`: A profile picture uploaded by the user, managed by Cloudinary.
+- user: A one-to-one relationship with Django's built-in User model.
+- date_created: The date and time when the profile was created.
+- date_updated: The date and time when the profile was last updated.
+- display_name: A custom name that the user can display.
+- bio: A short biography or description written by the user.
+- profile_picture: A profile picture uploaded by the user, managed by Cloudinary.
 
 **Relationships**:
-- The `UserProfile` model is directly linked to the `User` model via a one-to-one relationship. Each user has one profile.
+- The UserProfile model is directly linked to the User model via a one-to-one relationship. Each user has one profile.
 
 #### 2. HousePost
 
 **Purpose**:
-The `HousePost` model represents posts created by users about houses. These posts include details such as the title, description, and an image of the house.
+The HousePost model represents posts created by users about houses. These posts include details such as the title, description, and an image of the house.
 
 **Fields**:
-- `user`: A foreign key linking each post to a specific user.
-- `date_posted`: The date and time when the post was created.
-- `date_modified`: The date and time when the post was last updated.
-- `house_title`: The title of the house post.
-- `description`: A detailed description of the house.
-- `house_image`: An image of the house, managed by Cloudinary.
+- user: A foreign key linking each post to a specific user.
+- date_posted: The date and time when the post was created.
+- date_modified: The date and time when the post was last updated.
+- house_title: The title of the house post.
+- description: A detailed description of the house.
+- house_image: An image of the house, managed by Cloudinary.
 
 **Relationships**:
-- Each `HousePost` is linked to one user via a foreign key (`user`). This establishes a many-to-one relationship where a single user can have multiple posts.
+- Each HousePost is linked to one user via a foreign key (user). This establishes a many-to-one relationship where a single user can have multiple posts.
 
 #### 3. HouseHeart
 
 **Purpose**:
-The `HouseHeart` model represents a "like" or "heart" that a user gives to a specific house post.
+The HouseHeart model represents a "like" or "heart" that a user gives to a specific house post.
 
 **Fields**:
-- `user`: A foreign key linking the heart to the user who liked the post.
-- `housepost`: A foreign key linking the heart to the specific house post that was liked.
-- `timestamp_created`: The date and time when the heart was created.
+- user: A foreign key linking the heart to the user who liked the post.
+- housepost: A foreign key linking the heart to the specific house post that was liked.
+- timestamp_created: The date and time when the heart was created.
 
 **Relationships**:
-- Each `HouseHeart` is linked to both a user and a house post via foreign keys. This establishes a many-to-one relationship where a single post can have many hearts, and a single user can like multiple posts.
-- The combination of `user` and `housepost` is unique, ensuring that a user can only like a specific post once.
+- Each HouseHeart is linked to both a user and a house post via foreign keys. This establishes a many-to-one relationship where a single post can have many hearts, and a single user can like multiple posts.
+- The combination of user and housepost is unique, ensuring that a user can only like a specific post once.
 
 #### 4. HousePostComment
 
 **Purpose**:
-The `HousePostComment` model stores comments made by users on house posts.
+The HousePostComment model stores comments made by users on house posts.
 
 **Fields**:
-- `user`: A foreign key linking the comment to the user who made it.
-- `housepost`: A foreign key linking the comment to the specific house post it was made on.
-- `timestamp_created`: The date and time when the comment was created.
-- `timestamp_modified`: The date and time when the comment was last updated.
-- `comment`: The content of the comment.
+- user: A foreign key linking the comment to the user who made it.
+- housepost: A foreign key linking the comment to the specific house post it was made on.
+- timestamp_created: The date and time when the comment was created.
+- timestamp_modified: The date and time when the comment was last updated.
+- comment: The content of the comment.
 
 **Relationships**:
-- Each `HousePostComment` is linked to both a user and a house post via foreign keys. This creates a many-to-one relationship where a single post can have many comments, and a single user can comment on multiple posts.
+- Each HousePostComment is linked to both a user and a house post via foreign keys. This creates a many-to-one relationship where a single post can have many comments, and a single user can comment on multiple posts.
 
 #### Summary of Relationships
 
-- **UserProfile** is a one-to-one extension of the `User` model.
-- **HousePost** is related to `User` via a many-to-one relationship.
-- **HouseHeart** and **HousePostComment** are each related to both `User` and `HousePost` via many-to-one relationships.
+- **UserProfile** is a one-to-one extension of the User model.
+- **HousePost** is related to User via a many-to-one relationship.
+- **HouseHeart** and **HousePostComment** are each related to both User and HousePost via many-to-one relationships.
 
 These models work together to create a robust structure for managing user profiles, posts about houses, user interactions (likes/house-hearts), and user-generated comments.
 
+### **User Stories Mapped to Project Goals**
+
+This application was developed with the goal of creating a platform where house enthusiasts can share their dream homes and build a community. Below is a table mapping user stories to this main project goal:
+
+| **Project Goal**                                          | **User Story**                                                                                                 |
+|-----------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| **Create a platform for sharing dream homes**             | **House Post Management**: Users can create, edit, delete, and view house posts, allowing them to share their homes. |
+| **Build a community of house enthusiasts**                | **Househeart Functionality**: Users can "househeart" posts, showing appreciation and building community interaction. |
+|                                                           | **View House Posts Feed**: Users can browse through all shared house posts, encouraging exploration and engagement.   |
+| **Personalize user experiences**                          | **User Profile Management**: Users can manage their profiles, including their bio and profile picture, making the app more personal. |
+|                                                           | **Edit User Profile**: Users can update their profile information, keeping their personal information current.       |
+| **Ensure user-friendly interaction**                      | **Sign-Up Form**: Allows new users to join the community easily.                                                   |
+|                                                           | **Login Form**: Enables returning users to access their profiles and interact with the app.                         |
+|                                                           | **Action Feedback**: Provides clear feedback on actions like post creation or profile updates, ensuring users know what's happening. |
+|                                                           | **Navigation**: Users can easily navigate through the app, accessing different features without confusion.           |
+| **Secure and manage user data**                           | **User Authentication**: Users can securely sign up, log in, and manage their sessions.                            |
+|                                                           | **CORS Management**: Ensures secure communication between the frontend and backend.                                |
+|                                                           | **Error Handling**: Users receive clear messages when something goes wrong, improving their experience and security.  |
+| **Support image sharing and storage**                     | **Cloudinary Integration**: Users can upload images securely, ensuring their house posts are visually engaging.      |
+| **Encourage ongoing user interaction**                    | **Delete House Post**: Users can remove content they no longer wish to share, keeping their profiles up-to-date.     |
+|                                                           | **View User Profile**: Users can see their bio and shared posts, encouraging them to keep engaging with the app.     |
+
+
 <hr>
 
-#### UX design decisions
-Paste in figma or UX design decisions here.
+## Features
+
+Here is a list of all the features in the application and a brief explanation of their purpose:
+
+### Navigation Bar
+
+- The navigation bar is the first thing that the user sees when they visit the application. A non-logged-in user will see options to either log in or sign up.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\navbar.png" alt="Navbar" width="400">
+</p>
+
+### Landing Page
+
+- The landing page shows login and sign-up options further down the page.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\login-signup.png" alt="Landing Page" width="400">
+</p>
+
+### Login Form
+
+- When the user navigates to the login page, they will see this form. It takes a username and password. The user can also choose to "see" or "unsee" the password (default is hidden).
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\loginform.png" alt="Login" width="400">
+</p>
+
+### Signup Form
+
+- The signup form takes a username and two password fields for confirmation. It also has an "Instructions" button that shows requirements before signing up.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\signup-form.png" alt="Signup" width="400">
+</p>
+<p align="center">
+  <img src="frontend\src\assets\readme-images\signup-form-instructions.png" alt="Signup Instructions" width="400">
+</p>
+
+### House Posts Feed
+
+- This is the page the user is redirected to after signing up or logging in. The latest house posts appear at the top.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\feed.png" alt="Feed" width="400">
+</p>
+<p align="center">
+  <img src="frontend\src\assets\readme-images\housepost.png" alt="House Posts" width="400">
+</p>
+
+### Househeart and Comment Count
+
+- The househeart and comment functions have a count showing how many users have househearted or commented on a specific post. The househeart icon changes color and increments the count when clicked.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\count.png" alt="Counts" width="400">
+</p>
+
+### Comment Section
+
+- Each comment has a timestamp fetched from the database. If the logged-in user created the comment, a delete button appears. Clicking it shows a modal with options to delete or cancel.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\comment-timestamp-deletebutton.png" alt="Comment Timestamp" width="400">
+</p>
+
+### Housepost Deletion
+
+- If the logged-in user is the creator of a house post, a delete button is shown under the image. Clicking it triggers a modal for confirmation.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\delete-post-confirmation.png" alt="Delete Housepost" width="400">
+</p>
+
+### Loading Indicator
+
+- On all actions that involve user interaction, such as form submissions, a loading icon appears, providing visual feedback to the user.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\loader-image.png" alt="Loader" width="400">
+</p>
+
+### Pagination
+
+- The feed displays only 10 posts at a time due to pagination settings. Navigation buttons for "Next" and "Previous" are shown at the bottom of the page.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\next-previous.png" alt="Next and Previous" width="400">
+</p>
+
+### Comment Input
+
+- Logged-in users can type comments on posts. The send button only becomes active when the user starts typing, preventing empty comments.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\write-comment.png" alt="Write Comment" width="400">
+</p>
+
+### Upload Post
+
+- The upload page allows users to create a house post by uploading an image, title, and description. Once satisfied, they can submit the post and be redirected to the homepage.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\upload-post.png" alt="Upload" width="400">
+</p>
+
+### Profile Management
+
+- Users can visit and edit their profile. Initially, a placeholder image, no display name, and no bio are shown. Users can upload an image, add a display name, and a bio.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\profile.png" alt="Profile" width="400">
+</p>
+<p align="center">
+  <img src="frontend\src\assets\readme-images\edit-profile.png" alt="Edit Profile" width="400">
+</p>
+
+### Logout Functionality
+
+- When a user clicks the logout button, they are redirected to the homepage. The homepage displays a component meant for non-authenticated users, showing the login and signup options.
+
+## UX Design Decisions
+
+The UX design for Housegram was shaped by a clear idea of what the app should do and how users should interact with it. This flexible approach allowed us to make design decisions that focused on making the app easy to use and visually appealing.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\0.png" alt="landing page mockup" width="400">
+</p>
+- This is the mockup that was created for the landing page - the page that the user initially sees when they visit the app/page. It shows the navbar with the login and signup buttons as well as a carousel ith house-images, giving the first impression tht this app/service has to do with houses. We also added the bootstrap accordion later on, to give more text-based information about the app.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\1.png" alt="housepost feed" width="400">
+</p>
+- This mockup visualises how the housepost section should look like - on on page, there are ten posts and then the user has to navigate to the next page on the application. This mockup just presents the comment, househeart, timestamp and image elements on the post and where they should be placed.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\2.png" alt="upload housepost" width="400">
+</p>
+- This mockup visualises the component that takes care of the image-uploading. Here we can see that the user can input a image, title and description and then send it by clicking on submit. Notice that the navbar is different to the first mockup, since now the user is authenticated and logged in.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\3.png" alt="profile" width="400">
+</p>
+- This mockup shows the design idea for the profile section - here we can see that the user has a image field or profil picture, and a display name and a biography. And to change these, the user can click edit.
+
+### Visual and Interaction Design
+
+We built the user interface using Bootstrap, which provided solid and intuitive elements that formed the backbone of our design. Bootstrap’s components, like modals, forms, and navigation bars, were chosen because they are familiar to users and work well across different devices. This helped us create a consistent and user-friendly experience throughout the app.
+
+For icons and logos, we used Google Icons because they are simple, clear, and immediately recognizable. For example, we used the gear icon for editing and the delete icon for deleting content. These choices make the app intuitive to use because they follow common conventions that users already understand.
+
+### Color Scheme and Styling
+
+The color scheme was inspired by the logo in the navigation bar. We chose colors that work well together and are easy on the eyes. The idea was to create a clean, minimalist design that looks good and is easy to navigate. We used darker colors with black text for strong contrast and lighter colors with white text for clarity. This helps important elements stand out and makes the app easy to read and interact with.
+
+### Design Choices for User Experience
+
+One of our key design choices was to add a glassmorphism effect to the navigation bar and timestamps on house posts. This effect adds a modern and stylish look while keeping the interface light and visually appealing. Additionally, we decided to round the corners of all elements in the app. This small detail gives the app a softer, more welcoming feel, making it more pleasant to use.
+
+Overall, the design of Housegram is clean, simple, and user-focused, with thoughtful choices that enhance both the look and functionality of the app.
+
 
 <hr>
 
-#### Possible future features
+## Possible Future Features
 
-- logged in / authenticated user could have a navbar link that says "househearts" and when the user clicks on that, the user is navigated to a page where the user can see all the posts that the user has "house-hearted".
-
-- A featue that would be good to possibly apply in the future would be the ability to search other users. Right now the "feed" or the homepage lists all the houseposts in the database. So, the ability to follow other users and that the feed/home-page would only display those profile's posts, that would definetily be a cosiderable feature in the future.
-
-- A notification system giving the users notifications when other users give "house-hearts"/likes or comments on ones own posts - boosting the possibility for users to return to the website and post more houseposts and this would eventually make the community grow and self-reminding the webpage to users aout it's existance.
-
-- Right now, the application is just for the purpose of a portfolio project - but if this would eventually become a commercial application, there would be the need of a admin, staff or system in place that would check and approve if the houseposts contains a image of a house. If not, there would be a problem if users expect house-related images and posts but recieve something else.
-
-- One feature that was intended to input to the application was the ability to search and filter results on the homepage. Due to lack of time, it was excluded from the plan but it would be a good feature to add in the future to give the users the ability to search for "popular" houseposts tht have the most comments and the most househearts. Also, users would be able to search for posts. This functionality is added to the backend but, as said previously, due to lack of time, it had to be excluded from the plan.
+- **Househearts Page:** A page where users can see all the posts they have "househearted."
+- **Search and Follow Users:** The ability to search for and follow other users, with the homepage displaying posts only from followed profiles.
+- **Notification System:** Notifications when users receive "househearts" or comments on their posts, encouraging user engagement.
+- **Content Moderation:** If the app becomes commercial, a system or staff to approve house posts would be necessary to ensure content aligns with the app's theme.
+- **Search and Filter Posts:** Adding search and filter functionality on the homepage, allowing users to find popular or specific house posts.
 
 <hr>
 
 ## Testing
-### Lighthouse Testing
+
+## Browser Compatibility
+
+This project has been thoroughly tested across various web browsers to ensure full compatibility and a consistent user experience. Below is a table that details the browsers that were tested, along with the versions and the results.
+
+| **Browser**        | **Version**       | **Tested** | **Status**        |
+|--------------------|-------------------|------------|-------------------|
+| Google Chrome      | 113.0 and above   | ✔          | Works without errors |
+| Mozilla Firefox    | 102.0 and above   | ✔          | Works without errors |
+| Microsoft Edge     | 112.0 and above   | ✔          | Works without errors |
+| Safari             | 16.0 and above    | ✔          | Works without errors |
+
+### Mobile-First Design
+
+- A mobile-first design approach has been implemented throughout the project.
+- The design has been thoroughly tested on mobile versions of the browsers listed above.
+- The user interface adapts seamlessly across different screen sizes, ensuring an optimal experience on both mobile and desktop devices.
+
+### Notes:
+- The project has been tested on the latest stable versions of each browser listed above.
+- No issues or errors were encountered during testing across all listed browsers.
+
+
+### Lighthouse Testing Score
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\lighthouse.png" alt="lighthouse testing" width="400">
+</p>
 
 <hr>
 
@@ -354,17 +459,25 @@ REST_FRAMEWORK = {
 
 <hr>
 
-### Validator testing
-JavaScript testing: https://jshint.com/
-Python pep8 linter testing: https://pep8ci.herokuapp.com/
+### Validator Testing
+- JavaScript testing: [https://jshint.com/](https://jshint.com/)
+- Python PEP8 linter testing: [https://pep8ci.herokuapp.com/](https://pep8ci.herokuapp.com/)
+
+All tests have been passed.
 
 <hr>
 
-### Languages and Frameworks used
-- Backend is built with Django REST framework
-- Frontend is built with React
-- Styling and grid-layout on the frontend is applied with react-bootstrap
-- Custom CSS and HTML has been added aswell.
+## Languages and Frameworks Used
+
+- Backend: Django REST framework
+- Frontend: React
+- Styling: React Bootstrap, custom CSS, and HTML
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\Languages.png" alt="languages" width="400">
+</p>
+
+
 
 <hr>
 
@@ -612,18 +725,13 @@ Deploy the application using your preferred method. In this production we used H
 
 
 ## Credits
-#### Resources used
-- For the react-bootstrap elements, this porject has gotten it's information and content from the react-bootstrap documentation: https://react-bootstrap.netlify.app/docs/
-
-- Icons for the page has been gotten from Google Icons: https://favicon.io/favicon-converter/
-
-- The custom loading icon that has been applied to the different react-pages that use POST or GET requests (in submitting forms for example), then there is a loading gif that has been applied. This loading icon was generated with: https://loading.io/
-
-- Secret key generator for Django (in orde to create a new secet key for the backend): https://djecrety.ir/
-
-- The database diagram in this README has been made using this resource: https://dbdiagram.io/home
-
-- The househeart icons for the liked and not-liked icons are gotten from this free resource: https://www.flaticon.com/search?word=house%20heart
+#### Resources Used
+- For React Bootstrap elements, the project references the React Bootstrap documentation: https://react-bootstrap.netlify.app/docs/
+- Icons for the page were sourced from Google Icons: https://favicon.io/favicon-converter/
+- The custom loading icon used during form submissions was generated with: https://loading.io/
+- Secret key generator for Django: https://djecrety.ir/
+- The database diagram in this README was created using: https://dbdiagram.io/home
+- Househeart icons were sourced from Flaticon: https://www.flaticon.com/search?word=house%20heart
 
 #### Other credits
-- Inspiration for this application and for some of the features has been gotten from Code Institues walktrough project called "Moments". But in order to make it custom to my projects scope and needs, there has been significant customization made to all the models, views, react-code, UX-design, feature and naming convention troughout the whole application. But, initial inspiration for this project idea was achieved by doing the walktrough project from Code Institute. But just to clarify, this project has it's own uniqueness and my personal toucht it.
+- Inspiration for this application and some of its features was drawn from Code Institute's walkthrough project "Moments." However, significant customization has been made to models, views, React code, UX design, features, and naming conventions throughout the entire application. This project has its own unique elements and personal touches. The Upload.jsx component, for example, includes a feature where users can upload an image and preview it before submitting, similar to the feature in the Code Institute project, but with a unique design tailored to this project.

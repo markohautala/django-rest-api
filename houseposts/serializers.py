@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import HousePost
 from househearts.models import HouseHeart
 
+
 class HousePostSerializer(serializers.ModelSerializer):
     """
     Serializer for the HousePost model with additional fields.

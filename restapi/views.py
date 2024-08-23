@@ -8,11 +8,13 @@ from .settings import (
 )
 from dj_rest_auth.views import LoginView
 
+
 @api_view()
 def root_route(request):
     return Response({
         "message": "Welcome to my Houseposts API!"
     })
+
 
 @api_view(['POST'])
 def logout_route(request):
@@ -45,6 +47,7 @@ def logout_route(request):
 @ensure_csrf_cookie
 def set_csrf_token(request):
     return JsonResponse({'detail': 'CSRF cookie set'})
+
 
 class CustomLoginView(LoginView):
     def get(self, request, *args, **kwargs):

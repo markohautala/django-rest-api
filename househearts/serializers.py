@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from .models import HouseHeart, HousePost
 
+
 class HouseHeartSerializer(serializers.ModelSerializer):
     """
     Serializer for the HouseHeart model, which manages the representation

@@ -2,6 +2,7 @@ from django.contrib.humanize.templatetags.humanize import naturaltime
 from rest_framework import serializers
 from housepostcomments.models import HousePostComment
 
+
 class HousePostCommentSerializer(serializers.ModelSerializer):
     """
     Serializer for the HousePostComment model.
@@ -29,6 +30,7 @@ class HousePostCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousePostComment
         fields = '__all__'
+
 
 class CommentDetailSerializer(HousePostCommentSerializer):
     """

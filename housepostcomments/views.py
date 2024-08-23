@@ -3,17 +3,24 @@ from restapi.permissions import IsOwnerOrReadOnly
 from .models import HousePostComment
 from .serializers import HousePostCommentSerializer, CommentDetailSerializer
 
-# List takes care of GET requests, Create takes care of POST requests and create takes care of POST requests
+
 class HousePostCommentList(generics.ListCreateAPIView):
-  serializer_class = HousePostCommentSerializer
-  permission_classes = [permissions.IsAuthenticatedOrReadOnly] # Only authenticated users can create comments
-  queryset = HousePostComment.objects.all() # Get all comments
+    """
+    Handles GET (list all comments) and POST (create a new comment) requests.
+    """
+    serializer_class = HousePostCommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = HousePostComment.objects.all()
 
-  def perform_create(self, serializer):
-    serializer.save(user=self.request.user) # Save the user who created the comment
+    def perform_create(self, serializer):
+        # Save the user who created the comment
+        serializer.save(user=self.request.user)
 
-# Detail takes care of GET, PUT and DELETE requests
+
 class HousePostCommentDetail(generics.RetrieveUpdateDestroyAPIView):
-  serializer_class = CommentDetailSerializer
-  permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # Only authenticated users can update or delete comments
-  queryset = HousePostComment.objects.all() # Get all comments
+    """
+    Handles GET (retrieve), PUT/PATCH (update), and DELETE (destroy) requests for a single comment.
+    """
+    serializer_class = CommentDetailSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    queryset = HousePostComment.objects.all()

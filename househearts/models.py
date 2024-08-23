@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from houseposts.models import HousePost
 
+
 class HouseHeart(models.Model):
     """
     HouseHeart model, linked to a User (User) and a HousePost.

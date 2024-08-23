@@ -4,6 +4,7 @@ from .models import UserProfile
 from .serializers import UserProfileSerializer
 from restapi.permissions import IsOwnerOrReadOnly
 
+
 class UserProfileList(generics.ListAPIView):
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.annotate(
@@ -15,6 +16,7 @@ class UserProfileList(generics.ListAPIView):
 
     def get_queryset(self):
         return self.queryset
+
 
 class UserProfileDetail(generics.RetrieveUpdateAPIView):
     queryset = UserProfile.objects.all()
