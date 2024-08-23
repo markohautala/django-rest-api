@@ -1,5 +1,9 @@
 # HOUSEGRAM
 
+<p align="center">
+  <img src="frontend\src\assets\housegram.png" alt="housegram" width="600">
+</p>
+
 #### Housegram is a unique social media app designed for dream house enthusiasts. Users can log in to share images of their dream homes, explore other users' posts, and engage with the community by giving "Househearts" and leaving comments on their favorite houses. Whether you're looking for inspiration or just want to showcase your ideal living space, Housegram is the perfect platform to connect with like-minded individuals and celebrate the art of home and house-design.
 
 
