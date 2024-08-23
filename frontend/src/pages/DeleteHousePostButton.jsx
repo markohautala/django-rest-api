@@ -15,7 +15,7 @@ function DeleteHousePostButton({ postId, postUser, loggedInUser, onDeleteSuccess
     const token = localStorage.getItem('token'); // Get the authentication token from local storage
 
     // Send a DELETE request to the server to delete the house post
-    axios.delete(`http://127.0.0.1:8000/houseposts/${postId}/`, {
+    axios.delete(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/houseposts/${postId}/`, {
       headers: {
         'Authorization': `Token ${token}`, // Include the token in the request headers
       },

@@ -25,7 +25,7 @@ const HouseHearts = ({ postId, currentHeartCount }) => {
             return;
         }
 
-        axios.post('http://127.0.0.1:8000/househearts/', {
+        axios.post('https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/househearts/', {
             housepost: postId,
             user: loggedInUser,
         }, {

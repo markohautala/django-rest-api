@@ -19,7 +19,7 @@ function CommentDelete({ commentId, commentUser, loggedInUser, fetchCommentsForP
     }
 
     try {
-      const deleteUrl = `http://127.0.0.1:8000/housepostcomments/${commentId}/`; // URL for deleting the specific comment
+      const deleteUrl = `https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/housepostcomments/${commentId}/`; // URL for deleting the specific comment
       await axios.delete(deleteUrl, {
         headers: {
           Authorization: `Token ${token}`, // Include the token in the request header for authentication

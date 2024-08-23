@@ -1,7 +1,6 @@
 import axios from "axios";
 
 // Set up default configuration for axios
-axios.defaults.baseURL = "/api";  // Base URL for all axios requests, adjust to your backend URL
 axios.defaults.baseURL = "https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com";  // Base URL for all axios requests, adjust to your backend URL
 axios.defaults.withCredentials = true;  // Ensure that cookies are sent with every request, important for authentication
 
