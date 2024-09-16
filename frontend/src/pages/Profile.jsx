@@ -12,6 +12,7 @@ function Profile() {
   const [bio, setBio] = useState(""); // Stores the bio
   const [profilePicture, setProfilePicture] = useState(""); // Stores the profile picture URL
   const [tempProfilePicture, setTempProfilePicture] = useState(""); // Temporary profile picture for editing
+  const [profileImageFile, setProfileImageFile] = useState(null); // Stores the actual file for uploading
   const [isEditing, setIsEditing] = useState(false); // Controls whether the profile is in edit mode
   const [isLoading, setIsLoading] = useState(true); // Manages loading state during data fetching or saving
   const [showSuccessMessage, setShowSuccessMessage] = useState(false); // Controls the visibility of the success message
@@ -61,8 +62,10 @@ function Profile() {
     const file = event.target.files[0];
     if (file) {
       setTempProfilePicture(URL.createObjectURL(file)); // Update the preview with the selected image
+      setProfileImageFile(file); // Store the actual file for upload
     }
   };
+
 
   // Handle saving the edited profile
   const handleSaveProfile = async () => {
@@ -77,8 +80,10 @@ function Profile() {
       const formData = new FormData();
       formData.append("display_name", updatedProfile.display_name);
       formData.append("bio", updatedProfile.bio);
-      if (tempProfilePicture !== profilePicture) { // Only append the picture if it has changed
-        formData.append("profile_picture", tempProfilePicture);
+
+      // Append the actual file if a new profile image was selected
+      if (profileImageFile) {
+        formData.append("profile_picture", profileImageFile); // Use the file, not the preview URL
       }
 
       // Send the PATCH request to update the profile
@@ -100,6 +105,7 @@ function Profile() {
       setIsLoading(false); // Stop loading state
     }
   };
+
 
   // Handle cancelling profile edits
   const handleCancelEdit = () => {
