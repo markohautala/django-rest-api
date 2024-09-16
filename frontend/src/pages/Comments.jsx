@@ -43,7 +43,7 @@ function Comments({ postId, fetchCommentsForPost, incrementCommentCount }) {
 
     try {
       // Send the comment to the server
-      const response = await axios.post('https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/housepostcomments/', {
+      const response = await axios.post('https://fullstack-app-djangorest-react-e2534674e99b.herokuapp.com/housepostcomments/', {
         housepost: postId,
         comment: comment.trim(),
       }, {

@@ -102,7 +102,7 @@ function Profile() {
         formData.append("profile_picture", profilePictureUrl);
       }
 
-      await axios.patch(`/userprofiles/${userProfile.id}/`, formData, {
+      await axios.patch(`https://fullstack-app-djangorest-react-e2534674e99b.herokuapp.com/userprofiles/${userProfile.id}/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Token ${localStorage.getItem('token')}`,

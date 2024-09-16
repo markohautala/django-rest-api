@@ -29,7 +29,7 @@ function HousePosts() {
 
   // Fetch posts when the component mounts
   useEffect(() => {
-    fetchHousePosts("https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/houseposts/");
+    fetchHousePosts("https://fullstack-app-djangorest-react-e2534674e99b.herokuapp.com/houseposts/");
   }, []);
 
   // Scroll to the top of the page when navigating between pages
@@ -71,7 +71,7 @@ function HousePosts() {
   // Function to fetch comments for a specific post
   const fetchCommentsForPost = (postId) => {
     axios
-      .get(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/housepostcomments/?housepost=${postId}`)
+      .get(`https://fullstack-app-djangorest-react-e2534674e99b.herokuapp.com/housepostcomments/?housepost=${postId}`)
       .then((response) => {
         // Filter and sort comments by timestamp
         const filteredComments = response.data.results.filter(
@@ -215,7 +215,7 @@ function HousePosts() {
                 postId={post.id}
                 currentHeartCount={post.househearts_count}
                 fetchHousePosts={() =>
-                  fetchHousePosts("https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/houseposts/")
+                  fetchHousePosts("https://fullstack-app-djangorest-react-e2534674e99b.herokuapp.com/houseposts/")
                 }
               />
               {/* Display the username of the post's author */}
