@@ -43,7 +43,9 @@ function Profile() {
         setUserProfile(data); // Store the profile data in state
         setDisplayName(data.display_name || "No display name yet"); // Set display name with a fallback
         setBio(data.bio || "No bio has been given yet"); // Set bio with a fallback
-        const profileImg = data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"; // Default profile picture if none exists
+        const profileImg = data.profile_picture?.startsWith("http://")
+          ? data.profile_picture.replace("http://", "https://")
+          : data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"; // Default profile picture if none exists
         setProfilePicture(profileImg);
         setTempProfilePicture(profileImg); // Initialize the temporary profile picture
         setIsLoading(false); // Data fetching complete, disable loading
@@ -66,7 +68,6 @@ function Profile() {
     }
   };
 
-
   // Handle saving the edited profile
   const handleSaveProfile = async () => {
     const updatedProfile = {
@@ -86,10 +87,15 @@ function Profile() {
         formData.append("profile_picture", profileImageFile); // Use the file, not the preview URL
       }
 
+      // Debugging FormData
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+
       // Send the PATCH request to update the profile
       await axios.patch(`/userprofiles/${userProfile.id}/`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          // No need to manually set Content-Type; Axios handles it automatically
           Authorization: `Token ${localStorage.getItem('token')}`, // Include the auth token in the headers
         },
       });
@@ -105,7 +111,6 @@ function Profile() {
       setIsLoading(false); // Stop loading state
     }
   };
-
 
   // Handle cancelling profile edits
   const handleCancelEdit = () => {
