@@ -27,7 +27,7 @@ DEBUG = False  # Turned off debug mode for production
 ALLOWED_HOSTS = ['housegram-fullstack-app-a01c6177ffd8.herokuapp.com']
 
 CORS_ALLOWED_ORIGINS = [
-    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',  # Added Heroku domain
+    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',
 ]
 
 INSTALLED_APPS = [
