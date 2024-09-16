@@ -1,54 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Alert, Row, Col } from "react-bootstrap";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";  // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import styles from "../styles/Profile.module.css";
-import loadingSpinner from "../assets/loading.gif"; // Updated to use the smaller loading spinner
+import loadingSpinner from "../assets/loading.gif";
 
 function Profile() {
   // State management
-  const [userProfile, setUserProfile] = useState(null); // Stores the user profile data
-  const [displayName, setDisplayName] = useState(""); // Stores the display name
-  const [bio, setBio] = useState(""); // Stores the bio
-  const [profilePicture, setProfilePicture] = useState(""); // Stores the profile picture URL
-  const [tempProfilePicture, setTempProfilePicture] = useState(""); // Temporary profile picture for editing
-  const [profileImageFile, setProfileImageFile] = useState(null); // Stores the actual file for uploading
-  const [isEditing, setIsEditing] = useState(false); // Controls whether the profile is in edit mode
-  const [isLoading, setIsLoading] = useState(true); // Manages loading state during data fetching or saving
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false); // Controls the visibility of the success message
-  const [errors, setErrors] = useState({}); // Stores any errors encountered
-  const navigate = useNavigate();  // Initialize useNavigate for navigation
+  const [userProfile, setUserProfile] = useState(null);
+  const [displayName, setDisplayName] = useState("");
+  const [bio, setBio] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
+  const [tempProfilePicture, setTempProfilePicture] = useState("");
+  const [tempProfilePictureFile, setTempProfilePictureFile] = useState(null); // Added state for the image file
+  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   // Effect to fetch user profile data when the component mounts
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        // Fetch the current user's basic info
         const userResponse = await axios.get("/dj-rest-auth/user/", {
           headers: {
-            Authorization: `Token ${localStorage.getItem('token')}`, // Include the auth token in the headers
+            Authorization: `Token ${localStorage.getItem('token')}`,
           },
         });
 
-        const userId = userResponse.data.pk; // Get the user's ID from the response
+        const userId = userResponse.data.pk;
 
-        // Fetch the full profile details using the user's ID
         const response = await axios.get(`/userprofiles/${userId}/`, {
           headers: {
-            Authorization: `Token ${localStorage.getItem('token')}`, // Include the auth token in the headers
+            Authorization: `Token ${localStorage.getItem('token')}`,
           },
         });
 
         const data = response.data;
-        setUserProfile(data); // Store the profile data in state
-        setDisplayName(data.display_name || "No display name yet"); // Set display name with a fallback
-        setBio(data.bio || "No bio has been given yet"); // Set bio with a fallback
-        const profileImg = data.profile_picture?.startsWith("http://")
-          ? data.profile_picture.replace("http://", "https://")
-          : data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"; // Default profile picture if none exists
+        setUserProfile(data);
+        setDisplayName(data.display_name || "No display name yet");
+        setBio(data.bio || "No bio has been given yet");
+        const profileImg = data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
         setProfilePicture(profileImg);
-        setTempProfilePicture(profileImg); // Initialize the temporary profile picture
-        setIsLoading(false); // Data fetching complete, disable loading
+        setTempProfilePicture(profileImg);
+        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
         setErrors({ non_field_errors: ["Failed to load profile data."] });
@@ -56,69 +52,81 @@ function Profile() {
       }
     };
 
-    fetchUserProfile(); // Trigger the fetch on component mount
+    fetchUserProfile();
   }, []);
+
+  // Handle image upload to Cloudinary
+  const uploadImageToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'ml_default'); // Use your Cloudinary upload preset
+
+    try {
+      const response = await axios.post('https://api.cloudinary.com/v1_1/dtjbfg6km/image/upload', formData);
+      return response.data.secure_url; // Return Cloudinary URL
+    } catch (error) {
+      console.error('Error uploading image to Cloudinary:', error);
+      throw error;
+    }
+  };
 
   // Handle profile picture changes in the modal
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       setTempProfilePicture(URL.createObjectURL(file)); // Update the preview with the selected image
-      setProfileImageFile(file); // Store the actual file for upload
+      setTempProfilePictureFile(file); // Save the file object for uploading
     }
   };
 
   // Handle saving the edited profile
   const handleSaveProfile = async () => {
     const updatedProfile = {
-      display_name: displayName === "No display name yet" ? "" : displayName, // Remove placeholder text
-      bio: bio === "No bio has been given yet" ? "" : bio, // Remove placeholder text
+      display_name: displayName === "No display name yet" ? "" : displayName,
+      bio: bio === "No bio has been given yet" ? "" : bio,
     };
 
-    setIsLoading(true); // Start loading state
+    setIsLoading(true);
 
     try {
+      let profilePictureUrl = profilePicture;
+
+      if (tempProfilePictureFile) {
+        profilePictureUrl = await uploadImageToCloudinary(tempProfilePictureFile);
+      }
+
       const formData = new FormData();
       formData.append("display_name", updatedProfile.display_name);
       formData.append("bio", updatedProfile.bio);
-
-      // Append the actual file if a new profile image was selected
-      if (profileImageFile) {
-        formData.append("profile_picture", profileImageFile); // Use the file, not the preview URL
+      if (profilePictureUrl !== profilePicture) {
+        formData.append("profile_picture", profilePictureUrl);
       }
 
-      // Debugging FormData
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
-
-      // Send the PATCH request to update the profile
       await axios.patch(`/userprofiles/${userProfile.id}/`, formData, {
         headers: {
-          // No need to manually set Content-Type; Axios handles it automatically
-          Authorization: `Token ${localStorage.getItem('token')}`, // Include the auth token in the headers
+          "Content-Type": "multipart/form-data",
+          Authorization: `Token ${localStorage.getItem('token')}`,
         },
       });
 
-      setProfilePicture(tempProfilePicture); // Update the main profile picture after saving
-      setShowSuccessMessage(true); // Show success message
-      setTimeout(() => setShowSuccessMessage(false), 3000); // Hide success message after 3 seconds
-      setIsEditing(false); // Exit edit mode
+      setProfilePicture(profilePictureUrl);
+      setShowSuccessMessage(true);
+      setTimeout(() => setShowSuccessMessage(false), 3000);
+      setIsEditing(false);
     } catch (error) {
       console.error("Error updating profile:", error);
       setErrors(error.response?.data || { non_field_errors: ["Failed to update profile."] });
     } finally {
-      setIsLoading(false); // Stop loading state
+      setIsLoading(false);
     }
   };
 
   // Handle cancelling profile edits
   const handleCancelEdit = () => {
-    setTempProfilePicture(profilePicture); // Reset the temporary profile picture to the original
-    setIsEditing(false); // Exit edit mode
+    setTempProfilePicture(profilePicture);
+    setIsEditing(false);
   };
 
-  // Loading spinner while fetching data
   if (isLoading) {
     return (
       <div style={{
@@ -140,22 +148,20 @@ function Profile() {
 
   return (
     <div className={styles.profileCard}>
-      {/* Success message display */}
       {showSuccessMessage && (
         <Alert variant="success" style={{
           position: 'fixed',
-          top: '100px',  // Distance from the top of the page
-          right: '20px',  // Distance from the right side of the page
+          top: '100px',
+          right: '20px',
           zIndex: 1000,
-          width: '250px',  // Smaller width
+          width: '250px',
           textAlign: 'center',
-          padding: '10px',  // Smaller padding
+          padding: '10px',
         }}>
           Profile saved successfully!
         </Alert>
       )}
 
-      {/* Profile picture and details */}
       <img
         src={profilePicture}
         alt="Profile"
@@ -171,11 +177,10 @@ function Profile() {
         <Button variant="dark" onClick={() => setIsEditing(true)}>Edit Profile</Button>
       </div>
 
-      {/* Modal for Editing Profile */}
       <Modal
         show={isEditing}
         onHide={handleCancelEdit}
-        size="lg" // Make the modal larger
+        size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
@@ -197,7 +202,7 @@ function Profile() {
                 <img
                   src={tempProfilePicture}
                   alt="Profile Preview"
-                  className="mt-3 img-fluid rounded-circle" // Make the image preview round
+                  className="mt-3 img-fluid rounded-circle"
                   style={{ width: '150px', height: '150px', objectFit: 'cover' }}
                 />
               </div>
