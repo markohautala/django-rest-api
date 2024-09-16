@@ -1,6 +1,2 @@
 env.py
 .env
-
-# Node.js and React
-node_modules/
-build/
