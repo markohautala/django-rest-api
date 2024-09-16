@@ -81,7 +81,7 @@ function Upload() {
     const csrfToken = Cookies.get('csrftoken'); // Get CSRF token from cookies
 
     try {
-      await axios.post('https://fullstack-app-djangorest-react-e2534674e99b.herokuapp.com/houseposts/', formData, {
+      await axios.post('https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/houseposts/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'X-CSRFToken': csrfToken,

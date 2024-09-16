@@ -25,7 +25,7 @@ const HouseHearts = ({ postId, currentHeartCount }) => {
             return;
         }
 
-        axios.post('https://fullstack-app-djangorest-react-e2534674e99b.herokuapp.com/househearts/', {
+        axios.post('https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/househearts/', {
             housepost: postId,
             user: loggedInUser,
         }, {

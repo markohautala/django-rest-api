@@ -24,10 +24,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = False  # Turned off debug mode for production
 
-ALLOWED_HOSTS = ['fullstack-app-djangorest-react-e2534674e99b.herokuapp.com']
+ALLOWED_HOSTS = ['housegram-fullstack-app-a01c6177ffd8.herokuapp.com']
 
 CORS_ALLOWED_ORIGINS = [
-    'https://fullstack-app-djangorest-react-e2534674e99b.herokuapp.com',  # Added Heroku domain
+    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',  # Added Heroku domain
 ]
 
 INSTALLED_APPS = [
@@ -149,7 +149,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = False
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://fullstack-app-djangorest-react-e2534674e99b.herokuapp.com',  # Added Heroku domain
+    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',  # Added Heroku domain
 ]
 
 CORS_ALLOW_CREDENTIALS = True
