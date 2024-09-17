@@ -150,13 +150,7 @@ function Profile() {
       <img
         src={profilePicture}
         alt="Profile"
-        className={styles.profileImage}
-        style={{
-          width: '150px',
-          height: '150px',
-          borderRadius: '50%', // Ensure the image is circular
-          objectFit: 'cover' // Prevent image stretching
-        }}
+        className={`img-fluid rounded-circle ${styles.profileImage}`}
       />
       <div className={styles.profileDetails}>
         <h1 className={styles.profileName}>
