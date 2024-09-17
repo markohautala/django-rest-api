@@ -5,8 +5,26 @@ import { useNavigate } from "react-router-dom";
 import styles from "../styles/Profile.module.css";
 import loadingSpinner from "../assets/loading.gif";
 
+// Function to upload image to Cloudinary
+const uploadImageToCloudinary = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', 'ml_default'); // Replace with your preset name
+
+  try {
+    const response = await axios.post('https://api.cloudinary.com/v1_1/dtjbfg6km/image/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data.secure_url; // Return the secure URL of the uploaded image
+  } catch (error) {
+    console.error('Error uploading image to Cloudinary:', error);
+    throw error;
+  }
+};
+
 function Profile() {
-  // State management
   const [userProfile, setUserProfile] = useState(null);
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
@@ -54,25 +72,6 @@ function Profile() {
 
     fetchUserProfile();
   }, []);
-
-  // Handle image upload to Cloudinary
-  const uploadImageToCloudinary = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'housegram-preset-upload'); // Use your preset name here
-
-    try {
-      const response = await axios.post('https://api.cloudinary.com/v1_1/dtjbfg6km/image/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      return response.data.secure_url; // Return the secure URL of the uploaded image
-    } catch (error) {
-      console.error('Error uploading image to Cloudinary:', error);
-      throw error;
-    }
-  };
 
   // Handle image change
   const handleImageChange = (event) => {
