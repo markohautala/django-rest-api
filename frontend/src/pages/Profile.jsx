@@ -21,24 +21,33 @@ function Profile() {
       try {
         const userResponse = await axios.get("/dj-rest-auth/user/", {
           headers: {
-            Authorization: `Token ${localStorage.getItem('token')}`,
+            Authorization: `Token ${localStorage.getItem("token")}`,
           },
         });
 
         const userId = userResponse.data.pk;
 
-        const response = await axios.get(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userId}/`, {
-          headers: {
-            Authorization: `Token ${localStorage.getItem('token')}`,
-          },
-        });
+        const response = await axios.get(
+          `https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userId}/`,
+          {
+            headers: {
+              Authorization: `Token ${localStorage.getItem("token")}`,
+            },
+          }
+        );
 
         const data = response.data;
         setUserProfile(data);
         setDisplayName(data.display_name || "No display name yet");
         setBio(data.bio || "No bio has been given yet");
-        setProfilePicture(data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-        setTempProfilePicture(data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"); // Initialize tempProfilePicture with current picture
+        setProfilePicture(
+          data.profile_picture ||
+            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+        );
+        setTempProfilePicture(
+          data.profile_picture ||
+            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+        ); // Initialize tempProfilePicture with current picture
         setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
@@ -60,48 +69,56 @@ function Profile() {
 
   const handleSaveProfile = async () => {
     const updatedProfile = {
-        display_name: displayName === "No display name yet" ? "" : displayName,
-        bio: bio === "No bio has been given yet" ? "" : bio,
+      display_name: displayName === "No display name yet" ? "" : displayName,
+      bio: bio === "No bio has been given yet" ? "" : bio,
     };
 
     setIsLoading(true);
 
     try {
-        const formData = new FormData();
-        formData.append("display_name", updatedProfile.display_name);
-        formData.append("bio", updatedProfile.bio);
+      const formData = new FormData();
+      formData.append("display_name", updatedProfile.display_name);
+      formData.append("bio", updatedProfile.bio);
 
-        if (tempProfilePicture && tempProfilePicture.startsWith('blob:')) {
-            // Convert data URL to Blob and upload
-            const response = await fetch(tempProfilePicture);
-            const blob = await response.blob();
-            formData.append("profile_picture", blob, "profile_picture.jpg");
-        } else if (tempProfilePicture !== profilePicture) {
-            // Handle URL-based profile picture logic if necessary
+      if (tempProfilePicture && tempProfilePicture.startsWith("blob:")) {
+        // Convert data URL to Blob and upload
+        const response = await fetch(tempProfilePicture);
+        const blob = await response.blob();
+        formData.append("profile_picture", blob, "profile_picture.jpg");
+      } else if (tempProfilePicture !== profilePicture) {
+        // Handle URL-based profile picture logic if necessary
+      }
+
+      const csrfToken = Cookies.get("csrftoken"); // Adjust this if your token is stored differently
+
+      const response = await axios.patch(
+        `https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userProfile.id}/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Token ${localStorage.getItem("token")}`,
+            "X-CSRFToken": csrfToken, // Include CSRF token
+          },
         }
+      );
 
-        const csrfToken = Cookies.get('csrftoken'); // Adjust this if your token is stored differently
-
-        const response = await axios.patch(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userProfile.id}/`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: `Token ${localStorage.getItem('token')}`,
-                'X-CSRFToken': csrfToken, // Include CSRF token
-            },
-        });
-
-        // Update local state after successful upload
-        setProfilePicture(response.data.profile_picture); // Update profile picture with the URL returned by the server
-        setShowSuccessMessage(true);
-        setTimeout(() => setShowSuccessMessage(false), 3000);
-        setIsEditing(false);
+      // Update local state after successful upload
+      setProfilePicture(response.data.profile_picture); // Update profile picture with the URL returned by the server
+      setShowSuccessMessage(true);
+      setTimeout(() => setShowSuccessMessage(false), 3000);
+      setIsEditing(false);
     } catch (error) {
-        console.error("Error updating profile:", error);
-        setErrors(error.response?.data || { non_field_errors: ["Failed to update profile."] });
+      console.error("Error updating profile:", error);
+      setErrors(
+        error.response?.data || {
+          non_field_errors: ["Failed to update profile."],
+        }
+      );
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
+  };
 
   const handleCancelEdit = () => {
     // Revoke the temporary object URL to avoid memory leaks
@@ -114,19 +131,25 @@ function Profile() {
 
   if (isLoading) {
     return (
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 9999,
-      }}>
-        <img src={loadingSpinner} alt="Loading..." style={{ width: '75px', height: '75px' }} />
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999,
+        }}
+      >
+        <img
+          src={loadingSpinner}
+          alt="Loading..."
+          style={{ width: "75px", height: "75px" }}
+        />
       </div>
     );
   }
@@ -134,15 +157,18 @@ function Profile() {
   return (
     <div className={styles.profileCard}>
       {showSuccessMessage && (
-        <Alert variant="success" style={{
-          position: 'fixed',
-          top: '100px',  // Distance from the top of the page
-          right: '20px',  // Distance from the right side of the page
-          zIndex: 1000,
-          width: '250px',  // Smaller width
-          textAlign: 'center',
-          padding: '10px',  // Smaller padding
-        }}>
+        <Alert
+          variant="success"
+          style={{
+            position: "fixed",
+            top: "100px", // Distance from the top of the page
+            right: "20px", // Distance from the right side of the page
+            zIndex: 1000,
+            width: "250px", // Smaller width
+            textAlign: "center",
+            padding: "10px", // Smaller padding
+          }}
+        >
           Profile saved successfully!
         </Alert>
       )}
@@ -153,13 +179,11 @@ function Profile() {
         className={`img-fluid rounded-circle ${styles.profileImage}`}
       />
       <div className={styles.profileDetails}>
-        <h1 className={styles.profileName}>
-          {displayName}
-        </h1>
-        <p className={styles.profileBio}>
-          {bio}
-        </p>
-        <Button variant="dark" onClick={() => setIsEditing(true)}>Edit Profile</Button>
+        <h1 className={styles.profileName}>{displayName}</h1>
+        <p className={styles.profileBio}>{bio}</p>
+        <Button variant="dark" onClick={() => setIsEditing(true)}>
+          Edit Profile
+        </Button>
       </div>
 
       {/* Modal for Editing Profile */}
@@ -186,10 +210,9 @@ function Profile() {
                   className="form-control"
                 />
                 <img
-                  src={tempProfilePicture}
-                  alt="Profile Preview"
-                  className="mt-3 img-fluid rounded-circle" // Make the image preview round
-                  style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                  src={profilePicture}
+                  alt="Profile"
+                  className={`img-fluid rounded-circle ${styles.profileImage}`}
                 />
               </div>
             </Col>
