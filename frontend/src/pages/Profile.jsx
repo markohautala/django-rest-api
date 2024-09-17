@@ -9,7 +9,7 @@ import loadingSpinner from "../assets/loading.gif";
 const uploadImageToCloudinary = async (file) => {
   const formData = new FormData();
   formData.append('file', file);
-  formData.append('upload_preset', 'ml_default'); // Replace with your preset name
+  formData.append('upload_preset', 'grfpbgsd'); // Replace with your preset name
 
   try {
     const response = await axios.post('https://api.cloudinary.com/v1_1/dtjbfg6km/image/upload', formData, {
