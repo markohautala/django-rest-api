@@ -27,7 +27,7 @@ DEBUG = False  # Turned off debug mode for production
 ALLOWED_HOSTS = ['housegram-fullstack-app-a01c6177ffd8.herokuapp.com']
 
 CORS_ALLOWED_ORIGINS = [
-    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',
+    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',  # Added Heroku domain
 ]
 
 INSTALLED_APPS = [
@@ -60,9 +60,9 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
