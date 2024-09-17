@@ -1,43 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Alert, Row, Col } from "react-bootstrap";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import styles from "../styles/Profile.module.css";
-import loadingSpinner from "../assets/loading.gif";
-
-// Function to upload image to Cloudinary
-const uploadImageToCloudinary = async (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', 'grfpbgsd'); // Replace with your preset name
-
-  try {
-    const response = await axios.post('https://api.cloudinary.com/v1_1/dtjbfg6km/image/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-    return response.data.secure_url; // Return the secure URL of the uploaded image
-  } catch (error) {
-    console.error('Error uploading image to Cloudinary:', error);
-    throw error;
-  }
-};
+import loadingSpinner from "../assets/loading.gif"; // Updated to use the smaller loading spinner
 
 function Profile() {
   const [userProfile, setUserProfile] = useState(null);
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
-  const [tempProfilePicture, setTempProfilePicture] = useState("");
-  const [tempProfilePictureFile, setTempProfilePictureFile] = useState(null);
+  const [tempProfilePicture, setTempProfilePicture] = useState(""); // Temporary profile picture for the modal
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
 
-  // Effect to fetch user profile data when the component mounts
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -49,7 +27,7 @@ function Profile() {
 
         const userId = userResponse.data.pk;
 
-        const response = await axios.get(`/userprofiles/${userId}/`, {
+        const response = await axios.get(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userId}/`, {
           headers: {
             Authorization: `Token ${localStorage.getItem('token')}`,
           },
@@ -61,7 +39,7 @@ function Profile() {
         setBio(data.bio || "No bio has been given yet");
         const profileImg = data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
         setProfilePicture(profileImg);
-        setTempProfilePicture(profileImg);
+        setTempProfilePicture(profileImg); // Initialize the temp profile picture with the current one
         setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
@@ -73,16 +51,18 @@ function Profile() {
     fetchUserProfile();
   }, []);
 
-  // Handle image change
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setTempProfilePicture(URL.createObjectURL(file));
-      setTempProfilePictureFile(file);
+      // Revoke previous object URL to avoid memory leaks
+      if (tempProfilePicture && tempProfilePicture.startsWith("blob:")) {
+        URL.revokeObjectURL(tempProfilePicture);
+      }
+
+      setTempProfilePicture(URL.createObjectURL(file)); // Update only the temporary profile picture
     }
   };
 
-  // Handle saving the edited profile
   const handleSaveProfile = async () => {
     const updatedProfile = {
       display_name: displayName === "No display name yet" ? "" : displayName,
@@ -92,29 +72,23 @@ function Profile() {
     setIsLoading(true);
 
     try {
-      let profilePictureUrl = profilePicture;
-
-      if (tempProfilePictureFile) {
-        profilePictureUrl = await uploadImageToCloudinary(tempProfilePictureFile);
-      }
-
       const formData = new FormData();
       formData.append("display_name", updatedProfile.display_name);
       formData.append("bio", updatedProfile.bio);
-      if (profilePictureUrl !== profilePicture) {
-        formData.append("profile_picture", profilePictureUrl);
+      if (tempProfilePicture && tempProfilePicture.startsWith("blob:")) {
+        formData.append("profile_picture", tempProfilePicture);
       }
 
-      await axios.patch(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userProfile.id}/`, formData, {
+      await axios.patch(`/userprofiles/${userProfile.id}/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Token ${localStorage.getItem('token')}`,
         },
       });
 
-      setProfilePicture(profilePictureUrl);
+      setProfilePicture(tempProfilePicture); // Only update the main profile picture after saving
       setShowSuccessMessage(true);
-      setTimeout(() => setShowSuccessMessage(false), 3000);
+      setTimeout(() => setShowSuccessMessage(false), 3000); // Hide success message after 3 seconds
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -124,19 +98,14 @@ function Profile() {
     }
   };
 
-  // Handle cancelling profile edits
   const handleCancelEdit = () => {
-    setTempProfilePicture(profilePicture);
+    // Revoke the temporary object URL to avoid memory leaks
+    if (tempProfilePicture && tempProfilePicture.startsWith("blob:")) {
+      URL.revokeObjectURL(tempProfilePicture);
+    }
+    setTempProfilePicture(profilePicture); // Reset the temporary profile picture on cancel
     setIsEditing(false);
   };
-
-  useEffect(() => {
-    return () => {
-      if (tempProfilePicture) {
-        URL.revokeObjectURL(tempProfilePicture);
-      }
-    };
-  }, [tempProfilePicture]);
 
   if (isLoading) {
     return (
@@ -162,12 +131,12 @@ function Profile() {
       {showSuccessMessage && (
         <Alert variant="success" style={{
           position: 'fixed',
-          top: '100px',
-          right: '20px',
+          top: '100px',  // Distance from the top of the page
+          right: '20px',  // Distance from the right side of the page
           zIndex: 1000,
-          width: '250px',
+          width: '250px',  // Smaller width
           textAlign: 'center',
-          padding: '10px',
+          padding: '10px',  // Smaller padding
         }}>
           Profile saved successfully!
         </Alert>
@@ -188,10 +157,11 @@ function Profile() {
         <Button variant="dark" onClick={() => setIsEditing(true)}>Edit Profile</Button>
       </div>
 
+      {/* Modal for Editing Profile */}
       <Modal
         show={isEditing}
         onHide={handleCancelEdit}
-        size="lg"
+        size="lg" // Make the modal larger
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
@@ -213,7 +183,7 @@ function Profile() {
                 <img
                   src={tempProfilePicture}
                   alt="Profile Preview"
-                  className="mt-3 img-fluid rounded-circle"
+                  className="mt-3 img-fluid rounded-circle" // Make the image preview round
                   style={{ width: '150px', height: '150px', objectFit: 'cover' }}
                 />
               </div>
