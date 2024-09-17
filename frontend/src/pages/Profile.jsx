@@ -12,7 +12,7 @@ function Profile() {
   const [bio, setBio] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [tempProfilePicture, setTempProfilePicture] = useState("");
-  const [tempProfilePictureFile, setTempProfilePictureFile] = useState(null); // Added state for the image file
+  const [tempProfilePictureFile, setTempProfilePictureFile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -59,23 +59,27 @@ function Profile() {
   const uploadImageToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'ml_default'); // Use your Cloudinary upload preset
+    formData.append('upload_preset', 'housegram-preset-upload'); // Use your preset name here
 
     try {
-      const response = await axios.post('https://api.cloudinary.com/v1_1/dtjbfg6km/image/upload', formData);
-      return response.data.secure_url; // Return Cloudinary URL
+      const response = await axios.post('https://api.cloudinary.com/v1_1/dtjbfg6km/image/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      return response.data.secure_url; // Return the secure URL of the uploaded image
     } catch (error) {
       console.error('Error uploading image to Cloudinary:', error);
       throw error;
     }
   };
 
-  // Handle profile picture changes in the modal
+  // Handle image change
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setTempProfilePicture(URL.createObjectURL(file)); // Update the preview with the selected image
-      setTempProfilePictureFile(file); // Save the file object for uploading
+      setTempProfilePicture(URL.createObjectURL(file));
+      setTempProfilePictureFile(file);
     }
   };
 
@@ -126,6 +130,14 @@ function Profile() {
     setTempProfilePicture(profilePicture);
     setIsEditing(false);
   };
+
+  useEffect(() => {
+    return () => {
+      if (tempProfilePicture) {
+        URL.revokeObjectURL(tempProfilePicture);
+      }
+    };
+  }, [tempProfilePicture]);
 
   if (isLoading) {
     return (
