@@ -76,19 +76,16 @@ function Profile() {
         formData.append("display_name", updatedProfile.display_name);
         formData.append("bio", updatedProfile.bio);
 
-        // Check if the temporary profile picture is a file object or a data URL
         if (tempProfilePicture && tempProfilePicture.startsWith('data:image')) {
-            // If it’s a data URL, convert it to a File object
+            // Convert data URL to Blob
             const response = await fetch(tempProfilePicture);
             const blob = await response.blob();
             formData.append("profile_picture", blob, "profile_picture.jpg");
         } else if (tempProfilePicture && tempProfilePicture !== profilePicture) {
-            // If it's a URL and different from the current profile picture, handle accordingly
-            // For instance, you might skip appending it if not uploading a new file
-            // or you can fetch and include the file if needed
+            // Handle URL-based profile picture logic if necessary
+            // For example, you might need to add logic here if you use URLs
         }
 
-        // CSRF token (if applicable)
         const csrfToken = Cookies.get('csrftoken'); // Adjust this if your token is stored differently
 
         await axios.patch(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userProfile.id}/`, formData, {
@@ -99,9 +96,10 @@ function Profile() {
             },
         });
 
-        setProfilePicture(tempProfilePicture); // Only update the main profile picture after saving
+        // Update local state after successful upload
+        setProfilePicture(tempProfilePicture);
         setShowSuccessMessage(true);
-        setTimeout(() => setShowSuccessMessage(false), 3000); // Hide success message after 3 seconds
+        setTimeout(() => setShowSuccessMessage(false), 3000);
         setIsEditing(false);
     } catch (error) {
         console.error("Error updating profile:", error);
@@ -110,6 +108,7 @@ function Profile() {
         setIsLoading(false);
     }
 };
+
 
   const handleCancelEdit = () => {
     // Revoke the temporary object URL to avoid memory leaks
