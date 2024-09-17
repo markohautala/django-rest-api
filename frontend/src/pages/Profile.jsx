@@ -37,9 +37,8 @@ function Profile() {
         setUserProfile(data);
         setDisplayName(data.display_name || "No display name yet");
         setBio(data.bio || "No bio has been given yet");
-        const profileImg = data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-        setProfilePicture(profileImg);
-        setTempProfilePicture(profileImg); // Initialize the temp profile picture with the current one
+        setProfilePicture(data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+        setTempProfilePicture(data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"); // Initialize tempProfilePicture with current picture
         setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
@@ -54,12 +53,8 @@ function Profile() {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Revoke previous object URL to avoid memory leaks
-      if (tempProfilePicture && tempProfilePicture.startsWith("blob:")) {
-        URL.revokeObjectURL(tempProfilePicture);
-      }
-
-      setTempProfilePicture(URL.createObjectURL(file)); // Update only the temporary profile picture
+      // Update temporary profile picture
+      setTempProfilePicture(URL.createObjectURL(file));
     }
   };
 
@@ -76,19 +71,18 @@ function Profile() {
         formData.append("display_name", updatedProfile.display_name);
         formData.append("bio", updatedProfile.bio);
 
-        if (tempProfilePicture && tempProfilePicture.startsWith('data:image')) {
-            // Convert data URL to Blob
+        if (tempProfilePicture && tempProfilePicture.startsWith('blob:')) {
+            // Convert data URL to Blob and upload
             const response = await fetch(tempProfilePicture);
             const blob = await response.blob();
             formData.append("profile_picture", blob, "profile_picture.jpg");
-        } else if (tempProfilePicture && tempProfilePicture !== profilePicture) {
+        } else if (tempProfilePicture !== profilePicture) {
             // Handle URL-based profile picture logic if necessary
-            // For example, you might need to add logic here if you use URLs
         }
 
         const csrfToken = Cookies.get('csrftoken'); // Adjust this if your token is stored differently
 
-        await axios.patch(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userProfile.id}/`, formData, {
+        const response = await axios.patch(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userProfile.id}/`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 Authorization: `Token ${localStorage.getItem('token')}`,
@@ -97,7 +91,7 @@ function Profile() {
         });
 
         // Update local state after successful upload
-        setProfilePicture(tempProfilePicture);
+        setProfilePicture(response.data.profile_picture); // Update profile picture with the URL returned by the server
         setShowSuccessMessage(true);
         setTimeout(() => setShowSuccessMessage(false), 3000);
         setIsEditing(false);
@@ -108,7 +102,6 @@ function Profile() {
         setIsLoading(false);
     }
 };
-
 
   const handleCancelEdit = () => {
     // Revoke the temporary object URL to avoid memory leaks
@@ -224,8 +217,12 @@ function Profile() {
           </Row>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="dark" onClick={handleCancelEdit}>Cancel</Button>
-          <Button variant="dark" onClick={handleSaveProfile}>Save Profile</Button>
+          <Button variant="secondary" onClick={handleCancelEdit}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSaveProfile}>
+            Save Changes
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

@@ -40,10 +40,6 @@ class HousePostSerializer(serializers.ModelSerializer):
         validated_data['user'] = request.user
         return super().create(validated_data)
 
-    # def get_house_image(self, obj):
-    #     # Return the URL of the house image
-    #     return obj.house_image.url if obj.house_image else 'https://res.cloudinary.com/dtjbfg6km/image/upload/v1722598634/house-placeholder-image_vgm8en.png'
-
     class Meta:
         model = HousePost
         fields = '__all__'
