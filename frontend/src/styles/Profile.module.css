@@ -18,13 +18,6 @@
   margin-right: 20px; /* Space between the image and text */
 }
 
-@media (max-width: 768px) {
-  .profileImage {
-    width: 100px; /* Adjust size for smaller screens to prevent egg-shaped images */
-    height: 100px; /* Maintain aspect ratio for smaller screens */
-  }
-}
-
 .profileDetails {
   flex-grow: 1; /* Allow text to grow and take available space */
 }
