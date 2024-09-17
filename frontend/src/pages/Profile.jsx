@@ -65,38 +65,51 @@ function Profile() {
 
   const handleSaveProfile = async () => {
     const updatedProfile = {
-      display_name: displayName === "No display name yet" ? "" : displayName,
-      bio: bio === "No bio has been given yet" ? "" : bio,
+        display_name: displayName === "No display name yet" ? "" : displayName,
+        bio: bio === "No bio has been given yet" ? "" : bio,
     };
 
     setIsLoading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("display_name", updatedProfile.display_name);
-      formData.append("bio", updatedProfile.bio);
-      if (tempProfilePicture && tempProfilePicture.startsWith("blob:")) {
-        formData.append("profile_picture", tempProfilePicture);
-      }
+        const formData = new FormData();
+        formData.append("display_name", updatedProfile.display_name);
+        formData.append("bio", updatedProfile.bio);
 
-      await axios.patch(`/userprofiles/${userProfile.id}/`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Token ${localStorage.getItem('token')}`,
-        },
-      });
+        // Check if the temporary profile picture is a file object or a data URL
+        if (tempProfilePicture && tempProfilePicture.startsWith('data:image')) {
+            // If it’s a data URL, convert it to a File object
+            const response = await fetch(tempProfilePicture);
+            const blob = await response.blob();
+            formData.append("profile_picture", blob, "profile_picture.jpg");
+        } else if (tempProfilePicture && tempProfilePicture !== profilePicture) {
+            // If it's a URL and different from the current profile picture, handle accordingly
+            // For instance, you might skip appending it if not uploading a new file
+            // or you can fetch and include the file if needed
+        }
 
-      setProfilePicture(tempProfilePicture); // Only update the main profile picture after saving
-      setShowSuccessMessage(true);
-      setTimeout(() => setShowSuccessMessage(false), 3000); // Hide success message after 3 seconds
-      setIsEditing(false);
+        // CSRF token (if applicable)
+        const csrfToken = Cookies.get('csrftoken'); // Adjust this if your token is stored differently
+
+        await axios.patch(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userProfile.id}/`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Token ${localStorage.getItem('token')}`,
+                'X-CSRFToken': csrfToken, // Include CSRF token
+            },
+        });
+
+        setProfilePicture(tempProfilePicture); // Only update the main profile picture after saving
+        setShowSuccessMessage(true);
+        setTimeout(() => setShowSuccessMessage(false), 3000); // Hide success message after 3 seconds
+        setIsEditing(false);
     } catch (error) {
-      console.error("Error updating profile:", error);
-      setErrors(error.response?.data || { non_field_errors: ["Failed to update profile."] });
+        console.error("Error updating profile:", error);
+        setErrors(error.response?.data || { non_field_errors: ["Failed to update profile."] });
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
 
   const handleCancelEdit = () => {
     // Revoke the temporary object URL to avoid memory leaks
