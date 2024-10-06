@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'userprofiles',
     'houseposts',
+    'notes',
     'househearts',
     'housepostcomments',
     'rest_framework',

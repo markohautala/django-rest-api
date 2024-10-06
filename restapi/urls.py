@@ -12,6 +12,7 @@ urlpatterns = [
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     path('userprofiles/', include('userprofiles.urls')),
     path('houseposts/', include('houseposts.urls')),
+    path('notes/', include('notes.urls')),
     path('housepostcomments/', include('housepostcomments.urls')),
     path('househearts/', include('househearts.urls')),
     path('admin/', admin.site.urls),

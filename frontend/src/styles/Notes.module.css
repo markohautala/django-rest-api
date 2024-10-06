@@ -61,8 +61,8 @@ p {
 }
 
 .gearIcon:hover {
-  transform: rotate(45deg); /* Rotate the gear icon */
-  color: #007bff; /* Change color on hover */
+  transform: rotate(75deg); /* Rotate the gear icon */
+  color: #0041ce; /* Change color on hover */
 }
 
 h4 {
