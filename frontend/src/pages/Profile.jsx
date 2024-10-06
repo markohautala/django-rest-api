@@ -11,6 +11,7 @@ function Profile() {
   const [bio, setBio] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [tempProfilePicture, setTempProfilePicture] = useState(""); // Temporary profile picture for the modal
+  const [location, setLocation] = useState(""); // New state for location
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -37,6 +38,7 @@ function Profile() {
         setUserProfile(data);
         setDisplayName(data.display_name || "No display name yet");
         setBio(data.bio || "No bio has been given yet");
+        setLocation(data.location || "Not decided yet"); // Initialize location
         setProfilePicture(data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
         setTempProfilePicture(data.profile_picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"); // Initialize tempProfilePicture with current picture
         setIsLoading(false);
@@ -60,48 +62,50 @@ function Profile() {
 
   const handleSaveProfile = async () => {
     const updatedProfile = {
-        display_name: displayName === "No display name yet" ? "" : displayName,
-        bio: bio === "No bio has been given yet" ? "" : bio,
+      display_name: displayName === "No display name yet" ? "" : displayName,
+      bio: bio === "No bio has been given yet" ? "" : bio,
+      location: location === "Not decided yet" ? "" : location, // Include location in the updated profile
     };
 
     setIsLoading(true);
 
     try {
-        const formData = new FormData();
-        formData.append("display_name", updatedProfile.display_name);
-        formData.append("bio", updatedProfile.bio);
+      const formData = new FormData();
+      formData.append("display_name", updatedProfile.display_name);
+      formData.append("bio", updatedProfile.bio);
+      formData.append("location", updatedProfile.location); // Add location to FormData
 
-        if (tempProfilePicture && tempProfilePicture.startsWith('blob:')) {
-            // Convert data URL to Blob and upload
-            const response = await fetch(tempProfilePicture);
-            const blob = await response.blob();
-            formData.append("profile_picture", blob, "profile_picture.jpg");
-        } else if (tempProfilePicture !== profilePicture) {
-            // Handle URL-based profile picture logic if necessary
-        }
+      if (tempProfilePicture && tempProfilePicture.startsWith('blob:')) {
+        // Convert data URL to Blob and upload
+        const response = await fetch(tempProfilePicture);
+        const blob = await response.blob();
+        formData.append("profile_picture", blob, "profile_picture.jpg");
+      } else if (tempProfilePicture !== profilePicture) {
+        // Handle URL-based profile picture logic if necessary
+      }
 
-        const csrfToken = Cookies.get('csrftoken'); // Adjust this if your token is stored differently
+      const csrfToken = Cookies.get('csrftoken'); // Adjust this if your token is stored differently
 
-        const response = await axios.patch(`/userprofiles/${userProfile.id}/`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: `Token ${localStorage.getItem('token')}`,
-                'X-CSRFToken': csrfToken, // Include CSRF token
-            },
-        });
+      const response = await axios.patch(`/userprofiles/${userProfile.id}/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Token ${localStorage.getItem('token')}`,
+          'X-CSRFToken': csrfToken, // Include CSRF token
+        },
+      });
 
-        // Update local state after successful upload
-        setProfilePicture(response.data.profile_picture); // Update profile picture with the URL returned by the server
-        setShowSuccessMessage(true);
-        setTimeout(() => setShowSuccessMessage(false), 3000);
-        setIsEditing(false);
+      // Update local state after successful upload
+      setProfilePicture(response.data.profile_picture); // Update profile picture with the URL returned by the server
+      setShowSuccessMessage(true);
+      setTimeout(() => setShowSuccessMessage(false), 3000);
+      setIsEditing(false);
     } catch (error) {
-        console.error("Error updating profile:", error);
-        setErrors(error.response?.data || { non_field_errors: ["Failed to update profile."] });
+      console.error("Error updating profile:", error);
+      setErrors(error.response?.data || { non_field_errors: ["Failed to update profile."] });
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
+  };
 
   const handleCancelEdit = () => {
     // Revoke the temporary object URL to avoid memory leaks
@@ -159,7 +163,15 @@ function Profile() {
         <p className={styles.profileBio}>
           {bio}
         </p>
-        <Button variant="dark" onClick={() => setIsEditing(true)}>Edit Profile</Button>
+        <p className={styles.profileLocation}>
+          <span className="material-symbols-outlined" style={{ color: 'green', verticalAlign: 'middle' }}>
+            where_to_vote
+          </span>
+          My dream location is: {location}
+        </p>
+        <Button variant="dark" onClick={() => setIsEditing(true)} style={{ marginTop: '10px' }}> {/* Margin added here */}
+          Edit Profile
+        </Button>
       </div>
 
       {/* Modal for Editing Profile */}
@@ -211,6 +223,16 @@ function Profile() {
                   className="form-control"
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
+                />
+              </div>
+              <div className="mt-3">
+                <label htmlFor="location">Location</label>
+                <input
+                  type="text"
+                  id="location"
+                  className="form-control"
+                  value={location === "Not decided yet" ? "" : location} // If location is "Not decided yet", show an empty input
+                  onChange={(e) => setLocation(e.target.value || "Not decided yet")} // Update location state
                 />
               </div>
             </Col>
