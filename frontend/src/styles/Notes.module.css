@@ -27,6 +27,7 @@ p {
 
 .notesRow {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
 }
 
@@ -55,6 +56,15 @@ p {
   margin-left: 10px;
 }
 
+.gearIcon {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.gearIcon:hover {
+  transform: rotate(45deg); /* Rotate the gear icon */
+  color: #007bff; /* Change color on hover */
+}
+
 h4 {
   font-size: 1.5rem;
   margin-bottom: 10px;
@@ -67,4 +77,17 @@ p {
 a {
   font-size: 1rem;
   color: #007bff;
+}
+
+/* Modal action buttons styling */
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .noteCol {
+    flex: 0 0 100%; /* Full width on small screens */
+  }
 }

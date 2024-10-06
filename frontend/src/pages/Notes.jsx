@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal, Row, Col } from 'react-bootstrap';
-import styles from '../styles/Notes.module.css'; // Import your CSS
+import styles from '../styles/Notes.module.css';
 
 const Notes = () => {
   const [notes, setNotes] = useState([]); // State for notes
@@ -13,6 +13,7 @@ const Notes = () => {
     url: ''
   });
 
+  // Handle changes in the note form
   const handleNoteChange = (event) => {
     setNewNote({
       ...newNote,
@@ -20,6 +21,7 @@ const Notes = () => {
     });
   };
 
+  // Add a new note
   const addNote = () => {
     if (notes.length < 2) {
       setNotes([...notes, newNote]);
@@ -27,16 +29,20 @@ const Notes = () => {
     }
   };
 
+  // Open the edit modal and populate fields with the selected note
   const handleEditNote = (index) => {
     setCurrentNote(index);
+    setNewNote(notes[index]); // Auto-populate the form fields with the current note's data
     setShowEditModal(true);
   };
 
+  // Open delete modal to confirm deletion
   const handleDeleteNote = (index) => {
     setCurrentNote(index);
     setShowDeleteModal(true);
   };
 
+  // Submit the edited note
   const submitEditNote = () => {
     const updatedNotes = [...notes];
     updatedNotes[currentNote] = newNote;
@@ -44,6 +50,7 @@ const Notes = () => {
     setShowEditModal(false);
   };
 
+  // Confirm the deletion of the selected note
   const confirmDeleteNote = () => {
     setNotes(notes.filter((_, index) => index !== currentNote));
     setShowDeleteModal(false);
@@ -100,11 +107,16 @@ const Notes = () => {
             <div className={styles.noteCard}>
               <div className={styles.noteHeader}>
                 <span className="btn btn-danger btn-sm" onClick={() => handleDeleteNote(index)}>Delete</span>
-                <span className="material-symbols-outlined" onClick={() => handleEditNote(index)}>settings</span>
+                <span
+                  className={`material-symbols-outlined ${styles.gearIcon}`}
+                  onClick={() => handleEditNote(index)}
+                >
+                  settings
+                </span>
               </div>
               <h4>{note.title}</h4>
               <p>{note.description}</p>
-              {note.url && <a href={note.url} target="_blank" rel="noopener noreferrer">Visit Image/Link</a>}
+              {note.url && <a href={note.url} target="_blank" rel="noopener noreferrer">Visit Link</a>}
             </div>
           </Col>
         ))}
@@ -152,8 +164,10 @@ const Notes = () => {
         <Modal.Header closeButton>Delete Note</Modal.Header>
         <Modal.Body>
           Are you sure you want to delete this note?
-          <Button variant="danger" onClick={confirmDeleteNote}>Delete</Button>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+          <div className={styles.modalActions}>
+            <Button variant="danger" onClick={confirmDeleteNote}>Delete</Button>
+            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+          </div>
         </Modal.Body>
       </Modal>
     </div>
