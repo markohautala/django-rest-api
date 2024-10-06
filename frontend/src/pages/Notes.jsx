@@ -6,6 +6,7 @@ const Notes = () => {
   const [notes, setNotes] = useState([]); // State for notes
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showMaxNotesModal, setShowMaxNotesModal] = useState(false); // Modal for max notes reached
   const [currentNote, setCurrentNote] = useState(null);
   const [newNote, setNewNote] = useState({
     title: '',
@@ -23,7 +24,9 @@ const Notes = () => {
 
   // Add a new note
   const addNote = () => {
-    if (notes.length < 2) {
+    if (notes.length >= 2) {
+      setShowMaxNotesModal(true); // Show modal if the user already has 2 notes
+    } else {
       setNotes([...notes, newNote]);
       setNewNote({ title: '', description: '', url: '' });
     }
@@ -167,6 +170,17 @@ const Notes = () => {
           <div className={styles.modalActions}>
             <Button variant="danger" onClick={confirmDeleteNote}>Delete</Button>
             <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+      {/* Max Notes Modal */}
+      <Modal show={showMaxNotesModal} onHide={() => setShowMaxNotesModal(false)}>
+        <Modal.Header closeButton>Note Limit Reached</Modal.Header>
+        <Modal.Body>
+          You already have two notes created. To create a new one, please delete an existing note or edit one of them.
+          <div className={styles.modalActions}>
+            <Button variant="dark" onClick={() => setShowMaxNotesModal(false)}>I Understand</Button>
           </div>
         </Modal.Body>
       </Modal>

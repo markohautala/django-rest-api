@@ -88,6 +88,6 @@ a {
 
 @media (max-width: 768px) {
   .noteCol {
-    flex: 0 0 100%; /* Full width on small screens */
+    flex: 0 0 100%; /* Notes stack on top of each other */
   }
 }
