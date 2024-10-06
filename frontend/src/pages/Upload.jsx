@@ -79,12 +79,18 @@ function Upload() {
     }
 
     const csrfToken = Cookies.get('csrftoken'); // Get CSRF token from cookies
+    const authToken = localStorage.getItem('token'); // Get the auth token from local storage
+
+
 
     try {
       await axios.post('/houseposts/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'X-CSRFToken': csrfToken,
+          'Authorization': `Token ${authToken}`, // Auth token for user authentication
+
+
         },
       });
       setSuccess(true); // Show success message

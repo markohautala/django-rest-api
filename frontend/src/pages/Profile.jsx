@@ -167,7 +167,7 @@ function Profile() {
           <span className="material-symbols-outlined" style={{ color: 'green', verticalAlign: 'middle' }}>
             where_to_vote
           </span>
-          My dream location is: {location}
+          My dream house-location is: {location}
         </p>
         <Button variant="dark" onClick={() => setIsEditing(true)} style={{ marginTop: '10px' }}> {/* Margin added here */}
           Edit Profile
