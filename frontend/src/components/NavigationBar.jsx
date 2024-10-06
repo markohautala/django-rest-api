@@ -95,6 +95,9 @@ function NavigationBar({ isAuthenticated }) {
                 <NavLink to="/profile" className={styles.NavLink} onClick={() => handleNavClick("/profile")}>
                   <span className="material-symbols-outlined">account_box</span> Profile
                 </NavLink>
+                <NavLink to="/notes" className={styles.NavLink}>
+                <span class="material-symbols-outlined">edit_note</span> Notes
+                </NavLink>
                 <NavLink to="#" onClick={handleLogout} className={styles.NavLink}>
                   <span className="material-symbols-outlined">logout</span> Logout
                 </NavLink>

@@ -27,7 +27,7 @@ function Profile() {
 
         const userId = userResponse.data.pk;
 
-        const response = await axios.get(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userId}/`, {
+        const response = await axios.get(`/userprofiles/${userId}/`, {
           headers: {
             Authorization: `Token ${localStorage.getItem('token')}`,
           },
@@ -82,7 +82,7 @@ function Profile() {
 
         const csrfToken = Cookies.get('csrftoken'); // Adjust this if your token is stored differently
 
-        const response = await axios.patch(`https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/userprofiles/${userProfile.id}/`, formData, {
+        const response = await axios.patch(`/userprofiles/${userProfile.id}/`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 Authorization: `Token ${localStorage.getItem('token')}`,

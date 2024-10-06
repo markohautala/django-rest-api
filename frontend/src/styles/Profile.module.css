@@ -5,17 +5,21 @@
   padding: 20px; /* Add padding around the card */
   border-radius: 20px; /* Rounded corners for the card */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a card effect */
-  max-width: 600px; /* Optional: Adjust the width of the card */
+  width: 80%; /* Set the default width to 80% for larger screens */
+  max-width: 1000px; /* Optional: limit the max width on large screens */
   margin: 40px auto; /* Center the card horizontally with top and bottom margins */
+  min-height: 400px; /* Set a minimum height */
+  height: auto; /* Allow the height to grow based on content */
+  flex-direction: row; /* Keep the image and text side by side for large screens */
 }
 
 .profileImage {
-  width: 150px; /* Set width of the profile image */
-  height: 150px; /* Set height of the profile image */
+  width: 270px; /* Set width of the profile image */
+  height: 270px; /* Set height of the profile image */
   border-radius: 50%; /* Make the image circular */
   object-fit: cover; /* Ensure the image covers the circle without distortion */
   display: block; /* Prevent extra space around the image */
-  margin-right: 20px; /* Space between the image and text */
+  margin-right: 40px; /* Space between the image and text */
 }
 
 .profileDetails {
@@ -33,4 +37,25 @@
   color: #666; /* Lighter text color for the bio */
   font-size: 1.1em; /* Slightly larger text size for the bio */
   line-height: 1.6; /* Improve readability with line height */
+}
+
+/* Media query for smaller devices like tablets */
+@media (max-width: 768px) {
+  .profileCard {
+    flex-direction: column; /* Stack the image on top of the text */
+    align-items: center; /* Center everything */
+    width: 90%; /* Adjust width to 90% on smaller devices */
+    min-height: 400px; /* Set a minimum height */
+  }
+
+  .profileImage {
+    margin-right: 0; /* Remove margin to the right */
+    margin-bottom: 20px; /* Add margin below the image */
+    width: 200px; /* Set a smaller width for the image */
+    height: 200px; /* Set a smaller height for the image */
+  }
+
+  .profileDetails {
+    text-align: center; /* Center the text below the image */
+  }
 }

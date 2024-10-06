@@ -5,6 +5,7 @@ import Login from '../pages/auth/LogInForm';
 import Signup from '../pages/auth/CreateAccountForm';
 import Upload from '../pages/Upload';
 import Profile from '../pages/Profile';
+import Notes from '../pages/Notes';
 
 function AppRoutes({ isAuthenticated }) {
   return (
@@ -20,6 +21,9 @@ function AppRoutes({ isAuthenticated }) {
 
       {/* Route for Upload page; accessible only when authenticated, otherwise redirects to Home */}
       <Route path="/upload" element={isAuthenticated ? <Upload /> : <Navigate to="/home" />} />
+
+      {/* Route for Upload page; accessible only when authenticated, otherwise redirects to Home */}
+      <Route path="/notes" element={isAuthenticated ? <Notes /> : <Navigate to="/home" />} />
 
       {/* Route for Profile page; accessible only when authenticated, otherwise redirects to Home */}
       <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/home" />} />

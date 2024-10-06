@@ -22,14 +22,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = False  # Turned off debug mode for production
+DEBUG = True  # Turned off debug mode for production
 
-ALLOWED_HOSTS = ['housegram-fullstack-app-a01c6177ffd8.herokuapp.com']
-
-CORS_ALLOWED_ORIGINS = [
-    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',  # Added Heroku domain
+ALLOWED_HOSTS = [
+    'housegram-fullstack-app-a01c6177ffd8.herokuapp.com',
+    'localhost',
+    '127.0.0.1'
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',
+    'http://localhost:3000',  # Assuming your React frontend runs on port 3000 locally
+    'http://127.0.0.1:8000',
+]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -140,7 +145,10 @@ WHITENOISE_ROOT = BASE_DIR / 'staticfiles' / 'build'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = []
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'staticfiles', 'build', 'static'),
+]
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -149,7 +157,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = False
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',  # Added Heroku domain
+    'https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com',
+    'http://localhost:3000',
+    'http://127.0.0.1:8000'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
