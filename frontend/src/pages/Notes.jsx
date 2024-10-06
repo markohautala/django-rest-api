@@ -262,7 +262,7 @@ const Notes = () => {
                 onChange={handleNoteChange}
               />
             </Form.Group>
-            <Button variant="dark" onClick={submitEditNote}>Submit Changes</Button>
+            <Button variant="dark" className={styles.submitButton} onClick={submitEditNote}>Submit Changes</Button>
           </Form>
         </Modal.Body>
       </Modal>
