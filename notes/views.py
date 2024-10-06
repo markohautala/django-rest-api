@@ -8,16 +8,18 @@ from restapi.permissions import IsOwnerOrReadOnly  # Ensure you have this permis
 
 class NoteList(generics.ListCreateAPIView):
     """
-    List all notes, or create a new note.
+    List all notes for the authenticated user, or create a new note.
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = NoteSerializer
 
     def get_queryset(self):
-        return Note.objects.all().order_by('-date_created')
+        # Filter notes to return only those belonging to the logged-in user
+        return Note.objects.filter(user=self.request.user).order_by('-date_created')
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)  # Save the logged-in user as the note owner
+        # Save the logged-in user as the note owner
+        serializer.save(user=self.request.user)
 
 class NoteDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -27,4 +29,5 @@ class NoteDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NoteSerializer
 
     def get_queryset(self):
-        return Note.objects.all()
+        # Ensure that only the notes belonging to the authenticated user are accessible
+        return Note.objects.filter(user=self.request.user)

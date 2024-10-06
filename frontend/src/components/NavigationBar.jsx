@@ -18,44 +18,67 @@ const getCSRFToken = () => {
 };
 
 function NavigationBar({ isAuthenticated }) {
-  // Access current user context and define state for navbar expansion
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
 
-  // Handle user logout by clearing session and navigating to home page
+  // Handle user login
+  const handleLogin = async (credentials) => {
+    try {
+      const csrfToken = getCSRFToken();
+      const response = await axios.post('/dj-rest-auth/login/', credentials, {
+        headers: {
+          'X-CSRFToken': csrfToken,
+        },
+        withCredentials: true,
+      });
+      setCurrentUser(response.data.user); // Update context with user data
+      navigate('/home'); // Redirect after login
+    } catch (err) {
+      console.error('Login error:', err);
+    }
+  };
+
+  // Handle user logout
   const handleLogout = async () => {
     try {
       const csrfToken = getCSRFToken();
-
-      if (!csrfToken) {
-        console.error("CSRF token not found.");
-        return;
-      }
-
       await axios.post('/dj-rest-auth/logout/', {}, {
         headers: {
           'X-CSRFToken': csrfToken,
-          'Content-Type': 'application/json',
         },
-        withCredentials: true,  // Ensure credentials are sent with the request
+        withCredentials: true,
       });
-
-      // Clear local storage, session storage, and cookies
-      localStorage.clear();
-      sessionStorage.clear();
-      document.cookie.split(";").forEach((c) => {
-        document.cookie = c
-          .replace(/^ +/, "")
-          .replace(/=.*/, "=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/");
-      });
-
-      // Reset the current user context and navigate to the home page
-      setCurrentUser(null);
-      navigate("/home");
+      setCurrentUser(null); // Clear user context
+      navigate('/home'); // Redirect after logout
     } catch (err) {
-      console.error('Error during logout:', err);
+      console.error('Logout error:', err);
+    }
+  };
+
+  // Add a new note function
+  const addNote = async (newNote) => {
+    if (!newNote.title || !newNote.content) {
+      console.error("Title and content are required.");
+      return; // Basic validation
+    }
+
+    try {
+      const csrfToken = getCSRFToken();
+      const token = localStorage.getItem('token'); // Get token for auth
+
+      const response = await axios.post('/notes/', newNote, {
+        headers: {
+          Authorization: `Token ${token}`,
+          'X-CSRFToken': csrfToken,
+        },
+      });
+
+      console.log("Note created:", response.data);
+      // Update your notes state if needed
+    } catch (error) {
+      console.error('Error adding note:', error);
     }
   };
 
@@ -65,11 +88,9 @@ function NavigationBar({ isAuthenticated }) {
     navigate(path);
   };
 
-  // Main content of the component
   return (
     <Navbar expand="lg" className={styles.NavigationBar} fixed="top" expanded={expanded}>
       <Container>
-        {/* Brand logo and name, navigate to home when clicked */}
         <Navbar.Brand className={styles.NavbarBrand}>
           <NavLink to="/" onClick={() => setExpanded(false)} className={styles.BrandLink}>
             <img src={logo2} alt="logo" height={50} className={styles.BrandLogo} />
@@ -77,13 +98,10 @@ function NavigationBar({ isAuthenticated }) {
           </NavLink>
         </Navbar.Brand>
 
-        {/* Toggle button for collapsing the navbar on smaller screens */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
 
-        {/* Collapsible navigation links */}
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            {/* Display different navigation links based on authentication status */}
             {isAuthenticated ? (
               <>
                 <NavLink to="/home" className={styles.NavLink} onClick={() => handleNavClick("/home")}>
@@ -95,8 +113,8 @@ function NavigationBar({ isAuthenticated }) {
                 <NavLink to="/profile" className={styles.NavLink} onClick={() => handleNavClick("/profile")}>
                   <span className="material-symbols-outlined">account_box</span> Profile
                 </NavLink>
-                <NavLink to="/notes" className={styles.NavLink}>
-                <span class="material-symbols-outlined">edit_note</span> Notes
+                <NavLink to="/notes" className={styles.NavLink} onClick={() => handleNavClick("/notes")}>
+                  <span className="material-symbols-outlined">edit_note</span> Notes
                 </NavLink>
                 <NavLink to="#" onClick={handleLogout} className={styles.NavLink}>
                   <span className="material-symbols-outlined">logout</span> Logout

@@ -22,7 +22,7 @@ function AppRoutes({ isAuthenticated }) {
       {/* Route for Upload page; accessible only when authenticated, otherwise redirects to Home */}
       <Route path="/upload" element={isAuthenticated ? <Upload /> : <Navigate to="/home" />} />
 
-      {/* Route for Upload page; accessible only when authenticated, otherwise redirects to Home */}
+      {/* Route for Notes page; accessible only when authenticated, otherwise redirects to Home */}
       <Route path="/notes" element={isAuthenticated ? <Notes /> : <Navigate to="/home" />} />
 
       {/* Route for Profile page; accessible only when authenticated, otherwise redirects to Home */}
