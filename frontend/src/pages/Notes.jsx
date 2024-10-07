@@ -1,181 +1,171 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal, Row, Col, Alert } from 'react-bootstrap';
 import axios from 'axios';
-import Cookies from 'js-cookie'; // For CSRF token
-import styles from '../styles/Notes.module.css';
-import loadingSpinner from '../assets/loading.gif'; // Your loading spinner
+import Cookies from 'js-cookie'; // Library to manage cookies, used here for CSRF tokens
+import styles from '../styles/Notes.module.css'; // Custom styles for the Notes component
+import loadingSpinner from '../assets/loading.gif'; // Loading spinner image
 
 const Notes = () => {
-  const [notes, setNotes] = useState([]); // State for fetched notes
-  const [isLoading, setIsLoading] = useState(true); // Loading state
-  const [errors, setErrors] = useState(null); // State to hold errors
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showMaxNotesModal, setShowMaxNotesModal] = useState(false); // Modal for max notes reached
-  const [currentNote, setCurrentNote] = useState(null);
-  const [newNote, setNewNote] = useState({
+  // State hooks for managing different aspects of the Notes component
+  const [notes, setNotes] = useState([]); // Stores the list of notes fetched from the backend
+  const [isLoading, setIsLoading] = useState(true); // Manages loading state while fetching data
+  const [errors, setErrors] = useState(null); // Stores any error messages encountered during requests
+  const [showEditModal, setShowEditModal] = useState(false); // Controls visibility of the Edit Modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // Controls visibility of the Delete Modal
+  const [showMaxNotesModal, setShowMaxNotesModal] = useState(false); // Controls visibility of the "max notes reached" modal
+  const [currentNote, setCurrentNote] = useState(null); // Stores the index of the currently selected note
+  const [newNote, setNewNote] = useState({ // Stores the data for the new note to be created
     title: '',
-    content: '', // Changed from description to content
+    content: '',
     url: ''
   });
 
-  // New state for editing notes in the modal
+  // State for the note being edited in the modal
   const [editNote, setEditNote] = useState({
     title: '',
     content: '',
     url: ''
   });
 
+  // Fetch the notes from the backend when the component is first mounted
   useEffect(() => {
     const fetchNotes = async () => {
       try {
         const response = await axios.get('/notes/', {
           headers: {
-            Authorization: `Token ${localStorage.getItem('token')}`, // Auth token for logged-in user
+            Authorization: `Token ${localStorage.getItem('token')}`, // Pass the authentication token for the request
           },
         });
-        setNotes(response.data.results); // Set notes to the 'results' array
-        setIsLoading(false); // Set loading to false after data is fetched
+        setNotes(response.data.results); // Update the notes state with the data from the API
+        setIsLoading(false); // Stop loading once data is fetched
       } catch (error) {
         console.error('Error fetching notes:', error);
-        setErrors('Failed to load notes.');
-        setIsLoading(false); // Set loading to false in case of error
+        setErrors('Failed to load notes.'); // Show error message if the request fails
+        setIsLoading(false); // Stop loading even in case of error
       }
     };
 
-    fetchNotes(); // Fetch notes on component mount
-  }, []);
+    fetchNotes(); // Call the function to fetch notes on component mount
+  }, []); // Empty dependency array ensures this runs once after the initial render
 
-  // Handle changes in the note form (main form)
+  // Updates the newNote state as the user types in the form fields
   const handleNoteChange = (event) => {
     setNewNote({
       ...newNote,
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.value, // Dynamically update fields (title, content, url)
     });
   };
 
-  // Handle changes in the edit modal form
+  // Updates the editNote state as the user modifies the fields in the Edit Modal
   const handleEditNoteChange = (event) => {
     setEditNote({
       ...editNote,
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.value, // Dynamically update fields for the note being edited
     });
   };
 
-  // Add a new note and push to backend
+  // Adds a new note by sending a POST request to the backend
   const addNote = async () => {
-    if (notes.length >= 2) {
-      setShowMaxNotesModal(true); // Show modal if the user already has 2 notes
+    if (notes.length >= 2) { // Limit the user to a maximum of 2 notes
+      setShowMaxNotesModal(true); // Show modal if the limit is reached
     } else {
       try {
-        const csrfToken = Cookies.get('csrftoken'); // CSRF token from cookies
-
+        const csrfToken = Cookies.get('csrftoken'); // Retrieve CSRF token for security
         const response = await axios.post('/notes/', newNote, {
           headers: {
-            Authorization: `Token ${localStorage.getItem('token')}`,
-            'X-CSRFToken': csrfToken, // Include CSRF token
+            Authorization: `Token ${localStorage.getItem('token')}`, // Authentication token
+            'X-CSRFToken': csrfToken, // Include CSRF token in request headers
           },
         });
-
         // Add the newly created note to the state
-        setNotes([...notes, response.data]);
-
-        // Reset the form fields
-        setNewNote({ title: '', content: '', url: '' }); // Resetting content
-
+        setNotes([...notes, response.data]); // Append new note to existing notes
+        setNewNote({ title: '', content: '', url: '' }); // Reset form fields after submission
       } catch (error) {
         console.error('Error adding note:', error);
-        setErrors('Failed to create a new note.');
+        setErrors('Failed to create a new note.'); // Show error if the request fails
       }
     }
   };
 
-  // Open the edit modal and populate fields with the selected note
+  // Opens the Edit Modal and pre-populates the form with the selected note's details
   const handleEditNote = (index) => {
-    setCurrentNote(index);
+    setCurrentNote(index); // Store the index of the note being edited
     setEditNote({
       title: notes[index].title,
-      content: notes[index].content, // Auto-populate with content
-      url: notes[index].url
+      content: notes[index].content, // Set the content of the note being edited
+      url: notes[index].url,
     });
-    setShowEditModal(true);
+    setShowEditModal(true); // Show the Edit Modal
   };
 
-// Submit the edited note and push to backend
-const submitEditNote = async () => {
-  // Check if currentNote is valid
-  if (currentNote === null || currentNote === undefined) {
-    console.error("No note selected for editing.");
-    return; // Exit if no note is selected for editing
-  }
+  // Submits the edited note by sending a PATCH request to update the note on the backend
+  const submitEditNote = async () => {
+    if (currentNote === null || currentNote === undefined) { // Ensure a note is selected for editing
+      console.error("No note selected for editing.");
+      return; // Exit if no note is selected
+    }
 
-  // Ensure there are actual changes before submitting
-  const originalNote = notes[currentNote];
-  if (
-    editNote.title === originalNote.title &&
-    editNote.content === originalNote.content &&
-    editNote.url === originalNote.url
-  ) {
-    console.log("No changes detected, no need to submit.");
-    setShowEditModal(false); // Just close the modal if no changes
-    return;
-  }
+    // Check if there are actual changes before submitting the update
+    const originalNote = notes[currentNote];
+    if (
+      editNote.title === originalNote.title &&
+      editNote.content === originalNote.content &&
+      editNote.url === originalNote.url
+    ) {
+      console.log("No changes detected, no need to submit.");
+      setShowEditModal(false); // Close modal if no changes were made
+      return;
+    }
 
-  const updatedNotes = [...notes];
-  updatedNotes[currentNote] = editNote;
-
-  try {
-    const csrfToken = Cookies.get('csrftoken'); // CSRF token from cookies
-
-    // Make PATCH request to update the note
-    await axios.patch(`/notes/${notes[currentNote].id}/`, editNote, {
-      headers: {
-        Authorization: `Token ${localStorage.getItem('token')}`,
-        'X-CSRFToken': csrfToken, // Include CSRF token
-      },
-    });
-
-    setNotes(updatedNotes);  // Update notes state with new data
-    setShowEditModal(false);  // Close the modal after success
-
-    // Clear the main form after saving changes
-    setNewNote({ title: '', content: '', url: '' });
-  } catch (error) {
-    console.error('Error updating note:', error);
-    setErrors('Failed to update the note.');
-  }
-};
-
-
-  // Open delete modal to confirm deletion
-  const handleDeleteNote = (index) => {
-    setCurrentNote(index);
-    setShowDeleteModal(true);
-  };
-
-  // Confirm the deletion of the selected note and push to backend
-  const confirmDeleteNote = async () => {
-    const noteToDelete = notes[currentNote];
+    const updatedNotes = [...notes]; // Create a copy of the current notes state
+    updatedNotes[currentNote] = editNote; // Update the selected note with new data
 
     try {
-      const csrfToken = Cookies.get('csrftoken'); // CSRF token from cookies
-      await axios.delete(`/notes/${noteToDelete.id}/`, {
+      const csrfToken = Cookies.get('csrftoken'); // Retrieve CSRF token for security
+      await axios.patch(`/notes/${notes[currentNote].id}/`, editNote, {
         headers: {
-          Authorization: `Token ${localStorage.getItem('token')}`,
+          Authorization: `Token ${localStorage.getItem('token')}`, // Authentication token
           'X-CSRFToken': csrfToken, // Include CSRF token
         },
       });
 
-      // Remove the note from the state
-      setNotes(notes.filter((_, index) => index !== currentNote));
-      setShowDeleteModal(false);
+      setNotes(updatedNotes); // Update state with the edited note
+      setShowEditModal(false); // Close the Edit Modal on success
     } catch (error) {
-      console.error('Error deleting note:', error);
-      setErrors('Failed to delete the note.');
+      console.error('Error updating note:', error);
+      setErrors('Failed to update the note.'); // Display error if the update fails
     }
   };
 
-  // Render loading spinner while fetching notes
+  // Opens the Delete Modal and sets the note to be deleted
+  const handleDeleteNote = (index) => {
+    setCurrentNote(index); // Store the index of the note to be deleted
+    setShowDeleteModal(true); // Show the Delete Modal
+  };
+
+  // Confirms and deletes the selected note by sending a DELETE request to the backend
+  const confirmDeleteNote = async () => {
+    const noteToDelete = notes[currentNote]; // Retrieve the selected note
+
+    try {
+      const csrfToken = Cookies.get('csrftoken'); // Retrieve CSRF token for security
+      await axios.delete(`/notes/${noteToDelete.id}/`, {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`, // Authentication token
+          'X-CSRFToken': csrfToken, // Include CSRF token in request headers
+        },
+      });
+
+      // Remove the deleted note from the state
+      setNotes(notes.filter((_, index) => index !== currentNote)); // Filter out the deleted note
+      setShowDeleteModal(false); // Close the Delete Modal
+    } catch (error) {
+      console.error('Error deleting note:', error);
+      setErrors('Failed to delete the note.'); // Show error if deletion fails
+    }
+  };
+
+  // Render a loading spinner if data is still being fetched
   if (isLoading) {
     return (
       <div style={{
@@ -197,12 +187,14 @@ const submitEditNote = async () => {
 
   return (
     <div className={styles.notesContainer}>
-      {/* Notes creation section */}
+      {/* Section for creating a new note */}
       <h2>Notes</h2>
       <p>Here you can create notes for yourself - maybe about future houseposts. You can create a maximum of two notes.</p>
 
-      {errors && <Alert variant="danger">{errors}</Alert>} {/* Display any errors */}
+      {/* Display errors if any */}
+      {errors && <Alert variant="danger">{errors}</Alert>}
 
+      {/* Form for creating a new note */}
       <div className={styles.noteCreationBox}>
         <Form>
           <Form.Group>
@@ -220,8 +212,8 @@ const submitEditNote = async () => {
             <Form.Label>Description</Form.Label>
             <Form.Control
               as="textarea"
-              name="content" // Change from description to content
-              value={newNote.content} // Change from description to content
+              name="content" // Update from description to content
+              value={newNote.content} // Update from description to content
               onChange={handleNoteChange}
               placeholder="Write a description"
               required
@@ -237,33 +229,33 @@ const submitEditNote = async () => {
               placeholder="Enter a URL"
             />
           </Form.Group>
-          <Button variant="dark" onClick={addNote}>Create Note</Button>
+          <Button variant="dark" onClick={addNote}>Create Note</Button> {/* Trigger addNote on click */}
         </Form>
       </div>
 
-      {/* Display Notes */}
+      {/* Section for displaying the existing notes */}
       <Row className={styles.notesRow}>
         {notes.map((note, index) => (
           <Col md={6} key={index} className={styles.noteCol}>
             <div className={styles.noteCard}>
               <div className={styles.noteHeader}>
-                <span className="btn btn-danger btn-sm" onClick={() => handleDeleteNote(index)}>Delete</span>
+                <span className="btn btn-danger btn-sm" onClick={() => handleDeleteNote(index)}>Delete</span> {/* Trigger deletion */}
                 <span
                   className={`material-symbols-outlined ${styles.gearIcon}`}
-                  onClick={() => handleEditNote(index)}
+                  onClick={() => handleEditNote(index)} // Trigger edit modal
                 >
                   settings
                 </span>
               </div>
               <h4>{note.title}</h4>
-              <p>{note.content}</p> {/* Change from description to content */}
-              {note.url && <a href={note.url} target="_blank" rel="noopener noreferrer">Visit Link</a>}
+              <p>{note.content}</p> {/* Display note content */}
+              {note.url && <a href={note.url} target="_blank" rel="noopener noreferrer">Visit Link</a>} {/* Optional URL */}
             </div>
           </Col>
         ))}
       </Row>
 
-      {/* Edit Modal */}
+      {/* Edit Note Modal */}
       <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Note</Modal.Title>
@@ -303,11 +295,11 @@ const submitEditNote = async () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
-          <Button variant="primary" onClick={submitEditNote}>Save Changes</Button>
+          <Button variant="primary" onClick={submitEditNote}>Save Changes</Button> {/* Submit edit */}
         </Modal.Footer>
       </Modal>
 
-      {/* Delete Modal */}
+      {/* Delete Note Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
@@ -315,7 +307,7 @@ const submitEditNote = async () => {
         <Modal.Body>Are you sure you want to delete this note?</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
-          <Button variant="danger" onClick={confirmDeleteNote}>Delete</Button>
+          <Button variant="danger" onClick={confirmDeleteNote}>Delete</Button> {/* Confirm deletion */}
         </Modal.Footer>
       </Modal>
 
