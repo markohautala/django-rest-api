@@ -19,6 +19,13 @@ const Notes = () => {
     url: ''
   });
 
+  // New state for editing notes in the modal
+  const [editNote, setEditNote] = useState({
+    title: '',
+    content: '',
+    url: ''
+  });
+
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -39,10 +46,18 @@ const Notes = () => {
     fetchNotes(); // Fetch notes on component mount
   }, []);
 
-  // Handle changes in the note form
+  // Handle changes in the note form (main form)
   const handleNoteChange = (event) => {
     setNewNote({
       ...newNote,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  // Handle changes in the edit modal form
+  const handleEditNoteChange = (event) => {
+    setEditNote({
+      ...editNote,
       [event.target.name]: event.target.value,
     });
   };
@@ -55,18 +70,12 @@ const Notes = () => {
       try {
         const csrfToken = Cookies.get('csrftoken'); // CSRF token from cookies
 
-        // Log the note being sent to the backend for debugging
-        console.log("Sending new note data: ", newNote);
-
         const response = await axios.post('/notes/', newNote, {
           headers: {
             Authorization: `Token ${localStorage.getItem('token')}`,
             'X-CSRFToken': csrfToken, // Include CSRF token
           },
         });
-
-        // Log the response for debugging
-        console.log("Response from server: ", response.data);
 
         // Add the newly created note to the state
         setNotes([...notes, response.data]);
@@ -84,7 +93,7 @@ const Notes = () => {
   // Open the edit modal and populate fields with the selected note
   const handleEditNote = (index) => {
     setCurrentNote(index);
-    setNewNote({
+    setEditNote({
       title: notes[index].title,
       content: notes[index].content, // Auto-populate with content
       url: notes[index].url
@@ -92,27 +101,51 @@ const Notes = () => {
     setShowEditModal(true);
   };
 
-  // Submit the edited note and push to backend
-  const submitEditNote = async () => {
-    const updatedNotes = [...notes];
-    updatedNotes[currentNote] = newNote;
+// Submit the edited note and push to backend
+const submitEditNote = async () => {
+  // Check if currentNote is valid
+  if (currentNote === null || currentNote === undefined) {
+    console.error("No note selected for editing.");
+    return; // Exit if no note is selected for editing
+  }
 
-    try {
-      const csrfToken = Cookies.get('csrftoken'); // CSRF token from cookies
-      await axios.patch(`/notes/${notes[currentNote].id}/`, newNote, {
-        headers: {
-          Authorization: `Token ${localStorage.getItem('token')}`,
-          'X-CSRFToken': csrfToken, // Include CSRF token
-        },
-      });
+  // Ensure there are actual changes before submitting
+  const originalNote = notes[currentNote];
+  if (
+    editNote.title === originalNote.title &&
+    editNote.content === originalNote.content &&
+    editNote.url === originalNote.url
+  ) {
+    console.log("No changes detected, no need to submit.");
+    setShowEditModal(false); // Just close the modal if no changes
+    return;
+  }
 
-      setNotes(updatedNotes);
-      setShowEditModal(false);
-    } catch (error) {
-      console.error('Error updating note:', error);
-      setErrors('Failed to update the note.');
-    }
-  };
+  const updatedNotes = [...notes];
+  updatedNotes[currentNote] = editNote;
+
+  try {
+    const csrfToken = Cookies.get('csrftoken'); // CSRF token from cookies
+
+    // Make PATCH request to update the note
+    await axios.patch(`/notes/${notes[currentNote].id}/`, editNote, {
+      headers: {
+        Authorization: `Token ${localStorage.getItem('token')}`,
+        'X-CSRFToken': csrfToken, // Include CSRF token
+      },
+    });
+
+    setNotes(updatedNotes);  // Update notes state with new data
+    setShowEditModal(false);  // Close the modal after success
+
+    // Clear the main form after saving changes
+    setNewNote({ title: '', content: '', url: '' });
+  } catch (error) {
+    console.error('Error updating note:', error);
+    setErrors('Failed to update the note.');
+  }
+};
+
 
   // Open delete modal to confirm deletion
   const handleDeleteNote = (index) => {
@@ -232,7 +265,9 @@ const Notes = () => {
 
       {/* Edit Modal */}
       <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
-        <Modal.Header closeButton>Edit Note</Modal.Header>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Note</Modal.Title>
+        </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group>
@@ -240,17 +275,19 @@ const Notes = () => {
               <Form.Control
                 type="text"
                 name="title"
-                value={newNote.title}
-                onChange={handleNoteChange}
+                value={editNote.title}
+                onChange={handleEditNoteChange}
+                required
               />
             </Form.Group>
             <Form.Group>
               <Form.Label>Description</Form.Label>
               <Form.Control
                 as="textarea"
-                name="content" // Change from description to content
-                value={newNote.content} // Change from description to content
-                onChange={handleNoteChange}
+                name="content"
+                value={editNote.content}
+                onChange={handleEditNoteChange}
+                required
               />
             </Form.Group>
             <Form.Group>
@@ -258,18 +295,23 @@ const Notes = () => {
               <Form.Control
                 type="url"
                 name="url"
-                value={newNote.url}
-                onChange={handleNoteChange}
+                value={editNote.url}
+                onChange={handleEditNoteChange}
               />
             </Form.Group>
-            <Button variant="dark" className={styles.submitButton} onClick={submitEditNote}>Submit Changes</Button>
           </Form>
         </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
+          <Button variant="primary" onClick={submitEditNote}>Save Changes</Button>
+        </Modal.Footer>
       </Modal>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton>Confirm Deletion</Modal.Header>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
         <Modal.Body>Are you sure you want to delete this note?</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
@@ -277,12 +319,16 @@ const Notes = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Max Notes Reached Modal */}
+      {/* Max Notes Modal */}
       <Modal show={showMaxNotesModal} onHide={() => setShowMaxNotesModal(false)}>
-        <Modal.Header closeButton>Note Limit Reached</Modal.Header>
-        <Modal.Body>Sorry, you can only create up to 2 notes.</Modal.Body>
+        <Modal.Header closeButton>
+          <Modal.Title>Note Limit Reached</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          You have reached the maximum limit of 2 notes. Please delete an existing note to create a new one.
+        </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={() => setShowMaxNotesModal(false)}>OK</Button>
+          <Button variant="secondary" onClick={() => setShowMaxNotesModal(false)}>Close</Button>
         </Modal.Footer>
       </Modal>
     </div>
