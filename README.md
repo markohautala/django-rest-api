@@ -21,7 +21,9 @@ https://housegram-fullstack-app-a01c6177ffd8.herokuapp.com/
 
 - On the homepage, you can view other users' house posts, give them likes or "Househearts," and add kind and thoughtful comments. You can also read and view other users' comments. To delete your comment, hover over it and click on the delete button. This will permanently delete the comment.
 
-- You have your own profile that you can navigate to by clicking on "Profile" in the navigation bar. On the profile page, you can see a placeholder image (until you upload your own), your username, and your bio. You can edit these by clicking on the corresponding buttons and saving your changes. You can also upload your own avatar image.
+- You have your own profile that you can navigate to by clicking on "Profile" in the navigation bar. On the profile page, you can see a placeholder image (until you upload your own), your username, and your bio. You can edit these by clicking on the corresponding buttons and saving your changes. You can also upload your own avatar image. You can also add a location - either your current location or your dream location of your dream house.
+
+- Notes section is a section that is visible only when a user is logged in. Here the user can enter to personal notes for themselfs - if they want to remember something or maybe a brilliant idea for a future housepost - the choise is yours! As a user, you can enter up to two notes on the go and delete and edit them as you please.
 
 <hr>
 
@@ -97,76 +99,97 @@ These security measures help keep the app safe and make sure that user data is p
 </p>
 
 
-The HousePost application includes several key database models that define the structure and relationships of the data. Below is an overview of each model and how they are connected.
+# HousePost Application - Database Models Overview
 
-#### 1. UserProfile
+The HousePost application includes several key database models that define the structure and relationships of the data. Below is an overview of each model and how they are connected, including the new "Note" model and an additional field in the UserProfile model.
+
+## 1. UserProfile
 
 **Purpose**:
 The UserProfile model stores additional information about users that extends the default Django User model.
 
 **Fields**:
-- user: A one-to-one relationship with Django's built-in User model.
-- date_created: The date and time when the profile was created.
-- date_updated: The date and time when the profile was last updated.
-- display_name: A custom name that the user can display.
-- bio: A short biography or description written by the user.
-- profile_picture: A profile picture uploaded by the user, managed by Cloudinary.
+- **user**: A one-to-one relationship with Django's built-in User model.
+- **date_created**: The date and time when the profile was created.
+- **date_updated**: The date and time when the profile was last updated.
+- **display_name**: A custom name that the user can display.
+- **bio**: A short biography or description written by the user.
+- **profile_picture**: A profile picture uploaded by the user, managed by Cloudinary.
+- **location**: The user's preferred location for their dream house (new field).
 
 **Relationships**:
 - The UserProfile model is directly linked to the User model via a one-to-one relationship. Each user has one profile.
 
-#### 2. HousePost
+## 2. HousePost
 
 **Purpose**:
 The HousePost model represents posts created by users about houses. These posts include details such as the title, description, and an image of the house.
 
 **Fields**:
-- user: A foreign key linking each post to a specific user.
-- date_posted: The date and time when the post was created.
-- date_modified: The date and time when the post was last updated.
-- house_title: The title of the house post.
-- description: A detailed description of the house.
-- house_image: An image of the house, managed by Cloudinary.
+- **user**: A foreign key linking each post to a specific user.
+- **date_posted**: The date and time when the post was created.
+- **date_modified**: The date and time when the post was last updated.
+- **house_title**: The title of the house post.
+- **description**: A detailed description of the house.
+- **house_image**: An image of the house, managed by Cloudinary.
 
 **Relationships**:
 - Each HousePost is linked to one user via a foreign key (user). This establishes a many-to-one relationship where a single user can have multiple posts.
 
-#### 3. HouseHeart
+## 3. HouseHeart
 
 **Purpose**:
 The HouseHeart model represents a "like" or "heart" that a user gives to a specific house post.
 
 **Fields**:
-- user: A foreign key linking the heart to the user who liked the post.
-- housepost: A foreign key linking the heart to the specific house post that was liked.
-- timestamp_created: The date and time when the heart was created.
+- **user**: A foreign key linking the heart to the user who liked the post.
+- **housepost**: A foreign key linking the heart to the specific house post that was liked.
+- **timestamp_created**: The date and time when the heart was created.
 
 **Relationships**:
 - Each HouseHeart is linked to both a user and a house post via foreign keys. This establishes a many-to-one relationship where a single post can have many hearts, and a single user can like multiple posts.
-- The combination of user and housepost is unique, ensuring that a user can only like a specific post once.
+- The combination of **user** and **housepost** is unique, ensuring that a user can only like a specific post once.
 
-#### 4. HousePostComment
+## 4. HousePostComment
 
 **Purpose**:
 The HousePostComment model stores comments made by users on house posts.
 
 **Fields**:
-- user: A foreign key linking the comment to the user who made it.
-- housepost: A foreign key linking the comment to the specific house post it was made on.
-- timestamp_created: The date and time when the comment was created.
-- timestamp_modified: The date and time when the comment was last updated.
-- comment: The content of the comment.
+- **user**: A foreign key linking the comment to the user who made it.
+- **housepost**: A foreign key linking the comment to the specific house post it was made on.
+- **timestamp_created**: The date and time when the comment was created.
+- **timestamp_modified**: The date and time when the comment was last updated.
+- **comment**: The content of the comment.
 
 **Relationships**:
 - Each HousePostComment is linked to both a user and a house post via foreign keys. This creates a many-to-one relationship where a single post can have many comments, and a single user can comment on multiple posts.
 
-#### Summary of Relationships
+## 5. Note (New Model)
 
-- **UserProfile** is a one-to-one extension of the User model.
+**Purpose**:
+The Note model allows users to add personal notes to themselves. Each user can create a maximum of two notes. These notes are private and only visible to the user who created them.
+
+**Fields**:
+- **user**: A foreign key linking each note to the user who created it.
+- **date_created**: The date and time when the note was created.
+- **date_updated**: The date and time when the note was last updated.
+- **title**: The title of the note.
+- **content**: The content or description of the note.
+- **url**: An optional field where users can add a URL to an image or resource.
+
+**Relationships**:
+- Each Note is linked to one user via a foreign key (user). Each user can create up to two notes, which are only visible to that user.
+
+## Summary of Relationships
+
+- **UserProfile** is a one-to-one extension of the User model, with an added **location** field.
 - **HousePost** is related to User via a many-to-one relationship.
 - **HouseHeart** and **HousePostComment** are each related to both User and HousePost via many-to-one relationships.
+- **Note** is related to User via a many-to-one relationship, with each user able to create up to two private notes.
 
-These models work together to create a robust structure for managing user profiles, posts about houses, user interactions (likes/house-hearts), and user-generated comments.
+These models work together to create a robust structure for managing user profiles, posts about houses, user interactions (likes/house-hearts), comments, and private notes.
+
 
 ### **User Stories Mapped to Project Goals**
 
@@ -310,9 +333,36 @@ Here is a list of all the features in the application and a brief explanation of
   <img src="frontend\src\assets\readme-images\edit-profile.png" alt="Edit Profile" width="400">
 </p>
 
+The user can also add edits to their location - what their dream location could be if they could decide. If the user has not entered any location, then a automatic field shows up saying "Not decided yet". And when the user edits the fields, this auto-fill text disappears.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\new-edit-location.png" alt="Location edit" width="400">
+</p>
+
 ### Logout Functionality
 
 - When a user clicks the logout button, they are redirected to the homepage. The homepage displays a component meant for non-authenticated users, showing the login and signup options.
+
+### Notes
+
+The user can input notes into the new functionality - these notes are a way to help the user to remember things and if the user gets a brilliant idea to a future housepost, they can add it to the notes and return to the notes later. The create-note form consists of three formfields and a create note button. The fields are Title, Description and a URL-field that is optional.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\new-edit-make-note.png" alt="Make note form" width="400">
+</p>
+
+Once the user fills out the form and clicks "Create note", the note is created.
+The user can create up to two notes and the user can edit and delete the notes as the user wants.
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\new-edit-note.png" alt="Note created" width="400">
+</p>
+
+If the user clicks on the visual "gear" icon the user gets prompted the bootstrap modal that gives the user the ability to edit the note, save the updates and also cancel the edits (if the user accidently clicks the gear-icon)
+
+<p align="center">
+  <img src="frontend\src\assets\readme-images\new-edit-edit-note.png" width="400">
+</p>
 
 ## UX Design Decisions
 
@@ -587,6 +637,22 @@ All tests have been passed.
 | TC35         | Click on the "Profile" link in the navigation bar (when logged in) and ensure it navigates to the profile page. |
 | TC36         | Click on the "Logout" link in the navigation bar and verify that it logs the user out and redirects to the login page. |
 | TC37         | Verify that the "Login" and "Create Account" links are present and functional when not logged in.              |
+
+
+#### Notes Management
+
+**Test Scenario 10: Verify Notes creation, editing, and deletion functionality**
+
+| Test Case ID | Test Steps                                                                                                       |
+|--------------|------------------------------------------------------------------------------------------------------------------|
+| TC38         | Open the Notes page and verify the presence of the notes creation form with fields for "Title", "Description", and "URL". |
+| TC39         | Enter valid note details and submit the form. Ensure that the note is created successfully and displayed in the list of notes. |
+| TC40         | Enter valid note details but exceed the limit of 2 notes. Ensure that an appropriate error modal ("Note Limit Reached") is displayed. |
+| TC41         | Click on a note's "Edit" icon, modify the note details, and submit the form. Verify that the note is updated successfully in the notes list. |
+| TC42         | Open the Edit Note modal but make no changes to the note details. Ensure that closing the modal does not update the note. |
+| TC43         | Click on a note's "Delete" button, confirm the deletion, and verify that the note is removed from the list. |
+| TC44         | Try deleting a note, but cancel the deletion in the confirmation modal. Ensure that the note remains in the list. |
+| TC45         | Add a note with a valid URL and verify that the URL link appears under the note and navigates to the correct destination when clicked. |
 
 
 <hr>
